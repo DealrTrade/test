@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #f2f4f8; --navy-mid: #e8ebf0; --navy-card: #ffffff;
+      --navy-border: #ced5e2; --blue: #2B9FD9; --blue-light: #1a7db5;
+      --green: #34d399; --amber: #fbbf24; --red: #f87171;
+      --white: #1a1f2e; --muted: #5a647a; --radius: 12px;
+    }
+    html { overflow-x: hidden; }
+    body {
+      background: var(--navy); color: var(--white); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; min-height: 100vh; }
+
+    /* NAV */
+    nav.top-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px; background: var(--navy-mid);
+      border-bottom: 1px solid var(--navy-border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo img { height: 38px; width: auto; object-fit: contain; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-meta { font-size: 0.8rem; color: var(--muted); margin-right: 6px; text-align: right; line-height: 1.4; }
+    .nav-meta strong { color: var(--white); display: block; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 15px; border-radius: 7px;
+      font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.83rem;
+      cursor: pointer; border: none; transition: all 0.18s;
+    }
+    .btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--navy-border); }
+    .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #2080b8; }
+    .btn-sm { padding: 5px 11px; font-size: 0.76rem; }
+    .btn-danger { background: transparent; color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .btn-danger:hover { background: rgba(248,113,113,0.08); }
+    .btn-amber { background: transparent; color: var(--amber); border: 1px solid rgba(251,191,36,0.3); font-size: 0.76rem; padding: 4px 10px; }
+    .btn-amber:hover { background: rgba(251,191,36,0.08); }
+
+    /* LAYOUT */
+    .page-wrap {
+      display: grid; grid-template-columns: 210px 1fr;
+      max-width: 1080px; margin: 0 auto;
+      padding: 32px 24px 80px; align-items: start;
+    }
+
+    /* SIDEBAR */
+    .settings-sidebar {
+      position: sticky; top: 78px;
+      display: flex; flex-direction: column; gap: 2px;
+      padding-right: 20px;
+    }
+    .snav-group {
+      font-size: 0.63rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0 10px; margin: 14px 0 4px;
+    }
+    .snav-group:first-child { margin-top: 0; }
+    .s-nav-btn {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; border: none;
+      background: transparent; text-align: left; width: 100%;
+      font-family: 'Inter', sans-serif;
+    }
+    .s-nav-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+    .s-nav-btn:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+    .s-nav-btn.active { color: var(--white); background: var(--navy-card); border: 1px solid var(--navy-border); }
+    .snav-divider { border: none; border-top: 1px solid var(--navy-border); margin: 10px 0; }
+
+    /* CONTENT */
+    .settings-content { min-width: 0; }
+    .s-section { display: none; }
+    .s-section.active { display: block; animation: fadeUp 0.2s ease; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    .section-head { margin-bottom: 22px; padding-bottom: 14px; border-bottom: 1px solid var(--navy-border); }
+    .section-head h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 3px; }
+    .section-head p { font-size: 0.81rem; color: var(--muted); }
+
+    /* FORM */
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .field-input {
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 8px; color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      padding: 10px 13px; outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .field-input::placeholder { color: var(--muted); }
+    .field-input:focus { border-color: var(--blue); }
+    .field-input:read-only { opacity: 0.5; cursor: not-allowed; }
+    .field-input.has-lock { padding-right: 36px; }
+    select.field-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b9bbf' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; cursor: pointer; }
+    select.field-input option { background: var(--navy-mid); }
+    .field-hint { font-size: 0.72rem; color: var(--muted); }
+    .input-wrap { position: relative; }
+    .input-wrap .lock-icon { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; stroke: var(--muted); fill: none; stroke-width: 2; opacity: 0.45; }
+
+    /* CARD */
+    .s-card { background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px; }
+    .s-card-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+    .s-card-head h3 { font-size: 0.88rem; font-weight: 700; }
+    .s-card-head p { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+
+    /* TOGGLE */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--navy-border); }
+    .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .toggle-info strong { font-size: 0.84rem; font-weight: 600; display: block; margin-bottom: 2px; }
+    .toggle-info span { font-size: 0.74rem; color: var(--muted); }
+    .toggle { position: relative; width: 38px; height: 21px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: var(--navy-border); border-radius: 11px; cursor: pointer; transition: background 0.2s; }
+    .toggle-slider:before { content: ''; position: absolute; width: 15px; height: 15px; left: 3px; top: 3px; background: white; border-radius: 50%; transition: transform 0.2s; }
+    .toggle input:checked + .toggle-slider { background: var(--blue); }
+    .toggle input:checked + .toggle-slider:before { transform: translateX(17px); }
+
+    /* BRAND CHIPS */
+    .brand-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .brand-chip { padding: 4px 10px; border-radius: 5px; font-size: 0.74rem; font-weight: 600; background: var(--navy-mid); border: 1px solid var(--navy-border); color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none; }
+    .brand-chip.selected-sell { background: rgba(43,159,217,0.14); border-color: var(--blue); color: var(--blue-light); cursor: default; }
+    .brand-chip.selected-buy  { background: rgba(52,211,153,0.1);  border-color: var(--green); color: var(--green); }
+    .brand-chip.buy-inactive  { opacity: 0.45; }
+
+    /* BADGE */
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 5px; font-size: 0.68rem; font-weight: 700; }
+    .badge-green { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+    .badge-amber { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+    .badge-blue  { background: rgba(43,159,217,0.12); color: var(--blue-light); border: 1px solid rgba(43,159,217,0.25); }
+    .badge-muted { background: rgba(139,155,191,0.1); color: var(--muted); border: 1px solid rgba(139,155,191,0.2); }
+    .badge-red   { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+
+    /* FORM ACTIONS */
+    .form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--navy-border); }
+
+    /* DIVIDER */
+    hr.divider { border: none; border-top: 1px solid var(--navy-border); margin: 18px 0; }
+
+    /* INFO BOX */
+    .info-box { background: rgba(43,159,217,0.06); border: 1px solid rgba(43,159,217,0.18); border-radius: 9px; padding: 11px 14px; font-size: 0.78rem; color: var(--muted); line-height: 1.65; margin-bottom: 14px; display: flex; gap: 9px; }
+    .info-box svg { width: 14px; height: 14px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 2px; }
+
+    /* DANGER */
+    .danger-card { background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; }
+    .danger-card h3 { font-size: 0.86rem; font-weight: 700; color: var(--red); margin-bottom: 5px; }
+    .danger-card p { font-size: 0.77rem; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
+
+    /* USERS TABLE */
+    .users-table { width: 100%; border-collapse: collapse; }
+    .users-table th { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; text-align: left; padding: 0 12px 10px; border-bottom: 1px solid var(--navy-border); }
+    .users-table td { padding: 13px 12px; border-bottom: 1px solid rgba(74,78,85,0.5); font-size: 0.83rem; vertical-align: middle; }
+    .users-table tr:last-child td { border-bottom: none; }
+    .users-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--blue); display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: white; flex-shrink: 0; }
+    .user-name-cell { display: flex; align-items: center; gap: 9px; }
+    .user-name { font-weight: 600; font-size: 0.85rem; }
+    .user-email { font-size: 0.75rem; color: var(--muted); }
+    .user-actions { display: flex; gap: 6px; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 16px; padding: 28px; width: 100%; max-width: 440px; animation: fadeUp 0.22s ease; }
+    .modal h3 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; }
+    .modal > p { font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 20px; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 9px; padding: 11px 16px; font-size: 0.82rem; font-weight: 500; display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: rgba(52,211,153,0.3); color: var(--green); }
+    .toast.error   { border-color: rgba(248,113,113,0.3); color: var(--red); }
+
+    /* YOU chip */
+    .you-chip { font-size: 0.62rem; font-weight: 700; background: rgba(43,159,217,0.15); color: var(--blue-light); border: 1px solid rgba(43,159,217,0.25); border-radius: 4px; padding: 1px 6px; margin-left: 5px; }
+
+    @media (max-width: 768px) {
+      nav { padding: 10px 14px; flex-wrap: nowrap; gap: 8px; overflow: hidden; }
+      .settings-shell { flex-direction: column; }
+      .s-nav { width: 100%; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--navy-border); padding: 8px; gap: 4px; flex-shrink: 0; -webkit-overflow-scrolling: touch; }
+      .s-nav-btn { white-space: nowrap; flex-shrink: 0; padding: 7px 12px; font-size: 0.78rem; }
+      .s-main { padding: 16px; }
+      .brand-grid { gap: 6px; }
+      .brand-chip { padding: 6px 10px; font-size: 0.76rem; }
+      .s-section h2 { font-size: 1rem; }
+      .field-grid-2 { grid-template-columns: 1fr !important; }
+      .users-table-wrap { overflow-x: auto; }
+    }
+    @media (max-width: 480px) {
+      .s-main { padding: 12px; }
+      .s-section { gap: 14px; }
+      .s-nav-btn { padding: 8px 10px; font-size: 0.74rem; min-height: 38px; }
+      .brand-chip { font-size: 0.72rem; padding: 5px 9px; }
+    }
+    @media (max-width: 360px) {
+      .s-main { padding: 10px; }
+      .s-nav-btn { padding: 7px 8px; font-size: 0.7rem; }
+    }
+
+  
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      nav { padding: 8px 14px; height: 44px; }
+      .settings-shell { flex-direction: row; }
+      .s-nav { width: 140px; flex-direction: column; overflow-y: auto; overflow-x: visible; border-right: 1px solid var(--navy-border); border-bottom: none; padding: 6px; flex-shrink: 0; }
+      .s-nav-btn { white-space: normal; padding: 6px 10px; font-size: 0.72rem; min-height: 32px; }
+      .s-main { padding: 10px 14px; overflow-y: auto; }
+      .s-section { gap: 12px; }
+      .s-section h2 { font-size: 0.95rem; }
+      .brand-chip { padding: 4px 8px; font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="dealer-portal.html" class="logo">
+    <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+  </a>
+  <div class="nav-right">
+    <div class="nav-meta">
+      <strong id="nav-user-name">Ryan Kovacs</strong>
+      <span id="nav-dealer-name">Elite Autohaus</span>
+    </div>
+    <button class="btn btn-ghost" onclick="window.location.href='dealer-portal.html'">← Portal</button>
+    <button class="btn btn-ghost" onclick="window.location.href='dealer-login.html'">Sign Out</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="settings-sidebar">
+    <div class="snav-group">My Account</div>
+    <button class="s-nav-btn active" id="nav-myprofile" onclick="showSection('myprofile',this)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+    </button>
+    <button class="s-nav-btn" id="nav-notifications" onclick="showSection('notifications',this)">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Notifications
+    </button>
+    <button class="s-nav-btn" id="nav-password" onclick="showSection('password',this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Password
+    </button>
+
+    <!-- Admin only sections -->
+    <div id="admin-nav-group">
+      <hr class="snav-divider" />
+      <div class="snav-group">Dealership</div>
+      <button class="s-nav-btn" id="nav-dealership" onclick="showSection('dealership',this)">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Dealership Profile
+      </button>
+      <button class="s-nav-btn" id="nav-brands" onclick="showSection('brands',this)">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Brands We Buy
+      </button>
+      <button class="s-nav-btn" id="nav-users" onclick="showSection('users',this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </button>
+      <hr class="snav-divider" id="admin-danger-divider" />
+      <button class="s-nav-btn" style="color:var(--red);" id="nav-account-actions" onclick="showSection('account-actions',this)">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Account Actions
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <div class="settings-content">
+
+    <!-- MY PROFILE -->
+    <div class="s-section active" id="s-myprofile">
+      <div class="section-head">
+        <h2>My Profile</h2>
+        <p>Your personal contact details on this account. Name and email can only be changed by your Dealer Admin or DealrTrade support.</p>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head">
+          <div><h3>Personal Information</h3><p>Your name and email are managed by your account admin</p></div>
+          <span class="badge badge-blue" id="my-role-badge">Dealer Admin</span>
+        </div>
+        <div class="form-grid-2">
+          <div class="field">
+            <label>First Name</label>
+            <div class="input-wrap">
+              <input class="field-input has-lock" id="my-first" value="Ryan" readonly />
+              <svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <div class="input-wrap">
+              <input class="field-input has-lock" id="my-last" value="Kovacs" readonly />
+              <svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <input class="field-input has-lock" id="my-email" value="ryan@eliteautohaus.ca" readonly />
+              <svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <span class="field-hint">Contact your Dealer Admin or <a href="/cdn-cgi/l/email-protection#4f2c20213b2e2c3b0f2b2a2e233d3b3d2e2b2a612c2022">[email&#160;protected]</a> to change your email</span>
+          </div>
+          <div class="field">
+            <label>Phone Number</label>
+            <input class="field-input" id="my-phone" type="tel" value="(905) 555-0144" placeholder="(555) 000-0000" />
+            <span class="field-hint">This is your personal contact number</span>
+          </div>
+          <div class="field">
+            <label>Mobile Number</label>
+            <input class="field-input" id="my-mobile" type="tel" placeholder="(555) 000-0000" />
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="loadMyProfile()">Discard</button>
+        <button class="btn btn-primary" onclick="saveMyProfile()">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="s-section" id="s-notifications">
+      <div class="section-head">
+        <h2>Notifications</h2>
+        <p>These preferences apply to your account only and don't affect other users at your dealership.</p>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head"><div><h3>New Listings</h3><p>Alerts when matching vehicles are posted</p></div></div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>New listing posted</strong><span>Email when a vehicle matching your dealership's brands is listed</span></div>
+          <label class="toggle"><input type="checkbox" id="n-new-listing" checked /><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>Listing expiring soon</strong><span>Reminder 12 hours before a listing you've bid on expires</span></div>
+          <label class="toggle"><input type="checkbox" id="n-expiry" checked /><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head"><div><h3>Offers</h3><p>Updates on bids submitted from your dealership</p></div></div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>Offer outbid</strong><span>Alert when another dealer submits a higher offer</span></div>
+          <label class="toggle"><input type="checkbox" id="n-outbid" checked /><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>Customer contact info released</strong><span>Notification when the offer period closes and contact details become available</span></div>
+          <label class="toggle"><input type="checkbox" id="n-contact" checked /><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head"><div><h3>Billing & Account</h3><p>Subscription and account-level alerts</p></div></div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>Invoice generated</strong><span>Email with PDF invoice each billing cycle</span></div>
+          <label class="toggle"><input type="checkbox" id="n-invoice" checked /><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>Payment failed</strong><span>Urgent alert if a charge to your card is declined</span></div>
+          <label class="toggle"><input type="checkbox" id="n-payment" checked /><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><strong>Platform updates</strong><span>Occasional emails about new features and improvements</span></div>
+          <label class="toggle"><input type="checkbox" id="n-platform" /><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveNotifications()">Save Preferences</button>
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="s-section" id="s-password">
+      <div class="section-head">
+        <h2>Password</h2>
+        <p>Choose a strong password you don't use anywhere else.</p>
+      </div>
+      <div class="s-card" style="max-width:440px;">
+        <div class="field">
+          <label>Current Password</label>
+          <input class="field-input" type="password" id="pw-current" placeholder="Enter your current password" />
+        </div>
+        <hr class="divider" />
+        <div class="field">
+          <label>New Password</label>
+          <input class="field-input" type="password" id="pw-new" placeholder="At least 8 characters" oninput="checkPwStrength()" />
+          <div id="pw-strength-bar" style="height:3px;border-radius:2px;margin-top:5px;width:0;transition:width 0.3s,background 0.3s;"></div>
+          <span class="field-hint" id="pw-strength-label" style="margin-top:3px;"></span>
+        </div>
+        <div class="field">
+          <label>Confirm New Password</label>
+          <input class="field-input" type="password" id="pw-confirm" placeholder="Repeat new password" />
+        </div>
+      </div>
+      <div class="form-actions" style="max-width:440px;">
+        <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+      </div>
+    </div>
+
+    <!-- DEALERSHIP PROFILE (Admin only) -->
+    <div class="s-section" id="s-dealership">
+      <div class="section-head">
+        <h2>Dealership Profile</h2>
+        <p>Your dealership's registered information. All changes must go through DealrTrade support.</p>
+      </div>
+      <div class="info-box">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>To update any dealership information, contact <strong style="color:var(--white);"><a href="/cdn-cgi/l/email-protection#99faf6f7edf8faedd9fdfcf8f5ebedebf8fdfcb7faf6f4">[email&#160;protected]</a></strong> or call <strong style="color:var(--white);">1-800-555-0100</strong>. Changes are verified against your OMVIC registration.</span>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head">
+          <div><h3>Dealership Details</h3><p>Legal and registered information</p></div>
+          <span class="badge badge-green">Verified</span>
+        </div>
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Dealership Name</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="Elite Autohaus" readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field">
+            <label>Legal Operating Name</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="Elite Autohaus Inc." readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field">
+            <label>OMVIC Number</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="1234567" readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field">
+            <label>HST Number</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="987654321 RT0001" readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field">
+            <label>Dealer Principal</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="Ryan Kovacs" readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field">
+            <label>Dealer Group</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="Independent" readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+          <div class="field full">
+            <label>Address</label>
+            <div class="input-wrap"><input class="field-input has-lock" value="280 King Street East, Hamilton, ON  L8N 1Z7" readonly /><svg class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          </div>
+        </div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head"><div><h3>Brands We Sell</h3><p>Franchise brands — set by DealrTrade</p></div><span class="badge badge-amber">Locked</span></div>
+        <div class="brand-chips" id="sells-display"></div>
+      </div>
+    </div>
+
+    <!-- BRANDS WE BUY (Admin only) -->
+    <div class="s-section" id="s-brands">
+      <div class="section-head">
+        <h2>Brands We Buy</h2>
+        <p>The makes your dealership will purchase outright from customers. You can go beyond your franchise here.</p>
+      </div>
+      <div class="s-card">
+        <div class="s-card-head">
+          <div><h3>Select brands</h3><p>Click to toggle — changes take effect immediately for new listings</p></div>
+          <span style="font-size:0.72rem;color:var(--green);font-weight:600;" id="buys-count">0 selected</span>
+        </div>
+        <div class="brand-chips" id="buys-chips"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="loadBrands()">Discard</button>
+        <button class="btn btn-primary" onclick="saveBrands()">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- USERS (Admin only) -->
+    <div class="s-section" id="s-users">
+      <div class="section-head">
+        <h2>Users</h2>
+        <p>Manage who has access to your dealership account.</p>
+      </div>
+      <div class="s-card" style="padding:0;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--navy-border);">
+          <div>
+            <h3 style="font-size:0.88rem;font-weight:700;">Team Members</h3>
+            <p style="font-size:0.74rem;color:var(--muted);margin-top:1px;">3 users on this account</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-ghost btn-sm" onclick="openModal('modal-invite')">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Invite by Email
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-add')">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add User
+            </button>
+          </div>
+        </div>
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACCOUNT ACTIONS (Admin only) -->
+    <div class="s-section" id="s-account-actions">
+      <div class="section-head">
+        <h2>Account Actions</h2>
+        <p>Significant changes to your dealership account. Dealer Admin access required.</p>
+      </div>
+      <div id="account-actions-content">
+        <div class="danger-card">
+          <h3>Cancel Subscription</h3>
+          <p>To cancel your DealrTrade subscription, please contact our support team directly. We'll confirm your cancellation and ensure your data is retained for 90 days after your current billing period ends.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:9px;padding:14px">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--white);margin-bottom:4px">Contact Support to Cancel</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <a href="/cdn-cgi/l/email-protection#3e4d4b4e4e514c4a7e5a5b5f524c4a4c5f5a5b105d5153" style="color:var(--teal);text-decoration:none"><span class="__cf_email__" data-cfemail="30434540405f4244705455515c4244425154551e535f5d">[email&#160;protected]</span></a>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.56 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span style="color:var(--white)">(905) 555-0100</span>
+            </div>
+            <div style="font-size:0.74rem;color:var(--muted);margin-top:4px">Support hours: Mon–Fri 9am–5pm EST. We typically respond within 1 business day.</div>
+          </div>
+        </div>
+      </div>
+      <div id="account-actions-locked" style="display:none;">
+        <div class="info-box">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Only a <strong style="color:var(--white);">Dealer Admin</strong> can pause or cancel this account. Contact your Dealer Admin to make changes.</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end settings-content -->
+</div><!-- end page-wrap -->
+
+<!-- ── MODALS ── -->
+
+<!-- Add User -->
+<div class="modal-overlay" id="modal-add">
+  <div class="modal">
+    <h3>Add User</h3>
+    <p>Create a new login for a team member at your dealership.</p>
+    <div class="field">
+      <label>First Name</label>
+      <input class="field-input" id="add-first" placeholder="First name" />
+    </div>
+    <div class="field">
+      <label>Last Name</label>
+      <input class="field-input" id="add-last" placeholder="Last name" />
+    </div>
+    <div class="field">
+      <label>Email Address</label>
+      <input class="field-input" id="add-email" type="email" placeholder="user@dealership.com" />
+    </div>
+    <div class="field">
+      <label>Phone Number</label>
+      <input class="field-input" id="add-phone" type="tel" placeholder="(555) 000-0000" />
+    </div>
+    <div class="field">
+      <label>Role</label>
+      <select class="field-input" id="add-role">
+        <option value="Dealer Admin">Dealer Admin</option>
+        <option value="Sales Manager" selected>Sales Manager</option>
+        <option value="Dealer Principal / Owner">Dealer Principal / Owner</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Assign Password</label>
+      <input class="field-input" id="add-password" type="password" placeholder="Temporary password" />
+      <span class="field-hint">User will be prompted to change this on first login</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add')">Cancel</button>
+      <button class="btn btn-primary" onclick="addUser()">Create User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Invite by Email -->
+<div class="modal-overlay" id="modal-invite">
+  <div class="modal">
+    <h3>Invite by Email</h3>
+    <p>Send an invitation link to a team member. They'll set their own password.</p>
+    <div class="field">
+      <label>Email Address</label>
+      <input class="field-input" id="invite-email" type="email" placeholder="user@dealership.com" />
+    </div>
+    <div class="field">
+      <label>Role</label>
+      <select class="field-input" id="invite-role">
+        <option value="Dealer Admin">Dealer Admin</option>
+        <option value="Sales Manager" selected>Sales Manager</option>
+        <option value="Dealer Principal / Owner">Dealer Principal / Owner</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-invite')">Cancel</button>
+      <button class="btn btn-primary" onclick="sendInvite()">Send Invite</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reset Password -->
+<div class="modal-overlay" id="modal-reset">
+  <div class="modal">
+    <h3>Reset Password</h3>
+    <p id="modal-reset-desc">Set a new temporary password for this user.</p>
+    <div class="field">
+      <label>New Temporary Password</label>
+      <input class="field-input" id="reset-password" type="password" placeholder="Temporary password" />
+      <span class="field-hint">User will be prompted to change this on next login</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-reset')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmResetPassword()">Set Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- Change Role -->
+<div class="modal-overlay" id="modal-role">
+  <div class="modal">
+    <h3>Change Role</h3>
+    <p id="modal-role-desc">Select a new role for this user.</p>
+    <div class="field">
+      <label>Role</label>
+      <select class="field-input" id="change-role-select">
+        <option value="Dealer Admin">Dealer Admin</option>
+        <option value="Sales Manager">Sales Manager</option>
+        <option value="Dealer Principal / Owner">Dealer Principal / Owner</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-role')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmRoleChange()">Save Role</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Session guard ──
+    (function() {
+      const sess = localStorage.getItem('dealerSession');
+      if (!sess || sess === '{}' || !JSON.parse(sess).dealerId) {
+        window.location.href = 'dealer-login.html';
+      }
+    })();
+
+      // ── SESSION (simulated) ──
+  // In production this comes from Supabase auth session.
+  // Stored under localStorage key 'dealerSession'
+  // role options: 'Dealer Admin' | 'Sales Manager' | 'Dealer Principal / Owner'
+  const DEFAULT_SESSION = {
+    id: 'user-001',
+    firstName: 'Ryan',
+    lastName: 'Kovacs',
+    email: 'ryan@eliteautohaus.ca',
+    phone: '(905) 555-0144',
+    mobile: '',
+    role: 'Dealer Admin',
+    dealerName: 'Elite Autohaus',
+  };
+
+  function getSession() {
+    return JSON.parse(localStorage.getItem('dealerSession') || JSON.stringify(DEFAULT_SESSION));
+  }
+  function saveSession(s) {
+    localStorage.setItem('dealerSession', JSON.stringify(s));
+  }
+
+  const isAdmin = () => ['Dealer Admin', 'Dealer Principal / Owner'].includes(getSession().role);
+
+  // ── USERS DATA (per-dealership, stored in localStorage) ──
+  // DEFAULT_USERS is no longer used — users come from dt_dealer_users filtered by dealerId
+  // Kept as empty for safety
+  const DEFAULT_USERS = [];;
+
+  function getUsers() {
+    const allUsers   = JSON.parse(localStorage.getItem('dt_dealer_users') || '[]');
+    const sess       = getSession();
+    const dealerName = sess.dealerName || '';
+    const dealerId   = sess.dealerId   || '';
+    const mine = allUsers.filter(u =>
+      (dealerName && u.dealerName === dealerName) ||
+      (dealerId   && u.dealerId   === dealerId)
+    );
+    if (mine.length === 0) {
+      // Seed from session so logged-in user always sees themselves
+      return [{
+        id: sess.id || 'user-001',
+        firstName: sess.firstName || '', lastName: sess.lastName  || '',
+        email: sess.email || '', phone: sess.phone || '', mobile: '',
+        role: sess.role || 'Dealer Principal / Owner',
+        status: 'active', dealerId, dealerName, password: 'dealer123',
+      }];
+    }
+    return mine;
+  }
+  function saveUsers(updatedUsers) {
+    // Merge back into dt_dealer_users — replace only this dealer's entries
+    const allUsers   = JSON.parse(localStorage.getItem('dt_dealer_users') || '[]');
+    const sess       = getSession();
+    const dealerName = sess.dealerName || '';
+    const dealerId   = sess.dealerId   || '';
+    const others = allUsers.filter(u =>
+      u.dealerName !== dealerName &&
+      (!dealerId || u.dealerId !== dealerId)
+    );
+    const stamped = updatedUsers.map(u => ({
+      ...u,
+      dealerName: dealerName || u.dealerName || '',
+      dealerId:   dealerId   || u.dealerId   || '',
+    }));
+    localStorage.setItem('dt_dealer_users', JSON.stringify([...others, ...stamped]));
+  }
+
+  // ── BRANDS ──
+  const BRANDS = ['Acura','Alfa Romeo','Aston Martin','Audi','Bentley','BMW','Buick','Cadillac','Chevrolet','Chrysler','Dodge','Ferrari','Ford','Genesis','GMC','Honda','Hyundai','Infiniti','Jaguar','Jeep','Kia','Lamborghini','Land Rover','Lexus','Lincoln','Maserati','Mazda','Mercedes-Benz','MINI','Mitsubishi','Nissan','Porsche','RAM','Rolls-Royce','Subaru','Tesla','Toyota','Volkswagen','Volvo'];
+  const SELLS = new Set(['Audi','BMW','Land Rover']);
+  let selectedBuys = new Set(['Audi','BMW','Land Rover','Mercedes-Benz','Porsche']);
+
+  // ── INIT ──
+  function init() {
+    const session = getSession();
+
+    // Nav
+    document.getElementById('nav-user-name').textContent  = `${session.firstName} ${session.lastName}`;
+    document.getElementById('nav-dealer-name').textContent = session.dealerName || 'Elite Autohaus';
+
+    // My profile badge
+    const roleColors = { 'Dealer Admin':'badge-blue', 'Sales Manager':'badge-muted', 'Dealer Principal / Owner':'badge-amber' };
+    const badge = document.getElementById('my-role-badge');
+    badge.textContent = session.role;
+    badge.className = 'badge ' + (roleColors[session.role] || 'badge-muted');
+
+    // My profile fields
+    document.getElementById('my-first').value  = session.firstName || '';
+    document.getElementById('my-last').value   = session.lastName  || '';
+    document.getElementById('my-email').value  = session.email     || '';
+    document.getElementById('my-phone').value  = session.phone     || '';
+    document.getElementById('my-mobile').value = session.mobile    || '';
+
+    // Show/hide admin nav
+    document.getElementById('admin-nav-group').style.display = isAdmin() ? '' : 'none';
+
+    // Account actions — admin only
+    document.getElementById('account-actions-content').style.display = isAdmin() ? '' : 'none';
+    document.getElementById('account-actions-locked').style.display  = isAdmin() ? 'none' : '';
+
+    // Load brands display
+    renderSellsDisplay();
+    loadBrands();
+
+    // Load users
+    renderUsers();
+
+    // Load notifications
+    loadNotifications();
+  }
+
+  // ── MY PROFILE ──
+  function loadMyProfile() { init(); }
+
+  function saveMyProfile() {
+    const s = getSession();
+    s.phone  = document.getElementById('my-phone').value.trim();
+    s.mobile = document.getElementById('my-mobile').value.trim();
+    saveSession(s);
+    // Also update in users array
+    const users = getUsers();
+    const u = users.find(x => x.id === s.id);
+    if (u) { u.phone = s.phone; u.mobile = s.mobile; saveUsers(users); }
+    showToast('Profile updated', 'success');
+  }
+
+  // ── SECTION NAV ──
+  function showSection(id, el) {
+    document.querySelectorAll('.s-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.s-nav-btn').forEach(n => n.classList.remove('active'));
+    document.getElementById('s-' + id).classList.add('active');
+    if (el) el.classList.add('active');
+  }
+
+  // ── NOTIFICATIONS ──
+  function loadNotifications() {
+    const s = getSession();
+    const key = 'dealerNotifs_' + s.id;
+    const prefs = JSON.parse(localStorage.getItem(key) || '{}');
+    const defaults = { 'n-new-listing':true, 'n-expiry':true, 'n-outbid':true, 'n-contact':true, 'n-invoice':true, 'n-payment':true, 'n-platform':false };
+    Object.entries(defaults).forEach(([id, def]) => {
+      const el = document.getElementById(id);
+      if (el) el.checked = id in prefs ? prefs[id] : def;
+    });
+  }
+
+  function saveNotifications() {
+    const s = getSession();
+    const key = 'dealerNotifs_' + s.id;
+    const ids = ['n-new-listing','n-expiry','n-outbid','n-contact','n-invoice','n-payment','n-platform'];
+    const prefs = {};
+    ids.forEach(id => { const el = document.getElementById(id); if (el) prefs[id] = el.checked; });
+    localStorage.setItem(key, JSON.stringify(prefs));
+    showToast('Notification preferences saved', 'success');
+  }
+
+  // ── PASSWORD ──
+  function checkPwStrength() {
+    const pw  = document.getElementById('pw-new').value;
+    const bar = document.getElementById('pw-strength-bar');
+    const lbl = document.getElementById('pw-strength-label');
+    let score = 0;
+    if (pw.length >= 8)        score++;
+    if (/[A-Z]/.test(pw))      score++;
+    if (/[0-9]/.test(pw))      score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const levels = [
+      {w:'0%',  bg:'transparent',  t:''},
+      {w:'25%', bg:'var(--red)',   t:'Weak'},
+      {w:'50%', bg:'var(--amber)', t:'Fair'},
+      {w:'75%', bg:'var(--blue)',  t:'Good'},
+      {w:'100%',bg:'var(--green)', t:'Strong'},
+    ];
+    const l = levels[score];
+    bar.style.width = l.w; bar.style.background = l.bg;
+    lbl.textContent = l.t; lbl.style.color = l.bg;
+  }
+
+  function changePassword() {
+    const cur  = document.getElementById('pw-current').value;
+    const nw   = document.getElementById('pw-new').value;
+    const conf = document.getElementById('pw-confirm').value;
+    if (!cur)          { showToast('Enter your current password', 'error'); return; }
+    if (nw.length < 8) { showToast('New password must be at least 8 characters', 'error'); return; }
+    if (nw !== conf)   { showToast('Passwords do not match', 'error'); return; }
+    document.getElementById('pw-current').value = '';
+    document.getElementById('pw-new').value = '';
+    document.getElementById('pw-confirm').value = '';
+    document.getElementById('pw-strength-bar').style.width = '0';
+    document.getElementById('pw-strength-label').textContent = '';
+    showToast('Password updated successfully', 'success');
+  }
+
+  // ── BRANDS ──
+  function renderSellsDisplay() {
+    document.getElementById('sells-display').innerHTML = [...SELLS].map(b =>
+      `<span class="brand-chip selected-sell">${b}</span>`
+    ).join('');
+  }
+
+  function loadBrands() {
+    const p = JSON.parse(localStorage.getItem('dealerProfile') || '{}');
+    if (p.buys) selectedBuys = new Set(p.buys);
+    renderBuys();
+  }
+
+  function renderBuys() {
+    const el = document.getElementById('buys-chips');
+    if (!el) return;
+    el.innerHTML = BRANDS.map(b =>
+      `<span class="brand-chip ${selectedBuys.has(b) ? 'selected-buy' : 'buy-inactive'}" onclick="toggleBuy('${b}')">${b}</span>`
+    ).join('');
+    document.getElementById('buys-count').textContent = selectedBuys.size + ' selected';
+  }
+
+  function toggleBuy(brand) {
+    selectedBuys.has(brand) ? selectedBuys.delete(brand) : selectedBuys.add(brand);
+    renderBuys();
+  }
+
+  function saveBrands() {
+    const p = JSON.parse(localStorage.getItem('dealerProfile') || '{}');
+    p.buys  = [...selectedBuys];
+    p.sells = [...selectedBuys]; // keep sells in sync so dealer-portal filter always works
+    localStorage.setItem('dealerProfile', JSON.stringify(p));
+    showToast('Brands updated', 'success');
+  }
+
+  // ── USERS ──
+  let resetTargetId = null;
+  let roleTargetId  = null;
+
+  function avatarInitials(u) {
+    return ((u.firstName[0]||'') + (u.lastName[0]||'')).toUpperCase();
+  }
+
+  const ROLE_BADGE = {
+    'Dealer Admin':             'badge-blue',
+    'Sales Manager':            'badge-muted',
+    'Dealer Principal / Owner': 'badge-amber',
+  };
+
+  function renderUsers() {
+    const session = getSession();
+    const users   = getUsers();
+    const tbody   = document.getElementById('users-tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = users.map(u => {
+      const isMe   = u.id === session.id;
+      const status = u.status === 'active'
+        ? '<span class="badge badge-green">Active</span>'
+        : '<span class="badge badge-red">Inactive</span>';
+
+      const actions = isMe
+        ? `<span style="font-size:0.74rem;color:var(--muted);">—</span>`
+        : `<div class="user-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openRoleModal('${u.id}')">Change Role</button>
+            <button class="btn btn-ghost btn-sm" onclick="openResetModal('${u.id}')">Reset PW</button>
+            <button class="btn btn-amber" onclick="toggleUserStatus('${u.id}')">${u.status === 'active' ? 'Deactivate' : 'Reactivate'}</button>
+           </div>`;
+
+      return `<tr>
+        <td>
+          <div class="user-name-cell">
+            <div class="user-avatar">${avatarInitials(u)}</div>
+            <div>
+              <div class="user-name">${u.firstName} ${u.lastName}${isMe ? '<span class="you-chip">You</span>' : ''}</div>
+              <div class="user-email">${u.email}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge ${ROLE_BADGE[u.role]||'badge-muted'}">${u.role}</span></td>
+        <td>${status}</td>
+        <td>${actions}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function toggleUserStatus(id) {
+    const users = getUsers();
+    const u = users.find(x => x.id === id);
+    if (!u) return;
+    u.status = u.status === 'active' ? 'inactive' : 'active';
+    saveUsers(users);
+    renderUsers();
+    showToast(`${u.firstName} ${u.lastName} ${u.status === 'active' ? 'reactivated' : 'deactivated'}`, 'success');
+  }
+
+  function openRoleModal(id) {
+    roleTargetId = id;
+    const users = getUsers();
+    const u = users.find(x => x.id === id);
+    document.getElementById('modal-role-desc').textContent = `Change role for ${u.firstName} ${u.lastName}.`;
+    document.getElementById('change-role-select').value = u.role;
+    openModal('modal-role');
+  }
+
+  function confirmRoleChange() {
+    const users = getUsers();
+    const u = users.find(x => x.id === roleTargetId);
+    if (!u) return;
+    u.role = document.getElementById('change-role-select').value;
+    saveUsers(users);
+    closeModal('modal-role');
+    renderUsers();
+    showToast(`Role updated for ${u.firstName} ${u.lastName}`, 'success');
+  }
+
+  function openResetModal(id) {
+    resetTargetId = id;
+    const users = getUsers();
+    const u = users.find(x => x.id === id);
+    document.getElementById('modal-reset-desc').textContent = `Set a new temporary password for ${u.firstName} ${u.lastName}.`;
+    document.getElementById('reset-password').value = '';
+    openModal('modal-reset');
+  }
+
+  function confirmResetPassword() {
+    const pw = document.getElementById('reset-password').value;
+    if (pw.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+    closeModal('modal-reset');
+    const users = getUsers();
+    const u = users.find(x => x.id === resetTargetId);
+    showToast(`Password reset for ${u ? u.firstName + ' ' + u.lastName : 'user'}`, 'success');
+  }
+
+  function addUser() {
+    const first = document.getElementById('add-first').value.trim();
+    const last  = document.getElementById('add-last').value.trim();
+    const email = document.getElementById('add-email').value.trim();
+    const phone = document.getElementById('add-phone').value.trim();
+    const role  = document.getElementById('add-role').value;
+    const pw    = document.getElementById('add-password').value;
+    if (!first || !last || !email || !pw) { showToast('Please fill in all required fields', 'error'); return; }
+    if (pw.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
+    const users = getUsers();
+    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+      showToast('A user with this email already exists', 'error'); return;
+    }
+    const sess = getSession();
+    users.push({
+      id: 'user-' + Date.now(),
+      firstName: first, lastName: last,
+      email, phone, mobile: '', role,
+      status: 'active',
+      password: pw,
+      dealerId:   sess.dealerId   || '',
+      dealerName: sess.dealerName || '',
+    });
+    saveUsers(users);
+    closeModal('modal-add');
+    renderUsers();
+    ['add-first','add-last','add-email','add-phone','add-password'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('add-role').value = 'Sales Manager';
+    showToast(`${first} ${last} added — they can now log in at dealer-login.html`, 'success');
+  }
+
+  function sendInvite() {
+    const email = document.getElementById('invite-email').value.trim();
+    const role  = document.getElementById('invite-role').value;
+    if (!email) { showToast('Enter an email address', 'error'); return; }
+    closeModal('modal-invite');
+    document.getElementById('invite-email').value = '';
+    showToast(`Invite sent to ${email}`, 'success');
+  }
+
+  // ── ACCOUNT ACTIONS ──
+  function confirmPause() {
+    if (confirm("Pause your account? You won't receive new listing alerts or be able to submit offers until reactivated.")) {
+      showToast('Account paused — contact support@dealrtrade.com to reactivate', 'success');
+    }
+  }
+  function confirmCancel() {
+    if (confirm('Cancel your subscription? Access ends at your next billing date.')) {
+      showToast('Cancellation requested — access ends at your next billing date', 'success');
+    }
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function showToast(msg, type='success') {
+    let t = document.getElementById('ds-toast');
+    if (!t) {
+      t = document.createElement('div'); t.id = 'ds-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:9px;font-size:0.85rem;font-weight:600;z-index:9999;transition:opacity 0.3s;';
+      document.body.appendChild(t);
+    }
+    const colors = {success:'background:#34d399;color:#1a1f2e',error:'background:#f87171;color:white',warning:'background:#fbbf24;color:#1a1f2e',info:'background:#2B9FD9;color:white'};
+    t.style.cssText += ';' + (colors[type] || colors.success);
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
+  }
+
+  // ── BOOT ──
+  document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>

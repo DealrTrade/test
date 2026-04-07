@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DealrTrade — Test Data Seed</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0f1117;color:#e8edf5;font-family:'Inter',sans-serif;font-size:14px;min-height:100vh;padding:32px 16px}
+    .wrap{max-width:860px;margin:0 auto}
+    .header{text-align:center;margin-bottom:40px}
+    .header h1{font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px}
+    .header p{color:#6b7a99;font-size:0.9rem;line-height:1.6}
+    .warning{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:0.84rem;color:#fbbf24;line-height:1.6}
+    .warning strong{color:#fff}
+    .section{background:#1c2333;border:1px solid #252d3d;border-radius:12px;margin-bottom:20px;overflow:hidden}
+    .section-head{padding:16px 20px;border-bottom:1px solid #252d3d;display:flex;align-items:center;gap:10px}
+    .section-head h2{font-size:0.92rem;font-weight:700}
+    .section-head p{font-size:0.78rem;color:#6b7a99;margin-left:auto}
+    .section-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+    .section-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+    .icon-blue{background:rgba(43,159,217,0.15);color:#38bdf8}
+    .icon-green{background:rgba(52,211,153,0.12);color:#34d399}
+    .icon-amber{background:rgba(251,191,36,0.12);color:#fbbf24}
+    .icon-red{background:rgba(248,113,113,0.12);color:#f87171}
+    .accounts{display:flex;flex-direction:column;gap:0}
+    .account-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid #1c2333;flex-wrap:wrap}
+    .account-row:last-child{border-bottom:none}
+    .account-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:0.72rem;font-weight:700;flex-shrink:0}
+    .av-blue{background:#1e3a5f;color:#38bdf8}
+    .av-green{background:#0a3728;color:#34d399}
+    .av-amber{background:#3d2f0a;color:#fbbf24}
+    .av-purple{background:#2d1b5e;color:#a78bfa}
+    .av-pink{background:#3d1a2e;color:#f472b6}
+    .account-info{flex:1;min-width:180px}
+    .account-name{font-weight:600;font-size:0.88rem;margin-bottom:2px}
+    .account-email{font-size:0.75rem;color:#6b7a99;font-family:'DM Mono',monospace}
+    .account-creds{font-family:'DM Mono',monospace;font-size:0.72rem;background:#161b24;border:1px solid #252d3d;border-radius:6px;padding:4px 10px;color:#e8edf5;display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .cred-label{color:#6b7a99;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em}
+    .pill{font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:4px}
+    .pill-blue{background:rgba(43,159,217,0.15);color:#38bdf8;border:1px solid rgba(43,159,217,0.25)}
+    .pill-green{background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.2)}
+    .pill-amber{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+    .pill-purple{background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.2)}
+    .account-brands{font-size:0.72rem;color:#6b7a99;margin-top:3px}
+    .account-brands span{color:#a78bfa}
+    .listings-grid{display:flex;flex-direction:column;gap:0}
+    .listing-row{padding:10px 20px;border-bottom:1px solid #1c2333;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .listing-row:last-child{border-bottom:none}
+    .listing-title{font-weight:600;font-size:0.85rem;flex:1;min-width:160px}
+    .listing-meta{font-size:0.75rem;color:#6b7a99}
+    .listing-customer{font-size:0.75rem;color:#6b7a99;font-family:'DM Mono',monospace}
+    .btn-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:28px 20px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none}
+    .btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+    .btn-seed{background:#2B9FD9;color:white}
+    .btn-seed:hover{background:#2080b8}
+    .btn-clear{background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25)}
+    .btn-clear:hover{background:rgba(248,113,113,0.22)}
+    .btn-portal{background:#161b24;color:#e8edf5;border:1px solid #252d3d}
+    .btn-portal:hover{border-color:#2B9FD9;color:#38bdf8}
+    .status-bar{background:#161b24;border:1px solid #252d3d;border-radius:10px;padding:14px 18px;margin-top:20px;font-family:'DM Mono',monospace;font-size:0.78rem;color:#6b7a99;min-height:60px;line-height:1.8;display:none}
+    .status-bar.show{display:block}
+    .log-ok{color:#34d399}
+    .log-warn{color:#fbbf24}
+    .log-info{color:#38bdf8}
+    .log-err{color:#f87171}
+    .divider{height:1px;background:#252d3d;margin:24px 0}
+    .quick-login{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;padding:0 20px 20px}
+    .quick-btn{background:#161b24;border:1px solid #252d3d;border-radius:9px;padding:12px 14px;cursor:pointer;transition:all 0.15s;text-align:left}
+    .quick-btn:hover{border-color:#2B9FD9}
+    .quick-btn-label{font-size:0.72rem;color:#6b7a99;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+    .quick-btn-name{font-weight:700;font-size:0.88rem;margin-bottom:2px}
+    .quick-btn-email{font-family:'DM Mono',monospace;font-size:0.72rem;color:#6b7a99}
+    @media(max-width:600px){
+      .account-row{flex-direction:column;align-items:flex-start}
+      .quick-login{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;margin-bottom:10px;" />
+    <h1>DealrTrade — Test Data Seed</h1>
+    <p>Creates demo customer accounts, dealer accounts, and realistic listings<br>so you can test every flow independently from any browser or device.</p>
+  </div>
+
+  <div class="warning">
+    <strong>How to use:</strong> Click <strong>Seed All Test Data</strong> below. This writes accounts and listings to <code>localStorage</code> in this browser.
+    To test on another device or browser, open this page there and seed again — each browser has its own storage.
+    Clicking <strong>Clear All Data</strong> wipes everything so you can start fresh.
+  </div>
+
+  <!-- CUSTOMER ACCOUNTS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div>
+        <h2>Customer Accounts (6 accounts)</h2>
+        <p style="color:#6b7a99;font-size:0.75rem;margin-top:2px">Each has different vehicles listed — login at <code>customer-login.html</code></p>
+      </div>
+    </div>
+    <div class="accounts">
+      <div class="account-row">
+        <div class="account-avatar av-blue">JW</div>
+        <div class="account-info">
+          <div class="account-name">James Whitfield <span class="pill pill-amber">Demo Account</span></div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#adc783dac5c4d9cbc4c8c1c9edcac0ccc4c183cec2c0">[email&#160;protected]</a></div>
+          <div class="account-brands">Listings: <span>2020 Audi A4, 2019 Honda Civic, 2021 Ford F-150</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> demo1234</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-green">PN</div>
+        <div class="account-info">
+          <div class="account-name">Priya Nair</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#7f0f0d16061e51111e160d3f100a0b13101014511c1012">[email&#160;protected]</a></div>
+          <div class="account-brands">Listings: <span>2022 Toyota Camry XLE, 2023 Honda CR-V EX-L</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> test1234</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-amber">MB</div>
+        <div class="account-info">
+          <div class="account-name">Marcus Bellamy</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#dfb2beadbcaaacf1bdbab3b3beb2a69fadb0b8baadacf1bcb0b2">[email&#160;protected]</a></div>
+          <div class="account-brands">Listings: <span>2022 BMW X3 xDrive30i, 2020 Mercedes-Benz C300</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> test1234</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-purple">SK</div>
+        <div class="account-info">
+          <div class="account-name">Sarah Kowalski</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#ee9dc08581998f829d8587ae89838f8782c08d8183">[email&#160;protected]</a></div>
+          <div class="account-brands">Listings: <span>2021 Chevrolet Equinox LT, 2019 Nissan Rogue SV</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> test1234</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-pink">DL</div>
+        <div class="account-info">
+          <div class="account-name">David Lee</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#6703490b0202270f08130a060e0b4904080a">[email&#160;protected]</a></div>
+          <div class="account-brands">Listings: <span>2020 Mazda CX-5 GT, 2023 Kia Sportage EX</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> test1234</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-blue">TC</div>
+        <div class="account-info">
+          <div class="account-name">Test Customer <span class="pill pill-blue">Test Account</span></div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="284b5d5b5c47454d5a685c4d5b5c064b4745">[email&#160;protected]</a></div>
+          <div class="account-brands">Listings: <span>None — add your own</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> password</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEALER ACCOUNTS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-green"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div>
+        <h2>Dealer Accounts (5 dealerships)</h2>
+        <p style="color:#6b7a99;font-size:0.75rem;margin-top:2px">Each only sees listings matching their brands — login at <code>dealer-login.html</code></p>
+      </div>
+    </div>
+    <div class="accounts">
+      <div class="account-row">
+        <div class="account-avatar av-blue">EA</div>
+        <div class="account-info">
+          <div class="account-name">Elite Autohaus</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#d0a2a9b1be90b5bcb9a4b5b1a5a4bfb8b1a5a3feb3b1">[email&#160;protected]</a></div>
+          <div class="account-brands">Buys: <span>Audi, BMW, Mercedes-Benz, Porsche, Land Rover</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> dealer123</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-green">MH</div>
+        <div class="account-info">
+          <div class="account-name">Maple Honda</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#8dfeece3e9ffeccde0ecfde1e8e5e2e3e9eca3eeec">[email&#160;protected]</a></div>
+          <div class="account-brands">Buys: <span>Honda, Toyota, Mazda, Hyundai, Kia</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> dealer123</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-amber">HF</div>
+        <div class="account-info">
+          <div class="account-name">Hamilton Ford</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#7216130417321a131f1b1e061d1c141d00165c1113">[email&#160;protected]</a></div>
+          <div class="account-brands">Buys: <span>Ford, Chevrolet, GMC, Dodge, Chrysler, Nissan</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> dealer123</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-purple">LA</div>
+        <div class="account-info">
+          <div class="account-name">Lakeshore Auto Group</div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection#02766d6f426e636967716a6d706763652c6163">[email&#160;protected]</a></div>
+          <div class="account-brands">Buys: <span>Toyota, Honda, Nissan, Mazda, Kia, Hyundai, Subaru, Ford, Chevrolet</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> dealer123</div>
+      </div>
+      <div class="account-row">
+        <div class="account-avatar av-green">TD</div>
+        <div class="account-info">
+          <div class="account-name">Test Dealer <span class="pill pill-blue">Test Account</span></div>
+          <div class="account-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="274a46494640425567534254530944484a">[email&#160;protected]</a></div>
+          <div class="account-brands">Buys: <span>All Makes</span></div>
+        </div>
+        <div class="account-creds"><span class="cred-label">pass</span> password</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTINGS THAT WILL BE SEEDED -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-amber"><svg viewBox="0 0 24 24"><rect x="1" y="8" width="22" height="10" rx="2"/><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></div>
+      <div>
+        <h2>10 Listings (across 5 customers)</h2>
+        <p style="color:#6b7a99;font-size:0.75rem;margin-top:2px">Routed to the right dealers by make/brand</p>
+      </div>
+    </div>
+    <div class="listings-grid" id="listings-preview"></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="btn-row">
+    <button class="btn btn-seed" onclick="seedAll()">
+      <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Seed All Test Data
+    </button>
+    <button class="btn btn-clear" onclick="clearAll()">
+      <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      Clear All Data
+    </button>
+  </div>
+
+  <!-- QUICK LOGIN SHORTCUTS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon icon-blue"><svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>
+      <h2>Quick Login Shortcuts</h2>
+    </div>
+    <div class="quick-login">
+      <div class="quick-btn" onclick="quickLogin('customer','j.whitfield@gmail.com','demo1234')">
+        <div class="quick-btn-label">Customer</div>
+        <div class="quick-btn-name">James Whitfield</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#2e44005946475a48474b424a6e49434f4742004d4143">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('customer','priya.nair@outlook.com','test1234')">
+        <div class="quick-btn-label">Customer</div>
+        <div class="quick-btn-name">Priya Nair</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#deaeacb7a7bff0b0bfb7ac9eb1abaab2b1b1b5f0bdb1b3">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('customer','marcus.bellamy@rogers.com','test1234')">
+        <div class="quick-btn-label">Customer</div>
+        <div class="quick-btn-name">Marcus Bellamy</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#d5b8b4a7b6a0a6fbb7b0b9b9b4b8ac95a7bab2b0a7a6fbb6bab8">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('customer','s.kowalski@gmail.com','test1234')">
+        <div class="quick-btn-label">Customer</div>
+        <div class="quick-btn-name">Sarah Kowalski</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#84f7aaefebf3e5e8f7efedc4e3e9e5ede8aae7ebe9">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('customer','d.lee@hotmail.com','test1234')">
+        <div class="quick-btn-label">Customer</div>
+        <div class="quick-btn-name">David Lee</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#75115b191010351d1a0118141c195b161a18">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('dealer','ryan@eliteautohaus.ca','dealer123')">
+        <div class="quick-btn-label">Dealer — Audi/BMW/Merc</div>
+        <div class="quick-btn-name">Elite Autohaus</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#7e0c071f103e1b12170a1b1f0b0a11161f0b0d501d1f">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('dealer','sandra@maplehonda.ca','dealer123')">
+        <div class="quick-btn-label">Dealer — Honda/Toyota/Mazda</div>
+        <div class="quick-btn-name">Maple Honda</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#e596848b819784a588849589808d8a8b8184cb8684">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('dealer','dave@hamiltonford.ca','dealer123')">
+        <div class="quick-btn-label">Dealer — Ford/Chev/Nissan</div>
+        <div class="quick-btn-name">Hamilton Ford</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#7612170013361e171b1f1a02191810190412581517">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('dealer','tom@lakeshoreag.ca','dealer123')">
+        <div class="quick-btn-label">Dealer — Multi-brand</div>
+        <div class="quick-btn-name">Lakeshore Auto Group</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#bbcfd4d6fbd7dad0dec8d3d4c9dedadc95d8da">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('dealer','manager@test.com','password')">
+        <div class="quick-btn-label">Dealer — All Makes (Test)</div>
+        <div class="quick-btn-name">Test Dealer</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="523f333c3335372012263721267c313d3f">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('customer','customer@test.com','password')">
+        <div class="quick-btn-label">Customer (Test)</div>
+        <div class="quick-btn-name">Test Customer</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fe9d8b8d8a91939b8cbe8a9b8d8ad09d9193">[email&#160;protected]</a></div>
+      </div>
+      <div class="quick-btn" onclick="quickLogin('admin','Konrad@Admin.com','Konrad')">
+        <div class="quick-btn-label">Admin — CEO</div>
+        <div class="quick-btn-name">Konrad</div>
+        <div class="quick-btn-email"><a href="/cdn-cgi/l/email-protection#a8e3c7c6dac9cce8e9ccc5c1c686cbc7c5">[email&#160;protected]</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar" id="status-bar"></div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ═══════════════════════════════════════════════════════
+// SEED DATA DEFINITIONS
+// ═══════════════════════════════════════════════════════
+
+const CUSTOMERS = [
+  { id:'c-001', name:'James Whitfield',  email:'j.whitfield@gmail.com',    phone:'(416) 555-0192', password:'demo1234' },
+  { id:'c-002', name:'Priya Nair',       email:'priya.nair@outlook.com',   phone:'(647) 555-0374', password:'test1234' },
+  { id:'c-003', name:'Marcus Bellamy',   email:'marcus.bellamy@rogers.com',phone:'(905) 555-0817', password:'test1234' },
+  { id:'c-004', name:'Sarah Kowalski',   email:'s.kowalski@gmail.com',     phone:'(905) 555-0231', password:'test1234' },
+  { id:'c-005', name:'David Lee',        email:'d.lee@hotmail.com',        phone:'(416) 555-0509', password:'test1234' },
+  { id:'c-006', name:'Test Customer',    email:'customer@test.com',        phone:'(416) 555-0001', password:'password' },
+];
+
+// Dealer users — matches dealer-login.html DEFAULT_DEALER_USERS exactly
+const DEALER_USERS = [
+  { id:'du-001', email:'ryan@eliteautohaus.ca',   password:'dealer123', firstName:'Ryan',   lastName:'Kovacs',  role:'Dealer Principal / Owner', dealerId:'elite',     dealerName:'Elite Autohaus',        status:'active' },
+  { id:'du-002', email:'sandra@eliteautohaus.ca', password:'dealer123', firstName:'Sandra', lastName:'Park',    role:'Sales Manager',            dealerId:'elite',     dealerName:'Elite Autohaus',        status:'active' },
+  { id:'du-003', email:'mike@eliteautohaus.ca',   password:'dealer123', firstName:'Mike',   lastName:'Torres',  role:'Dealer Admin',             dealerId:'elite',     dealerName:'Elite Autohaus',        status:'active' },
+  { id:'du-004', email:'sandra@maplehonda.ca',    password:'dealer123', firstName:'Sandra', lastName:'Lee',     role:'Dealer Principal / Owner', dealerId:'maple',     dealerName:'Maple Honda',           status:'active' },
+  { id:'du-005', email:'dave@hamiltonford.ca',    password:'dealer123', firstName:'Dave',   lastName:'Nguyen',  role:'Dealer Principal / Owner', dealerId:'hamilton',  dealerName:'Hamilton Ford',         status:'active' },
+  { id:'du-006', email:'chris@hamiltonford.ca',   password:'dealer123', firstName:'Chris',  lastName:'Brown',   role:'Dealer Admin',             dealerId:'hamilton',  dealerName:'Hamilton Ford',         status:'active' },
+  { id:'du-007', email:'tom@lakeshoreag.ca',      password:'dealer123', firstName:'Tom',    lastName:'Ferraro', role:'Dealer Principal / Owner', dealerId:'lakeshore', dealerName:'Lakeshore Auto Group',  status:'active' },
+  { id:'du-008', email:'lisa@lakeshoreag.ca',     password:'dealer123', firstName:'Lisa',    lastName:'Chen',    role:'Sales Manager',            dealerId:'lakeshore', dealerName:'Lakeshore Auto Group',  status:'active' },
+  { id:'du-009', email:'manager@test.com',        password:'password',  firstName:'Test',    lastName:'Manager', role:'Dealer Principal / Owner', dealerId:'testdealer', dealerName:'Test Dealer',           status:'active' },
+];
+
+// Dealer profiles — brands each dealer buys (used to filter listings in dealer-portal)
+const DEALER_PROFILES = {
+  elite: {
+    dealerId: 'elite',
+    name: 'Elite Autohaus',
+    address: '1240 Brant St, Burlington, ON L7P 1X8',
+    phone: '(905) 555-0144',
+    email: 'ryan@eliteautohaus.ca',
+    omvic: '7823401',
+    sells: ['Audi','BMW','Mercedes-Benz','Porsche','Land Rover'],
+    buys:  ['Audi','BMW','Mercedes-Benz','Porsche','Land Rover'],
+  },
+  maple: {
+    dealerId: 'maple',
+    name: 'Maple Honda',
+    address: '850 Guelph Line, Burlington, ON L7R 3N6',
+    phone: '(905) 555-0288',
+    email: 'sandra@maplehonda.ca',
+    omvic: '6612334',
+    sells: ['Honda','Toyota','Mazda','Hyundai','Kia'],
+    buys:  ['Honda','Toyota','Mazda','Hyundai','Kia'],
+  },
+  hamilton: {
+    dealerId: 'hamilton',
+    name: 'Hamilton Ford',
+    address: '1555 Upper James St, Hamilton, ON L9B 1K2',
+    phone: '(905) 555-0512',
+    email: 'dave@hamiltonford.ca',
+    omvic: '4491028',
+    sells: ['Ford','Chevrolet','GMC','Dodge','Chrysler','Nissan'],
+    buys:  ['Ford','Chevrolet','GMC','Dodge','Chrysler','Nissan'],
+  },
+  lakeshore: {
+    dealerId: 'lakeshore',
+    name: 'Lakeshore Auto Group',
+    address: '3300 Fairview St, Burlington, ON L7N 3M1',
+    phone: '(905) 555-0371',
+    email: 'tom@lakeshoreag.ca',
+    omvic: '8823441',
+    sells: ['Toyota','Honda','Nissan','Mazda','Kia','Hyundai','Subaru','Ford','Chevrolet'],
+    buys:  ['Toyota','Honda','Nissan','Mazda','Kia','Hyundai','Subaru','Ford','Chevrolet'],
+  },
+  testdealer: {
+    dealerId: 'testdealer',
+    name: 'Test Dealer',
+    address: '123 Test St, Toronto, ON M5V 1A1',
+    phone: '(416) 555-0001',
+    email: 'manager@test.com',
+    omvic: '0000001',
+    sells: ['Acura','Alfa Romeo','Aston Martin','Audi','Bentley','BMW','Buick','Cadillac','Chevrolet','Chrysler','Dodge','Ferrari','Fiat','Ford','Genesis','GMC','Honda','Hyundai','Infiniti','Jaguar','Jeep','Kia','Lamborghini','Land Rover','Lexus','Lincoln','Maserati','Mazda','McLaren','Mercedes-Benz','MINI','Mitsubishi','Nissan','Porsche','Ram','Rolls-Royce','Subaru','Tesla','Toyota','Volkswagen','Volvo'],
+    buys:  ['Acura','Alfa Romeo','Aston Martin','Audi','Bentley','BMW','Buick','Cadillac','Chevrolet','Chrysler','Dodge','Ferrari','Fiat','Ford','Genesis','GMC','Honda','Hyundai','Infiniti','Jaguar','Jeep','Kia','Lamborghini','Land Rover','Lexus','Lincoln','Maserati','Mazda','McLaren','Mercedes-Benz','MINI','Mitsubishi','Nissan','Porsche','Ram','Rolls-Royce','Subaru','Tesla','Toyota','Volkswagen','Volvo'],
+  },
+};
+
+function makeDate(daysAgo) {
+  const d = new Date(Date.now() - daysAgo * 86400000);
+  return d.toISOString();
+}
+function makeExpiry(listedDaysAgo, durationDays) {
+  // Always give listings a future expiry: listed N days ago + duration from NOW
+  const d = new Date(Date.now() + durationDays * 86400000);
+  return d.toISOString();
+}
+
+// 10 listings — customer field matches CUSTOMERS array by id + email
+const LISTINGS = [
+  // James Whitfield — Audi (→ Elite Autohaus)
+  {
+    vin:'2CTALSECXB6329197', make:'Audi',       model:'A4',      year:'2020', trim:'Premium Plus',
+    mileage:'85,000 km', intent:'Trade-In', purchaseType:'Financing',
+    ownership:'Lien Free', tireType:'All-Season', tireCondition:'Good',
+    accident:'None', maintenance:'Regular oil changes, dealer serviced',
+    damages:'Minor door ding passenger side',
+    postal:'L7P 1X8', maxDistance:'300',
+    status:'active', listed: makeDate(10), expires: makeExpiry(10, 7),
+    customerId:'c-001',
+  },
+  // James Whitfield — Honda (→ Maple Honda + Lakeshore)
+  {
+    vin:'2HGFC2F69KH123456', make:'Honda',      model:'Civic',   year:'2019', trim:'Sport',
+    mileage:'61,000 km', intent:'Sell', purchaseType:'Owned Outright',
+    ownership:'Lien Free', tireType:'All-Season', tireCondition:'Fair',
+    accident:'1 Minor Accident', maintenance:'Oil changes only',
+    damages:'None', postal:'L7P 1X8', maxDistance:'200',
+    status:'expired', listed: makeDate(20), expires: makeExpiry(20, 7),
+    customerId:'c-001',
+    offers:[
+      { dealerName:'Maple Honda',         amount:'$21,000' },
+      { dealerName:'Lakeshore Auto Group',amount:'$20,500' },
+    ],
+    offerCount:2, highest:'$21,000',
+  },
+  // Priya Nair — Toyota (→ Maple Honda + Lakeshore)
+  {
+    vin:'4T1B11HK0MU456789', make:'Toyota',     model:'Camry',   year:'2022', trim:'XLE',
+    mileage:'28,000 km', intent:'Sell', purchaseType:'Financing',
+    ownership:'Lien on Vehicle', tireType:'All-Season', tireCondition:'Like New',
+    accident:'None', maintenance:'Dealer serviced, all records available',
+    damages:'None', postal:'L4K 2T5', maxDistance:'250',
+    status:'active', listed: makeDate(3), expires: makeExpiry(3, 7),
+    customerId:'c-002',
+  },
+  // Priya Nair — Honda (→ Maple Honda + Lakeshore)
+  {
+    vin:'7FARW2H85PE012345', make:'Honda',      model:'CR-V',    year:'2023', trim:'EX-L',
+    mileage:'14,000 km', intent:'Trade-In', purchaseType:'Financing',
+    ownership:'Lien on Vehicle', tireType:'All-Season', tireCondition:'Like New',
+    accident:'None', maintenance:'Dealer serviced',
+    damages:'None', postal:'L4K 2T5', maxDistance:'200',
+    status:'active', listed: makeDate(5), expires: makeExpiry(5, 7),
+    customerId:'c-002',
+  },
+  // Marcus Bellamy — BMW (→ Elite Autohaus)
+  {
+    vin:'5UXCR6C59KLL12345', make:'BMW',        model:'X3',      year:'2022', trim:'xDrive30i',
+    mileage:'22,000 km', intent:'Trade-In', purchaseType:'Lease',
+    ownership:'Leased', tireType:'All-Season', tireCondition:'Like New',
+    accident:'None', maintenance:'BMW dealer serviced, all records',
+    damages:'None', postal:'L9A 1B2', maxDistance:'300',
+    status:'active', listed: makeDate(2), expires: makeExpiry(2, 7),
+    customerId:'c-003',
+  },
+  // Marcus Bellamy — Mercedes-Benz (→ Elite Autohaus)
+  {
+    vin:'55SWF4KB0LU312456', make:'Mercedes-Benz', model:'C-Class', year:'2020', trim:'C 300 4MATIC',
+    mileage:'48,000 km', intent:'Sell', purchaseType:'Owned Outright',
+    ownership:'Lien Free', tireType:'All-Season', tireCondition:'Good',
+    accident:'None', maintenance:'MB dealer serviced',
+    damages:'Minor scratch on rear bumper', postal:'L9A 1B2', maxDistance:'400',
+    status:'active', listed: makeDate(7), expires: makeExpiry(7, 7),
+    customerId:'c-003',
+  },
+  // Sarah Kowalski — Chevrolet (→ Hamilton Ford + Lakeshore)
+  {
+    vin:'3GNAXKEV8ML123456', make:'Chevrolet',  model:'Equinox',  year:'2021', trim:'LT AWD',
+    mileage:'39,000 km', intent:'Sell', purchaseType:'Owned Outright',
+    ownership:'Lien Free', tireType:'All-Season', tireCondition:'Good',
+    accident:'None', maintenance:'Oil changes, one brake job',
+    damages:'None', postal:'L7M 3Y6', maxDistance:'200',
+    status:'active', listed: makeDate(4), expires: makeExpiry(4, 7),
+    customerId:'c-004',
+  },
+  // Sarah Kowalski — Nissan (→ Hamilton Ford + Lakeshore)
+  {
+    vin:'JN8AT2MV8KW123456', make:'Nissan',     model:'Rogue',   year:'2019', trim:'SV AWD',
+    mileage:'67,000 km', intent:'Trade-In', purchaseType:'Financing',
+    ownership:'Lien Free', tireType:'Winter + Summer', tireCondition:'Good',
+    accident:'None', maintenance:'Regular maintenance',
+    damages:'None', postal:'L7M 3Y6', maxDistance:'150',
+    status:'active', listed: makeDate(6), expires: makeExpiry(6, 7),
+    customerId:'c-004',
+  },
+  // David Lee — Mazda (→ Maple Honda + Lakeshore)
+  {
+    vin:'JM3KFBCM3L0123456', make:'Mazda',      model:'CX-5',    year:'2020', trim:'GT AWD',
+    mileage:'55,000 km', intent:'Sell', purchaseType:'Owned Outright',
+    ownership:'Lien Free', tireType:'All-Season', tireCondition:'Good',
+    accident:'None', maintenance:'Dealer serviced',
+    damages:'None', postal:'M6G 2X5', maxDistance:'300',
+    status:'active', listed: makeDate(1), expires: makeExpiry(1, 7),
+    customerId:'c-005',
+  },
+  // David Lee — Kia (→ Maple Honda + Lakeshore)
+  {
+    vin:'KNDPM3AC4P7123456', make:'Kia',        model:'Sportage', year:'2023', trim:'EX AWD',
+    mileage:'11,000 km', intent:'Trade-In', purchaseType:'Financing',
+    ownership:'Lien on Vehicle', tireType:'All-Season', tireCondition:'Like New',
+    accident:'None', maintenance:'Dealer serviced, all records',
+    damages:'None', postal:'M6G 2X5', maxDistance:'250',
+    status:'active', listed: makeDate(1), expires: makeExpiry(1, 7),
+    customerId:'c-005',
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// SEED LOGIC
+// ═══════════════════════════════════════════════════════
+
+function log(msg, cls='log-info') {
+  const bar = document.getElementById('status-bar');
+  bar.classList.add('show');
+  bar.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+  bar.scrollTop = bar.scrollHeight;
+}
+
+function seedAll() {
+  const bar = document.getElementById('status-bar');
+  bar.innerHTML = '';
+  bar.classList.add('show');
+
+  // ── 1. Customer accounts ──
+  const existing = JSON.parse(localStorage.getItem('dt_customer_accounts') || '[]');
+  const existingEmails = new Set(existing.map(a => a.email.toLowerCase()));
+  let newCust = 0;
+  CUSTOMERS.forEach(c => {
+    if (!existingEmails.has(c.email.toLowerCase())) {
+      existing.push({ ...c, createdAt: Date.now() });
+      newCust++;
+    }
+  });
+  localStorage.setItem('dt_customer_accounts', JSON.stringify(existing));
+  log(`✓ ${newCust} new customer accounts added (${existing.length} total)`, 'log-ok');
+
+  // ── 2. Dealer users ──
+  const existingDealers = JSON.parse(localStorage.getItem('dt_dealer_users') || '[]');
+  const existingDealerEmails = new Set(existingDealers.map(d => d.email.toLowerCase()));
+  let newDealers = 0;
+  DEALER_USERS.forEach(d => {
+    if (!existingDealerEmails.has(d.email.toLowerCase())) {
+      existingDealers.push(d);
+      newDealers++;
+    }
+  });
+  localStorage.setItem('dt_dealer_users', JSON.stringify(existingDealers));
+  log(`✓ ${newDealers} new dealer users added (${existingDealers.length} total)`, 'log-ok');
+
+  // ── 3. Dealer profiles (brand lists) ──
+  Object.entries(DEALER_PROFILES).forEach(([dealerId, profile]) => {
+    const key = 'dt_dealer_profile_' + dealerId;
+    if (!localStorage.getItem(key)) {
+      localStorage.setItem(key, JSON.stringify(profile));
+    }
+  });
+  // Also set a global dealer profiles map
+  localStorage.setItem('dt_dealer_profiles', JSON.stringify(DEALER_PROFILES));
+  log(`✓ Dealer brand profiles set for ${Object.keys(DEALER_PROFILES).length} dealerships`, 'log-ok');
+
+  // ── 4. Listings ──
+  const allListings = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+  let newListings = 0;
+  LISTINGS.forEach(l => {
+    if (allListings[l.vin]) return; // don't overwrite existing
+    const customer = CUSTOMERS.find(c => c.id === l.customerId);
+    allListings[l.vin] = {
+      id:          l.vin,
+      vin:         l.vin,
+      title:       `${l.year} ${l.make} ${l.model}`,
+      trim:        l.trim,
+      make:        l.make,
+      model:       l.model,
+      year:        l.year,
+      mileage:     l.mileage,
+      intent:      l.intent,
+      purchaseType:l.purchaseType,
+      ownership:   l.ownership,
+      tireType:    l.tireType,
+      tireCondition:l.tireCondition,
+      accident:    l.accident,
+      maintenance: l.maintenance,
+      damages:     l.damages,
+      postal:      l.postal,
+      maxDistance: l.maxDistance,
+      listed:      l.listed,
+      expires:     l.expires,
+      status:      l.status || 'active',
+      offerCount:  l.offerCount || 0,
+      highest:     l.highest || null,
+      offers:      l.offers || [],
+      customer:    customer ? { id:customer.id, name:customer.name, email:customer.email, phone:customer.phone } : null,
+    };
+    newListings++;
+  });
+  localStorage.setItem('dt_listings', JSON.stringify(allListings));
+  log(`✓ ${newListings} new listings added (${Object.keys(allListings).length} total)`, 'log-ok');
+
+  // ── 5. Market visibility ──
+  if (localStorage.getItem('dt_market_visible') === null) {
+    localStorage.setItem('dt_market_visible', 'true');
+    log('✓ Market guide set to visible', 'log-ok');
+  }
+
+  // ── 6. Ensure admin accounts ──
+  const staffAccounts = JSON.parse(localStorage.getItem('dt_staff_accounts') || '[]');
+  const staffEmails = new Set(staffAccounts.map(s => s.email.toLowerCase()));
+  const defaultStaff = [
+    { id:'ceo-000', email:'Konrad@Admin.com',      password:'Konrad',     name:'Konrad',         role:'ceo'      },
+    { id:'adm-001', email:'alex@dealrtrade.com',   password:'admin123',   name:'Alex Dupont',    role:'admin'    },
+    { id:'sup-001', email:'jordan@dealrtrade.com', password:'support123', name:'Jordan Park',    role:'support'  },
+  ];
+  let newStaff = 0;
+  defaultStaff.forEach(s => {
+    if (!staffEmails.has(s.email.toLowerCase())) {
+      staffAccounts.push(s); newStaff++;
+    }
+  });
+  if (newStaff > 0) {
+    localStorage.setItem('dt_staff_accounts', JSON.stringify(staffAccounts));
+    log(`✓ ${newStaff} admin staff accounts ensured`, 'log-ok');
+  }
+
+  log('', '');
+  log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'log-info');
+  log('  Seed complete! Use quick login buttons above to jump into any portal.', 'log-ok');
+  log('  Each dealer will only see listings matching their brand.', 'log-info');
+  log

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Terms & Conditions / Privacy Policy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:        #f2f4f8;
+      --navy-mid:    #e8ebf0;
+      --navy-card:   #ffffff;
+      --navy-border: #ced5e2;
+      --blue:        #2B9FD9;
+      --blue-light:  #1a7db5;
+      --blue-dim:    rgba(43,159,217,0.08);
+      --blue-border: rgba(43,159,217,0.25);
+      --white:       #1a1f2e;
+      --muted:       #5a647a;
+      --muted-mid:   #6b7a99;
+      --red:         #f87171;
+      --green:       #34d399;
+      --radius:      12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(242,244,248,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--navy-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--white);
+    }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 7px 14px;
+      border: 1px solid var(--navy-border);
+      border-radius: 7px;
+      transition: all 0.2s;
+    }
+    .nav-back:hover { color: var(--white); border-color: var(--blue); }
+    .nav-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── HERO BANNER ── */
+    .hero-banner {
+      background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy) 100%);
+      border-bottom: 1px solid var(--navy-border);
+      padding: 52px 40px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(43,159,217,0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .doc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--blue-dim);
+      border: 1px solid var(--blue-border);
+      color: var(--blue-light);
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.07em;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .doc-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .hero-banner h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .hero-banner h1 span {
+      background: linear-gradient(135deg, var(--blue-light), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 18px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 6px; }
+    .hero-meta svg { width: 13px; height: 13px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+
+    /* ── PDF DOWNLOAD BUTTON ── */
+    .download-bar {
+      max-width: 860px;
+      margin: 24px auto 0;
+      padding: 0 40px;
+    }
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 9px;
+      padding: 11px 18px;
+      text-decoration: none;
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .download-btn:hover { border-color: var(--blue); background: rgba(43,159,217,0.08); }
+    .download-btn svg { width: 16px; height: 16px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; }
+    .download-btn span.ext { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); background: var(--navy-border); padding: 1px 6px; border-radius: 4px; }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      max-width: 1060px;
+      margin: 36px auto 80px;
+      padding: 0 40px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR TOC ── */
+    .toc {
+      position: sticky;
+      top: 84px;
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+    }
+    .toc-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted-mid);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--navy-border);
+    }
+    .toc-part {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--blue-light);
+      margin: 12px 0 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .toc a {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 3px 0 3px 8px;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .toc a:hover, .toc a.active {
+      color: var(--white);
+      border-left-color: var(--blue);
+    }
+
+    /* ── CONTENT ── */
+    .content { min-width: 0; }
+
+    .part-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--blue-dim);
+      border: 1px solid var(--blue-border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      margin-top: 48px;
+    }
+    .part-header:first-child { margin-top: 0; }
+    .part-header svg { width: 20px; height: 20px; stroke: var(--blue-light); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+    .part-header-text strong { display: block; font-size: 0.95rem; font-weight: 700; color: var(--white); }
+    .part-header-text span { font-size: 0.78rem; color: var(--muted); }
+
+    .section {
+      margin-bottom: 36px;
+      scroll-margin-top: 88px;
+    }
+
+    .section-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--blue-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--navy-border);
+    }
+
+    .section h3 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--white);
+      margin: 18px 0 8px;
+    }
+
+    .section p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.75;
+    }
+
+    .section ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 14px;
+    }
+
+    .section ul li {
+      font-size: 0.86rem;
+      color: var(--muted);
+      padding: 5px 0 5px 18px;
+      position: relative;
+      line-height: 1.6;
+      border-bottom: 1px solid rgba(100,120,160,0.15);
+    }
+    .section ul li:last-child { border-bottom: none; }
+    .section ul li::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 13px;
+      width: 5px;
+      height: 5px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+
+    .callout {
+      background: rgba(43,159,217,0.06);
+      border: 1px solid rgba(43,159,217,0.18);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 13px 16px;
+      margin: 14px 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .callout strong { color: var(--white); }
+
+    .caps-block {
+      background: rgba(248,113,113,0.06);
+      border: 1px solid rgba(248,113,113,0.18);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 0.78rem;
+      color: #b05050;
+      line-height: 1.7;
+      letter-spacing: 0.01em;
+    }
+
+    .step-list { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
+    .step-item {
+      display: flex;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(100,120,160,0.15);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      width: 26px; height: 26px;
+      min-width: 26px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      margin-top: 1px;
+    }
+    .step-text { font-size: 0.86rem; color: var(--muted); line-height: 1.6; }
+    .step-text strong { color: var(--white); display: block; margin-bottom: 2px; font-size: 0.88rem; }
+
+    /* ── CONTACT CARD ── */
+    .contact-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-top: 36px;
+    }
+    .contact-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 14px; color: var(--white); }
+    .contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .contact-row:last-child { margin-bottom: 0; }
+    .contact-row svg { width: 15px; height: 15px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; }
+    .contact-row span { font-size: 0.84rem; color: var(--muted); }
+    .contact-row a { color: var(--blue-light); text-decoration: none; font-size: 0.84rem; }
+    .contact-row a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 24px;
+      border-top: 1px solid var(--navy-border);
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 20px;
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    footer a:hover { color: var(--blue-light); }
+    footer .sep { color: var(--navy-border); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 16px; }
+      .hero-banner { padding: 40px 20px 32px; }
+      .hero-banner h1 { font-size: 1.5rem; }
+      .download-bar { padding: 16px 20px 0; }
+      .download-btn { width: 100%; justify-content: center; }
+      .layout { grid-template-columns: 1fr; padding: 0 16px; gap: 24px; margin-top: 24px; }
+      .toc { display: none; }
+      .section h2 { font-size: 0.98rem; }
+      .part-header { padding: 12px 16px; }
+      .contact-card { padding: 16px; }
+    }
+    @media (max-width: 480px) {
+      .hero-banner { padding: 32px 16px 24px; }
+      .layout { padding: 0 12px; }
+      .section p, .section ul li { font-size: 0.84rem; }
+      .step-text { font-size: 0.82rem; }
+      .caps-block { font-size: 0.74rem; }
+      footer { font-size: 0.74rem; gap: 4px 12px; padding: 20px 16px; }
+    }
+    @media (max-width: 360px) {
+      .hero-banner { padding: 28px 12px 20px; }
+      .layout { padding: 0 10px; }
+    }
+  
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      nav { padding: 8px 16px; height: 44px; }
+      .hero-banner { padding: 24px 20px 20px; }
+      .hero-banner h1 { font-size: 1.2rem; }
+      .hero-meta { display: none; }
+      .download-bar { padding: 12px 20px 0; }
+      .layout { margin-top: 16px; padding: 0 16px; }
+      .section h2 { font-size: 0.92rem; }
+      .section p, .section ul li { font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+    </a>
+    <a href="javascript:history.back()" class="nav-back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+  </nav>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <div class="hero-inner">
+      <div class="doc-badge">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Legal Documents
+      </div>
+      <h1>Terms & Conditions<br/><span>Privacy Policy & Data Use</span></h1>
+      <div class="hero-meta">
+        <span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Effective: March 21, 2026</span>
+        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Jurisdiction: Canada</span>
+        <span><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="/cdn-cgi/l/email-protection#7615191802171502361213171a040204171213581517">[email&#160;protected]</a></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF DOWNLOAD -->
+  <div class="download-bar">
+    <a href="#" onclick="alert('PDF download coming soon. Please use browser print to save this page.');return false;" class="download-btn">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download Full Document
+      <span class="ext">PDF</span>
+    </a>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR TABLE OF CONTENTS -->
+    <aside class="toc">
+      <div class="toc-title">Contents</div>
+      <div class="toc-part">Part 1 — Terms</div>
+      <a href="#s1">1. Introduction & Acceptance</a>
+      <a href="#s2">2. Definitions</a>
+      <a href="#s3">3. Platform Overview</a>
+      <a href="#s4">4. Customer Terms</a>
+      <a href="#s5">5. Dealer Terms</a>
+      <a href="#s6">6. Listing Process</a>
+      <a href="#s7">7. Offer Disputes</a>
+      <a href="#s8">8. Fees & Billing</a>
+      <a href="#s9">9. Intellectual Property</a>
+      <a href="#s10">10. User Content</a>
+      <a href="#s11">11. Account Security</a>
+      <a href="#s12">12. Prohibited Conduct</a>
+      <a href="#s13">13. AML & FINTRAC</a>
+      <a href="#s14">14. Consumer Protection</a>
+      <a href="#s15">15. Accessibility</a>
+      <a href="#s16">16. Disclaimers & Liability</a>
+      <a href="#s17">17. Indemnification</a>
+      <a href="#s18">18. Force Majeure</a>
+      <a href="#s19">19. Severability</a>
+      <a href="#s20">20. Termination</a>
+      <a href="#s21">21. Governing Law</a>
+      <a href="#s22">22. Changes to Terms</a>
+      <div class="toc-part">Part 2 — Privacy</div>
+      <a href="#s23">23. Info We Collect</a>
+      <a href="#s24">24. How We Use It</a>
+      <a href="#s25">25. How We Share It</a>
+      <a href="#s26">26. Cookies</a>
+      <a href="#s27">27. Email & CASL</a>
+      <a href="#s28">28. Cross-Border Transfers</a>
+      <a href="#s29">29. Data Retention</a>
+      <a href="#s30">30. Data Breach</a>
+      <a href="#s31">31. Your Rights</a>
+      <a href="#s32">32. Security</a>
+      <a href="#s33">33. Children's Privacy</a>
+      <a href="#s34">34. Contact Us</a>
+    </aside>
+
+    <!-- DOCUMENT CONTENT -->
+    <main class="content">
+
+      <!-- PART 1 -->
+      <div class="part-header">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="part-header-text">
+          <strong>Part 1 — Terms and Conditions</strong>
+          <span>Governing your access to and use of the DealrTrade Platform</span>
+        </div>
+      </div>
+
+      <div class="section" id="s1">
+        <div class="section-num">SECTION 01</div>
+        <h2>Introduction & Acceptance of Terms</h2>
+        <p>Welcome to DealrTrade (the "Platform"). These Terms and Conditions ("Terms") govern your access to and use of the DealrTrade website and services, including any associated applications, tools, and content made available through the Platform.</p>
+        <p>By accessing or using DealrTrade, you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms in their entirety, you must not access or use the Platform.</p>
+        <p>These Terms constitute a legally binding agreement between you and DealrTrade. Your continued use of the Platform following any posted updates to these Terms constitutes your acceptance of the revised Terms.</p>
+      </div>
+
+      <div class="section" id="s2">
+        <div class="section-num">SECTION 02</div>
+        <h2>Definitions</h2>
+        <ul>
+          <li><strong style="color:var(--white)">"Platform"</strong> — The DealrTrade website, services, portals, and all associated tools and content.</li>
+          <li><strong style="color:var(--white)">"Customer"</strong> — An individual who registers on the Platform to list a vehicle for sale or trade-in consideration.</li>
+          <li><strong style="color:var(--white)">"Dealer"</strong> — A licensed, franchise motor vehicle dealership registered on the Platform to view listings and submit offers.</li>
+          <li><strong style="color:var(--white)">"Listing"</strong> — A vehicle submission created by a Customer, made available to Dealers during the offer window.</li>
+          <li><strong style="color:var(--white)">"Offer"</strong> — A monetary bid submitted by a Dealer in response to a Customer's Listing.</li>
+          <li><strong style="color:var(--white)">"Offer Window"</strong> — The 5 business day period during which Dealers may view a Listing and submit or revise Offers.</li>
+          <li><strong style="color:var(--white)">"User Content"</strong> — Any photos, documents, descriptions, or other materials uploaded or submitted to the Platform by a user.</li>
+          <li><strong style="color:var(--white)">"Market Guide"</strong> — The anonymized historical offer data feature available to registered Dealers.</li>
+          <li><strong style="color:var(--white)">"We / Us / DealrTrade"</strong> — The operators of the DealrTrade Platform.</li>
+          <li><strong style="color:var(--white)">"PIPEDA"</strong> — The Personal Information Protection and Electronic Documents Act (Canada).</li>
+          <li><strong style="color:var(--white)">"CASL"</strong> — Canada's Anti-Spam Legislation.</li>
+          <li><strong style="color:var(--white)">"FINTRAC"</strong> — The Financial Transactions and Reports Analysis Centre of Canada.</li>
+          <li><strong style="color:var(--white)">"MVDA"</strong> — Motor Vehicle Dealers Act or equivalent provincial legislation governing licensed vehicle dealers.</li>
+        </ul>
+      </div>
+
+      <div class="section" id="s3">
+        <div class="section-num">SECTION 03</div>
+        <h2>Platform Overview & No Agency Relationship</h2>
+        <p>DealrTrade is an online marketplace that connects private vehicle owners (Customers) with licensed franchise dealerships (Dealers) in Canada. The Platform enables Customers to submit vehicle listings which are made available to registered Dealers, who may then submit competitive cash or trade-in offers.</p>
+        <div class="callout"><strong>Important:</strong> DealrTrade is not an agent, broker, dealer, auctioneer, or fiduciary for any party. We do not buy, sell, appraise, finance, insure, or take possession of any vehicle. No agency, partnership, joint venture, employment, or franchise relationship is created between DealrTrade and any user.</div>
+        <p>DealrTrade does not guarantee the accuracy of any Offer, the completion of any transaction, or the suitability of any vehicle for any purpose. All transactions are conducted directly and independently between Customers and Dealers.</p>
+      </div>
+
+      <div class="section" id="s4">
+        <div class="section-num">SECTION 04</div>
+        <h2>Customer Terms</h2>
+        <h3>4.1 Eligibility</h3>
+        <p>To use the Platform as a Customer, you must be at least 18 years of age, a resident of Canada, and the registered owner (or authorized legal representative of the owner) of the vehicle you list. You must provide accurate, complete, and truthful information during registration and listing creation.</p>
+        <h3>4.2 Vehicle Listings</h3>
+        <p>When creating a Listing, you represent and warrant that:</p>
+        <ul>
+          <li>All vehicle information provided is accurate and complete to the best of your knowledge.</li>
+          <li>You are the lawful owner or have full legal authority to list the vehicle for sale or trade.</li>
+          <li>The vehicle is free of undisclosed encumbrances, liens, security interests, or legal disputes preventing clean title transfer.</li>
+          <li>Photos and documents uploaded are genuine, unaltered, and accurately represent the vehicle.</li>
+          <li>You will not list stolen, salvage-titled, write-off-branded, or illegally modified vehicles.</li>
+          <li>The vehicle has not been subject to an undisclosed total loss insurance claim.</li>
+          <li>You will promptly update or remove your Listing if the vehicle is sold, materially damaged, or otherwise no longer available.</li>
+        </ul>
+        <h3>4.3 Offer Process</h3>
+        <p>Once your Listing is submitted and approved, it will be made available to eligible Dealers for the duration of the Offer Window (5 business days). At the conclusion of the Offer Window, you will receive the top three (3) Offers, along with the contact information of the submitting Dealers. You are under no obligation to accept any Offer.</p>
+        <h3>4.4 Customer Responsibilities</h3>
+        <p>You are solely responsible for the accuracy of your Listing and any subsequent negotiations or transactions with Dealers. DealrTrade is not a party to any transaction between you and a Dealer and accepts no liability for the outcome of any such transaction.</p>
+        <h3>4.5 Third-Party Vehicle Reports</h3>
+        <p>DealrTrade may facilitate access to or display information from third-party vehicle history services. DealrTrade makes no representations as to the accuracy, completeness, or currency of third-party vehicle history data. Such reports are provided for informational purposes only.</p>
+      </div>
+
+      <div class="section" id="s5">
+        <div class="section-num">SECTION 05</div>
+        <h2>Dealer Terms</h2>
+        <h3>5.1 Eligibility & Registration</h3>
+        <p>To access the Platform as a Dealer, your dealership must be a licensed franchise motor vehicle dealership operating in Canada and in good standing with applicable provincial regulatory authorities, including registration under the applicable provincial Motor Vehicle Dealers Act (or equivalent). Registration is subject to DealrTrade's approval and we reserve the right to decline or revoke access at our sole discretion.</p>
+        <h3>5.2 Dealer Representations & Warranties</h3>
+        <ul>
+          <li>The dealership holds a valid, current motor vehicle dealer licence and will maintain such licence for the duration of its use of the Platform.</li>
+          <li>All information provided during registration and throughout use of the Platform is accurate and current.</li>
+          <li>The dealership is in compliance with all applicable federal and provincial laws governing motor vehicle sales, consumer protection, anti-spam, and anti-money laundering.</li>
+          <li>The dealership will promptly notify DealrTrade if its dealer licence is suspended, revoked, or not renewed.</li>
+          <li>The individual completing registration has authority to bind the dealership to these Terms.</li>
+        </ul>
+        <h3>5.3 Dealer Conduct</h3>
+        <ul>
+          <li>Submit Offers only in good faith and with genuine intention to transact at the offered price if accepted.</li>
+          <li>Treat all Customer information and Listing details as confidential.</li>
+          <li>Not contact Customers outside of the Platform using information obtained through DealrTrade, except following an accepted Offer.</li>
+          <li>Not engage in bid manipulation, collusion, shill bidding, or any conduct designed to distort the competitive offer process.</li>
+          <li>Maintain an active subscription in good standing.</li>
+        </ul>
+        <h3>5.4 Offer Confidentiality</h3>
+        <p>During the active Offer Window, the identity of submitting Dealers is kept confidential. Only the top three Dealers' identities and contact details are disclosed to the Customer at the conclusion of the Offer Window.</p>
+        <h3>5.5 Staff Access</h3>
+        <p>Dealers may grant access to staff members within their dealership account. The Dealer Principal is responsible for all activity conducted under their account, including activity by staff members at any access tier.</p>
+      </div>
+
+      <div class="section" id="s6">
+        <div class="section-num">SECTION 06</div>
+        <h2>Listing Process & Offer Window</h2>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Submission</strong>Customer submits vehicle details, photos, and documentation through the Platform.</div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Review</strong>DealrTrade may review the Listing for completeness and compliance. Approval does not constitute verification of accuracy.</div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Offer Window</strong>The Listing is made available to eligible Dealers for 5 business days.</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Competitive Bidding</strong>Dealers may submit and revise Offers. The current highest offer amount is visible to competing Dealers; identities remain confidential.</div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>Results</strong>At the end of the Offer Window, the Customer receives the top 3 Offers with Dealer contact information.</div></div>
+          <div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>Transaction</strong>The Customer independently contacts their preferred Dealer. DealrTrade is not involved in this stage.</div></div>
+        </div>
+      </div>
+
+      <div class="section" id="s7">
+        <div class="section-num">SECTION 07</div>
+        <h2>Offer Disputes & Retraction</h2>
+        <p>An Offer submitted through the Platform represents a good-faith commitment by the Dealer to purchase or accept trade-in of the listed vehicle at the stated price, subject to physical inspection and verification.</p>
+        <h3>Dealer Retraction</h3>
+        <p>A Dealer may retract an Offer prior to the Customer accepting it. However, repeated or bad-faith retractions may result in suspension or termination of Dealer access.</p>
+        <h3>Post-Acceptance Disputes</h3>
+        <p>If a Dealer discovers material misrepresentation in a Listing after an Offer is accepted, the Dealer may renegotiate or withdraw from the transaction directly with the Customer. DealrTrade is not a party to such disputes and provides no dispute resolution service for post-acceptance transactions.</p>
+        <h3>Customer Misrepresentation</h3>
+        <p>A Customer who provides false or misleading information in a Listing may be held liable to affected Dealers for any losses incurred as a result, and may have their account suspended or terminated.</p>
+      </div>
+
+      <div class="section" id="s8">
+        <div class="section-num">SECTION 08</div>
+        <h2>Fees, Subscriptions & Billing</h2>
+        <h3>8.1 Customer Fees</h3>
+        <p>Use of the Platform for Customers to create and submit Listings is currently provided free of charge. DealrTrade reserves the right to introduce Customer fees in the future with reasonable advance notice.</p>
+        <h3>8.2 Dealer Subscription</h3>
+        <p>Dealers access the Platform through a paid monthly subscription. Subscription fees are billed monthly in Canadian dollars (CAD) and are subject to applicable taxes, including HST/GST where applicable. Subscription fees are non-refundable except as required by applicable Canadian consumer protection law.</p>
+        <h3>8.3 Price Changes</h3>
+        <p>DealrTrade reserves the right to change subscription pricing at any time. Dealers will be given at least 30 days' written notice before any price increase takes effect.</p>
+        <h3>8.4 – 8.6 Payment, Failed Payments & Cancellation</h3>
+        <p>Payment is processed securely through our third-party payment processor. DealrTrade does not store full credit card or banking details. If a scheduled payment fails, access to the Platform may be suspended until outstanding amounts are resolved. Dealers may cancel their subscription at any time through the Platform's billing settings; cancellation takes effect at the end of the current billing period.</p>
+      </div>
+
+      <div class="section" id="s9">
+        <div class="section-num">SECTION 09</div>
+        <h2>Intellectual Property</h2>
+        <p>All content, features, and functionality of the Platform are owned by or licensed to DealrTrade and are protected by Canadian and international copyright, trademark, and other intellectual property laws. You are granted a limited, non-exclusive, non-transferable, revocable licence to access and use the Platform solely for its intended purposes.</p>
+        <p>This licence does not include the right to reproduce, copy, or resell any portion of the Platform; use DealrTrade's trademarks without prior written consent; reverse engineer any Platform software; or create derivative works without authorization.</p>
+      </div>
+
+      <div class="section" id="s10">
+        <div class="section-num">SECTION 10</div>
+        <h2>User-Generated Content</h2>
+        <p>By submitting photos, documents, descriptions, or any other User Content to the Platform, you grant DealrTrade a non-exclusive, royalty-free, worldwide licence to use, host, store, reproduce, display, and distribute such User Content solely for the purposes of operating and promoting the Platform. You remain solely responsible for all User Content you submit.</p>
+      </div>
+
+      <div class="section" id="s11">
+        <div class="section-num">SECTION 11</div>
+        <h2>Account Security</h2>
+        <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to use a strong, unique password; not share your login credentials; notify DealrTrade immediately at <a href="/cdn-cgi/l/email-protection#8fece0e1fbeeecfbcfebeaeee3fdfbfdeeebeaa1ecee" style="color:var(--blue-light)"><span class="__cf_email__" data-cfemail="ff9c90918b9e9c8bbf9b9a9e938d8b8d9e9b9ad19c9e">[email&#160;protected]</span></a> if you suspect unauthorized access; and log out of your account at the end of each session.</p>
+        <p>DealrTrade will not be liable for any loss or damage arising from your failure to maintain the security of your account credentials.</p>
+      </div>
+
+      <div class="section" id="s12">
+        <div class="section-num">SECTION 12</div>
+        <h2>Prohibited Conduct</h2>
+        <p>All users of the Platform are prohibited from:</p>
+        <ul>
+          <li>Providing false, misleading, or fraudulent information in any Listing, Offer, or registration.</li>
+          <li>Attempting to circumvent, bypass, or manipulate the offer process or any Platform security measures.</li>
+          <li>Harvesting, scraping, or collecting personal information of other users without express consent.</li>
+          <li>Impersonating any person or entity or misrepresenting your affiliation with any dealership.</li>
+          <li>Using the Platform to facilitate money laundering, fraud, or any other criminal activity.</li>
+          <li>Engaging in bid manipulation, shill bidding, or collusion with other Dealers.</li>
+          <li>Using automated tools, bots, or scripts to access or interact with the Platform without authorization.</li>
+          <li>Posting or transmitting content that is defamatory, discriminatory, harassing, or otherwise objectionable.</li>
+        </ul>
+      </div>
+
+      <div class="section" id="s13">
+        <div class="section-num">SECTION 13</div>
+        <h2>Anti-Money Laundering & FINTRAC</h2>
+        <p>Dealers operating in Canada may be subject to reporting obligations under the Proceeds of Crime (Money Laundering) and Terrorist Financing Act (PCMLTFA) and FINTRAC regulations. Dealers are solely responsible for ensuring their own compliance with all applicable AML, KYC, and terrorist financing prevention obligations.</p>
+        <div class="callout">DealrTrade reserves the right to report suspicious activity to applicable law enforcement or regulatory authorities where required or permitted by law.</div>
+      </div>
+
+      <div class="section" id="s14">
+        <div class="section-num">SECTION 14</div>
+        <h2>Consumer Protection</h2>
+        <p>DealrTrade acknowledges that provincial consumer protection legislation may apply to certain aspects of the interactions between Customers and Dealers facilitated through the Platform, including the Consumer Protection Act (Ontario), the Business Practices and Consumer Protection Act (British Columbia), and equivalent legislation in other provinces.</p>
+        <p>Nothing in these Terms is intended to limit any rights that Customers may have under applicable provincial consumer protection legislation that cannot be waived by contract.</p>
+      </div>
+
+      <div class="section" id="s15">
+        <div class="section-num">SECTION 15</div>
+        <h2>Accessibility</h2>
+        <p>DealrTrade is committed to making the Platform accessible to all users, including those with disabilities. We endeavour to comply with applicable accessibility standards, including the Accessibility for Ontarians with Disabilities Act (AODA) and the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA, where reasonably practicable. If you experience accessibility barriers, please contact us at <a href="/cdn-cgi/l/email-protection#781b17160c191b0c381c1d19140a0c0a191c1d561b19" style="color:var(--blue-light)"><span class="__cf_email__" data-cfemail="a7c4c8c9d3c6c4d3e7c3c2c6cbd5d3d5c6c3c289c4c6">[email&#160;protected]</span></a>.</p>
+      </div>
+
+      <div class="section" id="s16">
+        <div class="section-num">SECTION 16</div>
+        <h2>Disclaimers & Limitation of Liability</h2>
+        <div class="caps-block">THE PLATFORM IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. DEALRTRADE DOES NOT WARRANT THAT THE PLATFORM WILL BE UNINTERRUPTED, ERROR-FREE, SECURE, OR FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.</div>
+        <div class="caps-block">TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE CANADIAN LAW, DEALRTRADE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE PLATFORM. IN NO EVENT SHALL DEALRTRADE'S TOTAL LIABILITY EXCEED THE GREATER OF (A) THE AMOUNT PAID BY YOU TO DEALRTRADE IN THE THREE (3) MONTHS PRECEDING THE CLAIM, OR (B) ONE HUNDRED CANADIAN DOLLARS (CAD $100.00).</div>
+        <p>Nothing in these Terms excludes liability that cannot be excluded under applicable Canadian consumer protection legislation or other mandatory law.</p>
+      </div>
+
+      <div class="section" id="s17">
+        <div class="section-num">SECTION 17</div>
+        <h2>Indemnification</h2>
+        <p>You agree to indemnify, defend, and hold harmless DealrTrade and its officers, directors, employees, contractors, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or in connection with: (a) your use of the Platform; (b) your violation of these Terms; (c) your violation of any applicable law or regulation; (d) any inaccuracy or misrepresentation in your Listing or other User Content; or (e) any dispute between you and another user of the Platform.</p>
+      </div>
+
+      <div class="section" id="s18">
+        <div class="section-num">SECTION 18</div>
+        <h2>Force Majeure</h2>
+        <p>DealrTrade shall not be liable for any failure or delay in performing its obligations under these Terms where such failure or delay results from circumstances beyond DealrTrade's reasonable control, including acts of God, natural disasters, pandemic or public health emergency, war, terrorism, civil unrest, government orders, internet or telecommunications failures, power outages, or cyberattacks.</p>
+      </div>
+
+      <div class="section" id="s19">
+        <div class="section-num">SECTION 19</div>
+        <h2>Severability & Entire Agreement</h2>
+        <p>If any provision of these Terms is found to be invalid, illegal, or unenforceable, that provision shall be modified to the minimum extent necessary to make it enforceable, or severed from these Terms. The remaining provisions shall continue in full force and effect.</p>
+        <p>These Terms, together with the Privacy Policy and any other agreements or policies referenced herein, constitute the entire agreement between you and DealrTrade with respect to the Platform.</p>
+      </div>
+
+      <div class="section" id="s20">
+        <div class="section-num">SECTION 20</div>
+        <h2>Termination</h2>
+        <p>DealrTrade reserves the right to suspend or terminate your access to the Platform at any time, with or without notice, if we reasonably believe you have violated these Terms or applicable law. Upon termination of a Dealer account, any active Offer Windows will be closed and outstanding Offers retracted. Sections 9, 10, 16, 17, 19, and 21 of these Terms shall survive termination.</p>
+      </div>
+
+      <div class="section" id="s21">
+        <div class="section-num">SECTION 21</div>
+        <h2>Governing Law & Dispute Resolution</h2>
+        <p>These Terms are governed by and construed in accordance with the laws of Canada and the applicable laws of the province in which you reside, without regard to conflict of law principles.</p>
+        <p>Any dispute arising out of or in connection with these Terms shall first be submitted to good-faith mediation. If mediation is unsuccessful within 60 days of written notice, disputes shall be resolved through binding arbitration conducted in English in Canada.</p>
+      </div>
+
+      <div class="section" id="s22">
+        <div class="section-num">SECTION 22</div>
+        <h2>Changes to These Terms</h2>
+        <p>DealrTrade reserves the right to modify these Terms at any time. We will provide notice of material changes by updating the effective date at the top of these Terms and, where appropriate, by sending an email notification to registered users at least 14 days before the changes take effect.</p>
+      </div>
+
+      <!-- PART 2 -->
+      <div class="part-header">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div class="part-header-text">
+          <strong>Part 2 — Privacy Policy & Data Use</strong>
+          <span>How we collect, use, protect, and share your personal information</span>
+        </div>
+      </div>
+
+      <div class="section" id="s23">
+        <div class="section-num">SECTION 23</div>
+        <h2>Information We Collect</h2>
+        <h3>23.1 Information You Provide to Us</h3>
+        <p><strong style="color:var(--white)">Customers provide:</strong> Full name, email address, phone number; vehicle information (year, make, model, trim, VIN, mileage, condition, ownership/lien status); photos and documents; listing preferences.</p>
+        <p><strong style="color:var(--white)">Dealers provide:</strong> Dealership name, address, phone number, and email; contact person details; dealership licence and registration information; billing information; offer amounts and bidding activity; staff member information.</p>
+        <h3>23.2 Information Collected Automatically</h3>
+        <ul>
+          <li>IP address and approximate geographic location</li>
+          <li>Browser type and version, operating system, and device type</li>
+          <li>Pages visited, time spent on pages, and navigation paths</li>
+          <li>Session identifiers and login timestamps</li>
+          <li>Error logs and performance data</li>
+        </ul>
+        <h3>23.3 Information from Third Parties</h3>
+        <p>We may receive information about you from third-party service providers, such as identity verification services, payment processors, and provincial motor vehicle dealer licensing registries, where necessary to operate the Platform and verify eligibility.</p>
+      </div>
+
+      <div class="section" id="s24">
+        <div class="section-num">SECTION 24</div>
+        <h2>How We Use Your Information</h2>
+        <ul>
+          <li><strong style="color:var(--white)">To operate the Platform</strong> — Creating and managing accounts, processing Listings and Offers, facilitating the Offer Window.</li>
+          <li><strong style="color:var(--white)">To verify eligibility</strong> — Confirming that Customers are authorized vehicle owners and that Dealers hold valid licences.</li>
+          <li><strong style="color:var(--white)">To process payments</strong> — Managing Dealer subscription billing, invoicing, and payment records.</li>
+          <li><strong style="color:var(--white)">To communicate with you</strong> — Sending transactional emails (Listing confirmations, Offer notifications, billing receipts, account alerts). Marketing communications only with your express CASL consent.</li>
+          <li><strong style="color:var(--white)">To improve the Platform</strong> — Analysing usage patterns, identifying technical issues, improving features.</li>
+          <li><strong style="color:var(--white)">To ensure safety and security</strong> — Detecting, investigating, and preventing fraud, abuse, and unauthorized access.</li>
+          <li><strong style="color:var(--white)">Market Guide</strong> — Anonymized and aggregated offer data from completed Listings. No personally identifiable information is included.</li>
+        </ul>
+      </div>
+
+      <div class="section" id="s25">
+        <div class="section-num">SECTION 25</div>
+        <h2>How We Share Your Information</h2>
+        <div class="callout"><strong>DealrTrade does not sell your personal information to third parties.</strong></div>
+        <p>We share your information only in the following limited circumstances: between Customers and Dealers during and after the Offer Window as described above; with trusted third-party service providers for payment processing, email delivery, cloud hosting, analytics, and security monitoring; where required by law, court order, or government authority; and in connection with a business transfer such as a merger or acquisition.</p>
+      </div>
+
+      <div class="section" id="s26">
+        <div class="section-num">SECTION 26</div>
+        <h2>Cookies & Tracking Technologies</h2>
+        <p>The Platform uses cookies and similar tracking technologies to maintain user sessions, remember preferences, and collect usage analytics. We use Essential Cookies (required for core functionality), Analytics Cookies (to understand Platform usage), and Preference Cookies (to remember your settings).</p>
+        <p>You may control or disable non-essential cookies through your browser settings. We do not currently use third-party advertising or cross-site tracking cookies.</p>
+      </div>
+
+      <div class="section" id="s27">
+        <div class="section-num">SECTION 27</div>
+        <h2>Email Marketing & CASL Consent</h2>
+        <p>DealrTrade complies with Canada's Anti-Spam Legislation (CASL). Transactional messages (Listing confirmations, Offer notifications, billing receipts, account security alerts) do not require separate consent and will be sent to all registered users as part of the Platform service.</p>
+        <p>Commercial Electronic Messages (marketing) require your express or implied consent as defined by CASL. You may withdraw your consent to marketing communications at any time by clicking the "unsubscribe" link in any marketing email or by contacting us at <a href="/cdn-cgi/l/email-protection#2f4c40415b4e4c5b6f4b4a4e435d5b5d4e4b4a014c4e" style="color:var(--blue-light)"><span class="__cf_email__" data-cfemail="01626e6f75606275416564606d7375736065642f6260">[email&#160;protected]</span></a>.</p>
+      </div>
+
+      <div class="section" id="s28">
+        <div class="section-num">SECTION 28</div>
+        <h2>Cross-Border Data Transfers</h2>
+        <p>DealrTrade's Platform may be hosted on servers located in Canada, the United States, or other jurisdictions through third-party cloud infrastructure providers. Where personal information is transferred outside of Canada, DealrTrade takes reasonable steps to ensure that it receives a comparable level of protection consistent with PIPEDA.</p>
+      </div>
+
+      <div class="section" id="s29">
+        <div class="section-num">SECTION 29</div>
+        <h2>Data Retention</h2>
+        <ul>
+          <li>Active account information is retained for the duration of your account.</li>
+          <li>Listing data and offer records are retained for one (1) year following the close of the Offer Window.</li>
+          <li>Dealer billing records are retained for seven (7) years as required by CRA guidelines.</li>
+          <li>Transactional email logs are retained for two (2) years for CASL compliance purposes.</li>
+          <li>Upon account deletion, personal information is removed or anonymized within 90 days, except where retention is required by law.</li>
+        </ul>
+      </div>
+
+      <div class="section" id="s30">
+        <div class="section-num">SECTION 30</div>
+        <h2>Data Breach Notification</h2>
+        <p>In the event of a breach involving personal information that creates a real risk of significant harm, DealrTrade will report the breach to the Office of the Privacy Commissioner of Canada (OPC) as soon as feasible, notify affected individuals directly, and maintain a record of all breaches for a minimum of 24 months as required by PIPEDA.</p>
+      </div>
+
+      <div class="section" id="s31">
+        <div class="section-num">SECTION 31</div>
+        <h2>Your Rights Under Canadian Privacy Law</h2>
+        <ul>
+          <li><strong style="color:var(--white)">Right of Access</strong> — Request access to the personal information we hold about you. We will respond within 30 days.</li>
+          <li><strong style="color:var(--white)">Right to Correction</strong> — Request that inaccurate or incomplete information be corrected or updated.</li>
+          <li><strong style="color:var(--white)">Right to Withdraw Consent</strong> — Withdraw consent at any time, subject to legal or contractual restrictions.</li>
+          <li><strong style="color:var(--white)">Right to Deletion</strong> — Request deletion of your account and associated personal information, subject to our legal retention obligations.</li>
+          <li><strong style="color:var(--white)">Right to Lodge a Complaint</strong> — File a complaint with the Office of the Privacy Commissioner of Canada (OPC) at <a href="https://www.priv.gc.ca" target="_blank" style="color:var(--blue-light)">www.priv.gc.ca</a> or call 1-800-282-1376.</li>
+        </ul>
+      </div>
+
+      <div class="section" id="s32">
+        <div class="section-num">SECTION 32</div>
+        <h2>Security</h2>
+        <p>DealrTrade implements reasonable and appropriate physical, technical, and administrative safeguards to protect your personal information, including encrypted data transmission using HTTPS/TLS, secure access-controlled cloud infrastructure, role-based access controls, regular security assessments, secure third-party payment processing, and multi-factor authentication options.</p>
+      </div>
+
+      <div class="section" id="s33">
+        <div class="section-num">SECTION 33</div>
+        <h2>Children's Privacy</h2>
+        <p>The Platform is not intended for use by individuals under the age of 18. We do not knowingly collect personal information from minors. If we become aware that we have collected personal information from a person under 18, we will take steps to delete that information as soon as practicable.</p>
+      </div>
+
+      <div class="section" id="s34">
+        <div class="section-num">SECTION 34</div>
+        <h2>Contact Us</h2>
+        <p>If you have questions, concerns, or requests regarding these Terms or our Privacy Policy, or if you wish to exercise your privacy rights, please contact us:</p>
+        <div class="contact-card">
+          <h3>DealrTrade — Privacy & Legal</h3>
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="/cdn-cgi/l/email-protection#d5b6babba1b4b6a195b1b0b4b9a7a1a7b4b1b0fbb6b4"><span class="__cf_email__" data-cfemail="c6a5a9a8b2a7a5b286a2a3a7aab4b2b4a7a2a3e8a5a7">[email&#160;protected]</span></a>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <a href="https://www.dealrtrade.ca" target="_blank">www.dealrtrade.ca</a>
+          </div>
+          <div class="contact-row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--navy-border);">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5

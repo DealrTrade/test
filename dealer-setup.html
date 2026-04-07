@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Dealer Setup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #f2f4f8; --navy-mid: #e8ebf0; --navy-card: #ffffff;
+      --navy-border: #ced5e2; --blue: #2B9FD9; --blue-light: #1a7db5;
+      --teal: #2B9FD9; --green: #34d399; --white: #1a1f2e; --muted: #5a647a; --red: #f87171;
+    }
+    body {
+      overflow-x: hidden;
+      background: var(--navy); color: var(--white); font-family: 'Inter', sans-serif;
+      font-size: 15px; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 48px 24px 80px;
+    }
+    body::before {
+      content: ''; position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .top-logo {
+      display: flex; align-items: center; gap: 9px;
+      font-weight: 700; font-size: 1.05rem; color: var(--white);
+      margin-bottom: 36px; text-decoration: none;
+    }
+    .logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: grid; place-items: center; }
+    .logo-icon svg { width: 17px; height: 17px; fill: white; }
+    .card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 18px; padding: 36px 36px 32px;
+      width: 100%; max-width: 520px; position: relative; z-index: 1;
+      animation: fadeUp 0.4s ease both;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    .card-icon {
+      width: 52px; height: 52px; background: rgba(56,189,248,0.12);
+      border: 1px solid rgba(56,189,248,0.25); border-radius: 13px;
+      display: grid; place-items: center; margin-bottom: 18px;
+    }
+    .card-icon svg { width: 26px; height: 26px; stroke: var(--teal); fill: none; stroke-width: 1.8; }
+    .card h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+    .card > p { color: var(--muted); font-size: 0.88rem; margin-bottom: 28px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+    .req { color: var(--red); margin-left: 2px; }
+    .input, .select {
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 9px; color: var(--white); font-family: 'Inter', sans-serif;
+      font-size: 0.9rem; outline: none; transition: border-color 0.2s; width: 100%; padding: 11px 14px;
+    }
+    .select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b9bbf' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; padding-right: 34px; }
+    .input::placeholder { color: var(--muted); }
+    .input:focus, .select:focus { border-color: var(--blue); }
+    .select option { background: var(--navy-mid); color: var(--white); }
+    .divider { height: 1px; background: var(--navy-border); margin: 22px 0; }
+    .brand-section-title {
+      font-size: 0.88rem; font-weight: 700; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .brand-section-title svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .brand-section-desc { font-size: 0.78rem; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    .brand-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .brand-count { font-size: 0.72rem; padding: 2px 9px; border-radius: 100px; }
+    .brand-count.blue  { color: var(--blue-light); background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); }
+    .brand-count.green { color: var(--green); background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); }
+    .toolbar-links { display: flex; gap: 10px; }
+    .link-btn { font-size: 0.74rem; color: var(--muted); cursor: pointer; background: none; border: none; font-family: 'Inter', sans-serif; text-decoration: underline; padding: 0; transition: color 0.15s; }
+    .link-btn:hover { color: var(--white); }
+    .brand-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+    .brand-chip {
+      padding: 5px 13px; border-radius: 100px; font-size: 0.76rem; cursor: pointer;
+      border: 1px solid var(--navy-border); background: var(--navy-mid);
+      color: var(--muted); transition: all 0.15s; user-select: none; font-family: 'Inter', sans-serif;
+    }
+    .brand-chip:hover { border-color: rgba(59,130,246,0.5); color: var(--white); }
+    .sells-chip.selected { border-color: var(--blue); background: rgba(43,159,217,0.12); color: var(--blue-light); }
+    .buys-chip.selected  { border-color: var(--green); background: rgba(52,211,153,0.08); color: var(--green); }
+    .note-box {
+      background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.18);
+      border-radius: 8px; padding: 11px 14px; font-size: 0.78rem; color: var(--muted);
+      line-height: 1.5; display: flex; gap: 9px; align-items: flex-start; margin-top: 16px;
+    }
+    .note-box svg { width: 14px; height: 14px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 1px; }
+    .btn-submit {
+      width: 100%; padding: 13px; background: var(--teal); border: none; border-radius: 10px;
+      color: #ffffff; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s; margin-top: 24px;
+    }
+    .btn-submit:hover { background: #22d3ee; box-shadow: 0 6px 20px rgba(56,189,248,0.3); }
+    .signin-row { text-align: center; margin-top: 16px; font-size: 0.8rem; color: var(--muted); }
+    .signin-row a { color: var(--blue-light); text-decoration: none; font-weight: 500; }
+    .signin-row a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      body { padding: 24px 16px 60px; }
+      .setup-wrap { padding: 70px 12px 24px; }
+      .card { padding: 20px 16px; border-radius: 14px; }
+      .card h2 { font-size: 1.1rem; }
+      .form-row, .form-grid { grid-template-columns: 1fr !important; gap: 10px; }
+      .brand-grid { gap: 6px; }
+      .brand-chip { font-size: 0.76rem; padding: 6px 10px; min-height: 36px; display: flex; align-items: center; }
+      .divider { margin: 16px 0; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 20px 12px 60px; }
+      .card { padding: 16px 12px; }
+      .btn-submit { padding: 14px; font-size: 0.9rem; }
+      .brand-chip { font-size: 0.72rem; padding: 5px 9px; }
+      .input, .select { font-size: 0.88rem; }
+      .top-logo img { height: 32px; }
+    }
+    @media (max-width: 360px) {
+      body { padding: 16px 10px 60px; }
+      .card { padding: 14px 10px; }
+      .brand-chip { font-size: 0.7rem; padding: 5px 8px; }
+    }
+
+  
+    /* ── Tablet (iPad 768-1024px) ── */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      body { padding: 40px 40px 80px; }
+      .card { max-width: 600px; }
+    }
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body { padding: 20px 16px 40px; }
+      .card { padding: 16px 16px; }
+      .card h1 { font-size: 1.1rem; }
+      .card > p { margin-bottom: 16px; font-size: 0.82rem; }
+      .field { margin-bottom: 10px; }
+      .input, .select { padding: 9px 12px; }
+      .divider { margin: 14px 0; }
+      .brand-chip { padding: 4px 8px; font-size: 0.72rem; }
+      .btn-submit { padding: 11px; margin-top: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="dealer-login.html" class="top-logo">
+    <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+  </a>
+
+  <div class="card">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <h1>Dealership Information</h1>
+    <p>Tell us about your dealership to get started</p>
+
+    <div class="field">
+      <label>Dealership Name <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-name" placeholder="e.g., Premier Auto Group" />
+    </div>
+    <div class="field">
+      <label>Dealership Legal Operating Name <span class="req">*</span>
+        <span style="margin-left:10px;font-weight:400">
+          <label style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--muted)">
+            <input type="checkbox" id="same-name-check" onchange="toggleSameName()" style="accent-color:var(--blue);width:13px;height:13px" />
+            Same as above
+          </label>
+        </span>
+      </label>
+      <input class="input" type="text" id="dealer-legal-name" placeholder="e.g., Premier Auto Group Inc." />
+    </div>
+    <div class="field">
+      <label>Address <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-address" placeholder="Start typing your dealership address..." autocomplete="off" />
+    </div>
+    <div class="field">
+      <label>City <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-city" placeholder="Auto-filled from address" readonly style="opacity:0.7" />
+    </div>
+    <div class="field">
+      <label>Province <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-province" placeholder="Auto-filled from address" readonly style="opacity:0.7" />
+    </div>
+    <div class="field">
+      <label>Postal Code <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-postal" placeholder="Auto-filled from address" readonly style="opacity:0.7" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="field">
+        <label>First Name <span class="req">*</span></label>
+        <input class="input" type="text" id="dealer-contact-first" placeholder="First name" />
+      </div>
+      <div class="field">
+        <label>Last Name <span class="req">*</span></label>
+        <input class="input" type="text" id="dealer-contact-last" placeholder="Last name" />
+      </div>
+    </div>
+    <div class="field">
+      <label>Email Address <span class="req">*</span></label>
+      <input class="input" type="email" id="dealer-email" placeholder="you@dealership.com" />
+    </div>
+    <div class="field">
+      <label>Phone Number <span class="req">*</span></label>
+      <div style="display:grid;grid-template-columns:1fr 120px;gap:10px">
+        <input class="input" type="tel" id="dealer-phone" placeholder="(555) 123-4567" />
+        <input class="input" type="text" id="dealer-ext" placeholder="Ext. 123" />
+      </div>
+    </div>
+    <div class="field">
+      <label>Mobile Number</label>
+      <input class="input" type="tel" id="dealer-mobile" placeholder="(555) 123-4567" />
+    </div>
+    <div class="field">
+      <label>Dealer Principal <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-principal" placeholder="Full name of dealership owner / principal" />
+    </div>
+    <div class="field">
+      <label>Dealer OMVIC Number <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-omvic" placeholder="e.g., 1234567" />
+    </div>
+    <div class="field">
+      <label>Dealership HST # <span class="req">*</span></label>
+      <input class="input" type="text" id="dealer-hst" placeholder="e.g., 123456789 RT0001" />
+    </div>
+    <div class="field">
+      <label>Dealer Group</label>
+      <input class="input" type="text" id="dealer-group" placeholder="e.g., AutoCanada, Dilawri Group (leave blank if independent)" />
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Brands We Sell -->
+    <div class="brand-section-title" style="color:var(--blue-light)">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Brands We Sell (New Cars) <span class="req">*</span>
+    </div>
+    <p class="brand-section-desc">Select your franchised new car brands. You'll receive trade-in listings from customers looking to trade into these brands.</p>
+    <div class="brand-toolbar">
+      <div class="toolbar-links">
+        <button class="link-btn" onclick="selectAll('sells')">Select all</button>
+        <button class="link-btn" onclick="clearAll('sells')">Clear</button>
+      </div>
+      <span class="brand-count blue" id="sells-count">0 selected</span>
+    </div>
+    <div class="brand-grid" id="sells-grid"></div>
+
+    <div class="divider"></div>
+
+    <!-- Brands We Buy Outright -->
+    <div class="brand-section-title" style="color:var(--green)">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Brands We Buy Outright <span class="req">*</span>
+    </div>
+    <p class="brand-section-desc">Select brands you'll purchase outright from customers who want to sell. You can go beyond your franchise here.</p>
+    <div class="brand-toolbar">
+      <div class="toolbar-links">
+        <button class="link-btn" onclick="selectAll('buys')">Select all</button>
+        <button class="link-btn" onclick="clearAll('buys')">Clear</button>
+      </div>
+      <span class="brand-count green" id="buys-count">0 selected</span>
+    </div>
+    <div class="brand-grid" id="buys-grid"></div>
+
+    <div class="note-box">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Your postal code is used to match you with customers within their selected travel distance. Once your account is approved, dealership information can only be changed by contacting support.
+    </div>
+
+    <!-- Terms & Conditions acceptance -->
+    <div id="tos-box" style="display:flex;gap:10px;align-items:flex-start;background:rgba(43,159,217,0.05);border:1px solid rgba(43,159,217,0.2);border-radius:10px;padding:14px 16px;margin-top:18px;">
+      <input type="checkbox" id="tos-check" style="accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;" />
+      <label for="tos-check" style="font-size:0.76rem;color:var(--muted);line-height:1.6;cursor:pointer;">
+        I have read and agree to DealrTrade's
+        <a href="terms.html" target="_blank" style="color:var(--blue-light);font-weight:600;text-decoration:underline;">Terms &amp; Conditions</a>
+        and
+        <a href="terms.html#s23" target="_blank" style="color:var(--blue-light);font-weight:600;text-decoration:underline;">Privacy Policy</a>,
+        including the Dealer Terms in Section 5 and the collection and use of dealership and personal information as described therein. I confirm I have authority to bind the dealership to these Terms.
+      </label>
+    </div>
+    <p id="tos-error" style="display:none;font-size:0.75rem;color:var(--red);margin-top:6px;padding-left:4px;">⚠ You must accept the Terms &amp; Conditions before submitting your application.</p>
+
+    <button class="btn-submit" onclick="completeSetup()">Submit Application</button>
+
+    <div class="signin-row">
+      Already have an account? <a href="dealer-login.html">Sign in →</a>
+    </div>
+  </div>
+
+  <!-- Pending Review Screen (hidden until submission) -->
+  <div id="pending-screen" style="display:none; width:100%; max-width:520px; z-index:1; position:relative; animation: fadeUp 0.4s ease both;">
+    <div class="card" style="text-align:center; padding: 48px 36px;">
+      <div style="width:64px;height:128px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:10px;">Application Submitted</h2>
+      <p style="color:var(--muted);font-size:0.88rem;line-height:1.6;margin-bottom:28px;">
+        Thank you for applying to DealrTrade. Our team will review your application and verify your dealership credentials.<br><br>
+        You'll receive an email confirmation shortly, and another email once your account has been approved — typically within <strong style="color:var(--white)">1–2 business days</strong>.
+      </p>
+
+      <div style="background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:10px;padding:16px 18px;text-align:left;margin-bottom:24px;">
+        <div style="font-size:0.75rem;color:var(--muted);font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;">What happens next</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;font-size:0.82rem;color:var(--muted)">
+            <div style="width:22px;height:22px;background:var(--blue);border-radius:50%;display:grid;place-items:center;font-size:0.65rem;font-weight:700;color:white;flex-shrink:0">1</div>
+            Admin reviews and verifies your OMVIC number and dealership credentials
+          </div>
+          <div style="display:flex;gap:12px;font-size:0.82rem;color:var(--muted)">
+            <div style="width:22px;height:22px;background:var(--blue);border-radius:50%;display:grid;place-items:center;font-size:0.65rem;font-weight:700;color:white;flex-shrink:0">2</div>
+            You receive an approval email with your login credentials
+          </div>
+          <div style="display:flex;gap:12px;font-size:0.82rem;color:var(--muted)">
+            <div style="width:22px;height:22px;background:var(--blue);border-radius:50%;display:grid;place-items:center;font-size:0.65rem;font-weight:700;color:white;flex-shrink:0">3</div>
+            Sign in and start receiving matching vehicle listings immediately
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box" style="text-align:left;margin-bottom:24px;">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        After approval, dealership information is locked and can only be updated by contacting support. You'll be able to manage your "Brands We Buy Outright" and password from your account settings.
+      </div>
+
+      <a href="dealer-login.html" style="display:block;padding:13px;background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:10px;color:var(--muted);font-weight:600;font-size:0.88rem;text-decoration:none;transition:all 0.2s;">
+        Back to Sign In
+      </a>
+    </div>
+  </div>
+
+  <!-- Google Places Autocomplete — replace YOUR_API_KEY with your key when ready -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
+
+  <script>
+    // ── Google Places Autocomplete ──
+    function initAutocomplete() {
+      const input = document.getElementById('dealer-address');
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ['address'],
+        componentRestrictions: { country: 'ca' }, // Canada only
+        fields: ['address_components', 'formatted_address']
+      });
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place.address_components) return;
+
+        let streetNumber = '', streetName = '', city = '', province = '', postal = '';
+
+        place.address_components.forEach(component => {
+          const types = component.types;
+          if (types.includes('street_number'))                          streetNumber = component.long_name;
+          if (types.includes('route'))                                  streetName   = component.long_name;
+          if (types.includes('locality'))                               city         = component.long_name;
+          if (types.includes('administrative_area_level_1'))            province     = component.long_name;
+          if (types.includes('postal_code'))                            postal       = component.long_name;
+        });
+
+        document.getElementById('dealer-address').value  = `${streetNumber} ${streetName}`.trim();
+        document.getElementById('dealer-city').value     = city;
+        document.getElementById('dealer-province').value = province;
+        document.getElementById('dealer-postal').value   = postal;
+      });
+    }
+
+    // Fallback if API key not yet set — allow manual entry
+    if (typeof google === 'undefined') {
+      const fields = ['dealer-city', 'dealer-province', 'dealer-postal'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        el.removeAttribute('readonly');
+        el.style.opacity = '1';
+        el.placeholder = id === 'dealer-postal' ? 'A1A 1A1' :
+                         id === 'dealer-city'   ? 'e.g. Toronto' : 'e.g. Ontario';
+      });
+      document.getElementById('dealer-address').placeholder = '123 Main St';
+    }
+
+    const brands = [
+      'Acura','Alfa Romeo','Audi','BMW','Buick','Cadillac','Chevrolet','Chrysler',
+      'Dodge','Ferrari','Ford','Genesis','GMC','Honda','Hyundai','Infiniti',
+      'Jaguar','Jeep','Kia','Lamborghini','Land Rover','Lexus','Lincoln',
+      'Maserati','Mazda','Mercedes-Benz','MINI','Mitsubishi','Nissan','Porsche',
+      'RAM','Rolls-Royce','Subaru','Tesla','Toyota','Volkswagen','Volvo'
+    ];
+
+    function toggleSameName() {
+      const checked = document.getElementById('same-name-check').checked;
+      const legalField = document.getElementById('dealer-legal-name');
+      const nameField = document.getElementById('dealer-name');
+      if (checked) {
+        legalField.value = nameField.value;
+        legalField.disabled = true;
+        legalField.style.opacity = '0.5';
+        nameField.oninput = () => {
+          if (document.getElementById('same-name-check').checked) {
+            legalField.value = nameField.value;
+          }
+        };
+      } else {
+        legalField.disabled = false;
+        legalField.style.opacity = '1';
+        legalField.value = '';
+        legalField.focus();
+      }
+    }
+
+    function buildGrid(gridId, chipClass, countId) {
+      const grid = document.getElementById(gridId);
+      brands.forEach(b => {
+        const chip = document.createElement('div');
+        chip.className = `brand-chip ${chipClass}`;
+        chip.textContent = b;
+        chip.onclick = () => { chip.classList.toggle('selected'); updateCount(gridId, countId); };
+        grid.appendChild(chip);
+      });
+    }
+
+    function updateCount(gridId, countId) {
+      const n = document.querySelectorAll(`#${gridId} .brand-chip.selected`).length;
+      document.getElementById(countId).textContent = `${n} selected`;
+    }
+
+    function selectAll(type) {
+      const g = type === 'sells' ? 'sells-grid' : 'buys-grid';
+      const c = type === 'sells' ? 'sells-count' : 'buys-count';
+      document.querySelectorAll(`#${g} .brand-chip`).forEach(ch => ch.classList.add('selected'));
+      updateCount(g, c);
+    }
+
+    function clearAll(type) {
+      const g = type === 'sells' ? 'sells-grid' : 'buys-grid';
+      const c = type === 'sells' ? 'sells-count' : 'buys-count';
+      document.querySelectorAll(`#${g} .brand-chip`).forEach(ch => ch.classList.remove('selected'));
+      updateCount(g, c);
+    }
+
+    function completeSetup() {
+      const required = [
+        'dealer-name','dealer-legal-name','dealer-address','dealer-city',
+        'dealer-province','dealer-postal','dealer-contact-first','dealer-contact-last','dealer-email',
+        'dealer-phone','dealer-omvic','dealer-principal','dealer-hst'
+      ];
+      let missing = false;
+      required.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el || !el.value.trim()) { if(el) el.style.borderColor = 'var(--red)'; missing = true; }
+        else el.style.borderColor = '';
+      });
+      const sells = [...document.querySelectorAll('#sells-grid .brand-chip.selected')].map(el => el.dataset.brand||el.textContent.trim());
+      const buys  = [...document.querySelectorAll('#buys-grid .brand-chip.selected')].map(el => el.dataset.brand||el.textContent.trim());
+      if (sells.length === 0) { document.getElementById('sells-count').style.color = 'var(--red)'; missing = true; }
+      else document.getElementById('sells-count').style.color = '';
+      if (buys.length === 0)  { document.getElementById('buys-count').style.color = 'var(--red)'; missing = true; }
+      else document.getElementById('buys-count').style.color = '';
+      if (missing) { alert('Please complete all required fields and select at least one brand in each section.'); return; }
+
+      // ── Terms & Conditions ──
+      const tosCheck = document.getElementById('tos-check');
+      const tosError = document.getElementById('tos-error');
+      const tosBox   = document.getElementById('tos-box');
+      if (tosCheck && !tosCheck.checked) {
+        if (tosError) tosError.style.display = 'block';
+        if (tosBox)   tosBox.style.borderColor = 'var(--red)';
+        tosBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      if (tosError) tosError.style.display = 'none';
+      if (tosBox)   tosBox.style.borderColor = 'rgba(43,159,217,0.2)';
+
+      const g = id => document.getElementById(id)?.value.trim() || '';
+      const contactName = g('dealer-contact-first') + ' ' + g('dealer-contact-last');
+
+      // Save dealer profile
+      const dealerProfile = {
+        name: g('dealer-name'), contact: contactName,
+        email: g('dealer-email'), phone: g('dealer-phone'),
+        city: g('dealer-city'), province: g('dealer-province'),
+        address: g('dealer-address'), postal: g('dealer-postal'),
+        omvic: g('dealer-omvic'), hst: g('dealer-hst'),
+        sells, buys,
+      };
+      localStorage.setItem('dealerProfile', JSON.stringify(dealerProfile));
+
+      // Push application to dt_applications for admin portal
+      const existing = JSON.parse(localStorage.getItem('dt_applications') || '[]');
+      const newApp = {
+        id: 'app-' + Date.now(),
+        dealerName: g('dealer-name'),
+        legalName:  g('dealer-legal-name'),
+        contact:    contactName,
+        email:      g('dealer-email'),
+        phone:      g('dealer-phone'),
+        address:    g('dealer-address'),
+        city:       g('dealer-city'),
+        province:   g('dealer-province'),
+        postal:     g('dealer-postal'),
+        omvic:      g('dealer-omvic'),
+        hst:        g('dealer-hst'),
+        principal:  g('dealer-principal'),
+        sells, buys,
+        submittedAt: Date.now(),
+        status: 'pending',
+      };
+      existing.push(newApp);
+      localStorage.setItem('dt_applications', JSON.stringify(existing));
+
+      // Hide form, show pending screen
+      document.querySelector('.card').style.display = 'none';
+      document.getElementById('pending-screen').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    buildGrid('sells-grid', 'sells-chip', 'sells-count');
+    buildGrid('buys-grid',  'buys-chip',  'buys-count');
+  </script>
+
+<!-- SITE FOOTER -->
+<footer style="text-align:center;padding:20px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;margin-top:auto;">
+  <span>&#169; 2026 DealrTrade</span>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="/cdn-cgi/l/email-protection" class="__cf_e

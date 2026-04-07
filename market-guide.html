@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Market Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #f2f4f8; --navy-mid: #e8ebf0; --navy-card: #ffffff;
+      --navy-border: #ced5e2; --blue: #2B9FD9; --blue-light: #1a7db5;
+      --green: #34d399; --amber: #fbbf24; --red: #f87171;
+      --white: #1a1f2e; --muted: #5a647a;
+    }
+    html { overflow-x: hidden; }
+    body {
+      background: var(--navy); color: var(--white); font-family: 'Inter', sans-serif; font-size: 14px; min-height: 100vh; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 32px; background: var(--navy-mid); border-bottom: 1px solid var(--navy-border); position: sticky; top: 0; z-index: 50; }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo img { height: 38px; width: auto; object-fit: contain; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-meta { font-size: 0.8rem; color: var(--muted); text-align: right; line-height: 1.4; margin-right: 6px; }
+    .nav-meta strong { color: var(--white); display: block; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 15px; border-radius: 7px; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.82rem; cursor: pointer; border: none; transition: all 0.18s; }
+    .btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--navy-border); }
+    .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
+    .page { max-width: 1300px; margin: 0 auto; padding: 28px 24px 80px; }
+    .page-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+    .page-head h1 { font-size: 1.3rem; font-weight: 800; margin-bottom: 3px; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
+    .page-head p { font-size: 0.82rem; color: var(--muted); }
+    .info-box { display: flex; align-items: flex-start; gap: 10px; background: rgba(43,159,217,0.06); border: 1px solid rgba(43,159,217,0.2); border-radius: 9px; padding: 12px 16px; font-size: 0.8rem; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
+    .info-box svg { width: 15px; height: 15px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 2px; }
+    .filter-panel { background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
+    .filter-panel-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 14px; }
+    .filter-row { display: flex; gap: 18px; flex-wrap: wrap; align-items: flex-end; }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-group label { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .filter-select { padding: 8px 28px 8px 10px; background: var(--navy-mid); border: 1px solid var(--navy-border); border-radius: 7px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.82rem; outline: none; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238b9bbf' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; min-width: 130px; }
+    .filter-select:focus { border-color: var(--blue); }
+    .filter-select option { background: var(--navy-mid); }
+    .other-input { padding: 8px 10px; background: var(--navy-mid); border: 1px solid var(--navy-border); border-radius: 7px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.82rem; outline: none; min-width: 130px; display: none; }
+    .other-input:focus { border-color: var(--blue); }
+    .other-input::placeholder { color: var(--muted); }
+    .year-range-wrap { display: flex; flex-direction: column; gap: 5px; }
+    .year-range-label { font-size: 0.7rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .year-range-display { font-size: 0.82rem; font-weight: 700; color: var(--blue-light); text-align: center; }
+    .dual-slider { position: relative; width: 180px; height: 34px; }
+    .slider-track { position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; height: 4px; background: var(--navy-border); border-radius: 2px; pointer-events: none; }
+    .slider-fill { position: absolute; height: 100%; background: var(--blue); border-radius: 2px; }
+    .dual-slider input[type=range] { position: absolute; width: 100%; pointer-events: none; -webkit-appearance: none; appearance: none; background: transparent; top: 50%; transform: translateY(-50%); height: 4px; outline: none; margin: 0; }
+    .dual-slider input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: var(--blue); border: 2px solid var(--navy-card); cursor: pointer; }
+    .dual-slider input[type=range]::-moz-range-thumb { pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: var(--blue); border: 2px solid var(--navy-card); cursor: pointer; }
+    .period-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+    .period-chip { padding: 6px 11px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; border: 1px solid var(--navy-border); background: var(--navy-mid); color: var(--muted); transition: all 0.15s; white-space: nowrap; }
+    .period-chip:hover { border-color: var(--blue); color: var(--white); }
+    .period-chip.active { background: var(--blue); border-color: var(--blue); color: white; }
+    .table-wrap { background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 12px; overflow: hidden; overflow-x: auto; }
+    .table-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--navy-border); gap: 12px; flex-wrap: wrap; }
+    .table-title { font-size: 0.88rem; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    thead th { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--navy-border); white-space: nowrap; }
+    thead th.sortable { cursor: pointer; user-select: none; }
+    thead th.sortable:hover { color: var(--white); }
+    thead th.right { text-align: right; }
+    thead th.high-col { color: var(--green); }
+    tbody td { padding: 11px 14px; border-bottom: 1px solid rgba(74,78,85,0.4); font-size: 0.82rem; white-space: nowrap; font-family: 'Inter', sans-serif; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(255,255,255,0.02); }
+    .td-mono { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-variant-numeric: tabular-nums; font-weight: 500; letter-spacing: 0.01em; }
+    .td-muted { color: var(--muted); }
+    .td-right { text-align: right; }
+    .offer-high { background: rgba(52,211,153,0.1); color: var(--green); font-weight: 700; border-radius: 5px; padding: 3px 10px; border: 1px solid rgba(52,211,153,0.25); display: inline-block; font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+    .offer-second { color: var(--white); font-weight: 600; font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+    .offer-third { color: var(--muted); font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+    .pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 5px; font-size: 0.68rem; font-weight: 700; }
+    .pill-green { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+    .pill-amber { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+    .date-recent { color: var(--amber); }
+    .date-old { color: var(--muted); }
+    .locked-overlay { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; }
+    .locked-overlay svg { width: 40px; height: 40px; stroke: var(--muted); fill: none; stroke-width: 1.5; margin-bottom: 16px; }
+    .locked-overlay h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .locked-overlay p { font-size: 0.82rem; color: var(--muted); max-width: 360px; line-height: 1.6; }
+
+    @media (max-width: 768px) {
+      nav { padding: 10px 14px; flex-wrap: nowrap; gap: 6px; overflow: hidden; }
+      nav .btn svg { display: none; }
+      nav .btn { padding: 6px 10px; font-size: 0.76rem; }
+      .page { padding: 16px 12px 60px; }
+      .page-head h1 { font-size: 1.1rem; }
+      .filter-panel { padding: 12px 14px; }
+      .filter-row { flex-direction: column; gap: 10px; }
+      .filter-group { width: 100%; }
+      .filter-select, .other-input { width: 100%; min-width: unset; }
+      .dual-slider { width: 100%; }
+      .period-chips { flex-wrap: wrap; gap: 5px; }
+      .period-chip { font-size: 0.74rem; padding: 5px 10px; }
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { min-width: 700px; }
+      .table-head { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+    }
+    @media (max-width: 480px) {
+      .page-head { flex-direction: column; gap: 10px; }
+      .page-actions { flex-wrap: wrap; gap: 6px; }
+      .period-chip { min-height: 36px; display: flex; align-items: center; font-size: 0.72rem; }
+      .filter-select { font-size: 0.84rem; padding: 9px 12px; }
+      input[type=range] { height: 20px; }
+    }
+    @media (max-width: 360px) {
+      .page { padding: 12px 10px 60px; }
+      .filter-panel { padding: 10px 12px; }
+    }
+
+  
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      nav { padding: 8px 14px; height: 44px; }
+      .page { padding: 10px 12px 40px; }
+      .page-head h1 { font-size: 1rem; }
+      .filter-panel { padding: 10px 14px; }
+      .filter-row { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+      .filter-group { flex: 1; min-width: 140px; }
+      .filter-select { padding: 7px 10px; font-size: 0.8rem; }
+      .period-chips { flex-wrap: nowrap; gap: 4px; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="dealer-portal.html" class="logo"><img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" /></a>
+  <div class="nav-right">
+    <div class="nav-meta"><strong id="nav-dealer-name">Elite Autohaus</strong><span id="nav-user-name">Ryan Kovacs</span></div>
+    <button class="btn btn-ghost" onclick="window.location.href='dealer-portal.html'">← Portal</button>
+    <button id="btn-export-csv" class="btn btn-ghost" onclick="exportCSV()" style="display:none"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
+    <button class="btn btn-ghost" onclick="window.location.href='dealer-login.html'">Sign Out</button>
+  </div>
+</nav>
+<div class="page">
+  <div class="page-head"><div><h1>Market Guide</h1><p>Historical offer data across all closed vehicle listings. Data retained for 12 months.</p></div></div>
+  <div class="info-box"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Anonymised offer data from completed listings. High, Second, and Third offer columns let you benchmark your bids — the highest offer is highlighted in green. Data refreshes as listings close and is retained for 12 months.</span></div>
+  <div id="locked-view" style="display:none;"><div class="table-wrap"><div class="locked-overlay"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h3>Market Guide Unavailable</h3><p>The Market Guide is not currently available for your dealership. Please contact your DealrTrade account manager to request access.</p></div></div></div>
+  <div id="main-view">
+    <div class="filter-panel">
+      <div class="filter-panel-title">Filter Results</div>
+      <div class="filter-row">
+        <div class="year-range-wrap">
+          <div class="year-range-label">Year Range</div>
+          <div class="year-range-display" id="year-display">2010 – 2026</div>
+          <div class="dual-slider">
+            <div class="slider-track"><div class="slider-fill" id="slider-fill"></div></div>
+            <input type="range" id="year-min" min="1990" max="2026" value="2010" oninput="syncSliders()">
+            <input type="range" id="year-max" min="2010" max="2026" value="2026" oninput="syncSliders()">
+          </div>
+        </div>
+        <div class="filter-group"><label>Make</label><select class="filter-select" id="mg-make" onchange="onMakeChange()"><option value="">All Makes</option></select></div>
+        <div class="filter-group">
+          <label>Model</label>
+          <select class="filter-select" id="mg-model" onchange="onModelChange()"><option value="">All Models</option></select>
+          <input class="other-input" id="mg-model-other" type="text" placeholder="Enter model…" oninput="render()" />
+        </div>
+        <div class="filter-group"><label>Trim</label><select class="filter-select" id="mg-trim" onchange="render()"><option value="">All Trims</option></select></div>
+        <div class="filter-group"><label>Max Mileage</label><select class="filter-select" id="mg-mileage" onchange="render()"><option value="">Any</option><option value="20000">Under 20,000 km</option><option value="40000">Under 40,000 km</option><option value="60000">Under 60,000 km</option><option value="80000">Under 80,000 km</option><option value="100000">Under 100,000 km</option></select></div>
+        <div class="filter-group"><label>Type</label><select class="filter-select" id="mg-intent" onchange="render()"><option value="">All Types</option><option value="sell">Sell Outright</option><option value="trade">Trade-In</option></select></div>
+        <div class="filter-group"><label>Time Period</label><div class="period-chips"><div class="period-chip active" onclick="setPeriod(365,this)">1 Year</div><div class="period-chip" onclick="setPeriod(180,this)">180 Days</div><div class="period-chip" onclick="setPeriod(90,this)">90 Days</div><div class="period-chip" onclick="setPeriod(60,this)">60 Days</div><div class="period-chip" onclick="setPeriod(30,this)">30 Days</div></div></div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-head"><div class="table-title">Vehicle Transactions</div><div id="mg-count" style="font-size:0.78rem;color:var(--muted);"></div></div>
+      <table>
+        <thead><tr>
+          <th class="sortable" onclick="sort('year')">Year ↕</th>
+          <th class="sortable" onclick="sort('make')">Make ↕</th>
+          <th>Model</th><th>Trim</th>
+          <th class="sortable" onclick="sort('mileage')">Mileage ↕</th>
+          <th>Type</th>
+          <th class="sortable right" onclick="sort('offerCount')">Offers ↕</th>
+          <th class="sortable right high-col" onclick="sort('offer1')">High Offer ↕</th>
+          <th class="sortable right" onclick="sort('offer2')">Second Offer ↕</th>
+          <th class="sortable right" onclick="sort('offer3')">Third Offer ↕</th>
+          <th class="sortable right" onclick="sort('endDate')">Offer Period Ended ↕</th>
+        </tr></thead>
+        <tbody id="mg-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+    // ── Session guard ──
+    (function() {
+      const sess = localStorage.getItem('dealerSession');
+      if (!sess || sess === '{}' || !JSON.parse(sess).dealerId) {
+        window.location.href = 'dealer-login.html';
+      }
+    })();
+
+    const sess = JSON.parse(localStorage.getItem('dealerSession')||'{}');
+if(sess.dealerName) document.getElementById('nav-dealer-name').textContent=sess.dealerName;
+if(sess.firstName)  document.getElementById('nav-user-name').textContent=sess.firstName+' '+(sess.lastName||'');
+// Export CSV: visible to CEO and Admin only
+if(['ceo','admin'].includes((sess.role||'').toLowerCase())){
+  document.getElementById('btn-export-csv').style.display='';
+}
+const globalMgOn=JSON.parse(localStorage.getItem('dt_market_visible')|| 'true');
+const mgAccess=JSON.parse(localStorage.getItem('dt_market_dealer_access')||'{}');
+const mgSess=JSON.parse(localStorage.getItem('dealerSession')||'{}');
+const dealerMgOn=!!mgAccess[mgSess.dealerName||''];
+const visible=globalMgOn&&dealerMgOn;
+if(!visible){document.getElementById('locked-view').style.display='';document.getElementById('main-view').style.display='none';}
+
+const MODEL_MAP={
+  'Acura':['ILX','MDX','RDX','RLX','TLX','NSX','OTHER'],
+  'Alfa Romeo':['Giulia','Stelvio','Tonale','OTHER'],
+  'Audi':['A3','A4','A5','A6','A7','A8','Q3','Q5','Q7','Q8','e-tron','TT','R8','OTHER'],
+  'BMW':['1 Series','2 Series','3 Series','4 Series','5 Series','7 Series','X1','X2','X3','X4','X5','X6','X7','iX','i4','OTHER'],
+  'Buick':['Enclave','Encore','Envision','LaCrosse','OTHER'],
+  'Cadillac':['CT4','CT5','Escalade','XT4','XT5','XT6','Lyriq','OTHER'],
+  'Chevrolet':['Blazer','Camaro','Colorado','Corvette','Equinox','Malibu','Silverado','Suburban','Tahoe','Trailblazer','Traverse','Trax','OTHER'],
+  'Chrysler':['300','Pacifica','Voyager','OTHER'],
+  'Dodge':['Challenger','Charger','Durango','Hornet','Journey','OTHER'],
+  'Ferrari':['296','488','812','F8','Portofino','Roma','SF90','OTHER'],
+  'Ford':['Bronco','Edge','Escape','Expedition','Explorer','F-150','F-250','F-350','Fusion','Maverick','Mustang','Ranger','Transit','OTHER'],
+  'Genesis':['G70','G80','G90','GV70','GV80','OTHER'],
+  'GMC':['Acadia','Canyon','Sierra','Terrain','Yukon','OTHER'],
+  'Honda':['Accord','Civic','CR-V','HR-V','Odyssey','Passport','Pilot','Ridgeline','OTHER'],
+  'Hyundai':['Elantra','Ioniq 5','Ioniq 6','Kona','Palisade','Santa Cruz','Santa Fe','Sonata','Tucson','Venue','OTHER'],
+  'Infiniti':['Q50','Q60','QX50','QX55','QX60','QX80','OTHER'],
+  'Jaguar':['E-Pace','F-Pace','F-Type','I-Pace','XE','XF','OTHER'],
+  'Jeep':['Cherokee','Compass','Gladiator','Grand Cherokee','Renegade','Wagoneer','Wrangler','OTHER'],
+  'Kia':['Carnival','EV6','EV9','Forte','K5','Niro','Seltos','Soul','Sorento','Sportage','Stinger','Telluride','OTHER'],
+  'Lamborghini':['Huracan','Urus','Revuelto','OTHER'],
+  'Land Rover':['Defender','Discovery','Discovery Sport','Range Rover','Range Rover Evoque','Range Rover Sport','Range Rover Velar','OTHER'],
+  'Lexus':['ES','GS','GX','IS','LC','LS','LX','NX','RX','UX','OTHER'],
+  'Lincoln':['Aviator','Corsair','Nautilus','Navigator','OTHER'],
+  'Maserati':['Ghibli','GranTurismo','Grecale','Levante','Quattroporte','OTHER'],
+  'Mazda':['CX-3','CX-5','CX-50','CX-60','CX-90','Mazda3','Mazda6','MX-5 Miata','OTHER'],
+  'Mercedes-Benz':['A-Class','C-Class','CLA','CLS','E-Class','EQB','EQC','EQS','G-Class','GLA','GLB','GLC','GLE','GLS','S-Class','SL','OTHER'],
+  'MINI':['Clubman','Convertible','Countryman','Hardtop','OTHER'],
+  'Mitsubishi':['Eclipse Cross','Mirage','Outlander','Outlander PHEV','RVR','OTHER'],
+  'Nissan':['Altima','Armada','Frontier','GT-R','Kicks','Leaf','Maxima','Murano','Pathfinder','Qashqai','Rogue','Sentra','Titan','Versa','OTHER'],
+  'Porsche':['718','911','Cayenne','Macan','Panamera','Taycan','OTHER'],
+  'RAM':['1500','2500','3500','ProMaster','OTHER'],
+  'Rolls-Royce':['Cullinan','Dawn','Ghost','Phantom','Spectre','Wraith','OTHER'],
+  'Subaru':['Ascent','BRZ','Crosstrek','Forester','Impreza','Legacy','Outback','Solterra','WRX','OTHER'],
+  'Tesla':['Cybertruck','Model 3','Model S','Model X','Model Y','OTHER'],
+  'Toyota':['4Runner','bZ4X','Camry','Corolla','GR86','Highlander','Land Cruiser','Prius','RAV4','Sequoia','Sienna','Tacoma','Tundra','Venza','OTHER'],
+  'Volkswagen':['Atlas','Golf','GTI','ID.4','Jetta','Passat','Taos','Tiguan','OTHER'],
+  'Volvo':['C40','S60','S90','V60','V90','XC40','XC60','XC90','OTHER'],
+};
+
+const MARKET_DATA=[
+  {year:2020,make:'Audi',model:'A4',trim:'Premium',mileage:85000,intent:'Trade-In',offerCount:3,offer1:50000,offer2:46500,offer3:44000,endDate:'2026-02-18'},
+  {year:2022,make:'Toyota',model:'Camry',trim:'XLE',mileage:45000,intent:'Sell',offerCount:4,offer1:28500,offer2:27200,offer3:25800,endDate:'2026-02-19'},
+  {year:2021,make:'Honda',model:'Accord',trim:'Sport',mileage:62000,intent:'Trade-In',offerCount:3,offer1:24000,offer2:22500,offer3:21000,endDate:'2026-03-13'},
+  {year:2023,make:'Honda',model:'CR-V',trim:'EX-L',mileage:18000,intent:'Trade-In',offerCount:2,offer1:36000,offer2:34500,offer3:null,endDate:'2026-03-08'},
+  {year:2021,make:'Ford',model:'F-150',trim:'XLT',mileage:44000,intent:'Sell',offerCount:4,offer1:38000,offer2:36500,offer3:33000,endDate:'2026-03-08'},
+  {year:2019,make:'BMW',model:'3 Series',trim:'330i xDrive',mileage:71000,intent:'Sell',offerCount:5,offer1:31000,offer2:29500,offer3:28000,endDate:'2026-01-15'},
+  {year:2020,make:'Mazda',model:'CX-5',trim:'GT',mileage:55000,intent:'Trade-In',offerCount:3,offer1:27000,offer2:25200,offer3:23500,endDate:'2026-02-01'},
+  {year:2022,make:'Hyundai',model:'Tucson',trim:'Preferred',mileage:28000,intent:'Sell',offerCount:2,offer1:29500,offer2:27000,offer3:null,endDate:'2026-01-22'},
+  {year:2018,make:'Toyota',model:'Corolla',trim:'LE',mileage:92000,intent:'Sell',offerCount:3,offer1:14500,offer2:13200,offer3:12000,endDate:'2026-03-01'},
+  {year:2021,make:'Chevrolet',model:'Equinox',trim:'LT',mileage:39000,intent:'Trade-In',offerCount:4,offer1:25000,offer2:23500,offer3:21500,endDate:'2026-02-10'},
+  {year:2020,make:'Ford',model:'Escape',trim:'SEL',mileage:61000,intent:'Sell',offerCount:2,offer1:20500,offer2:18000,offer3:null,endDate:'2026-01-30'},
+  {year:2023,make:'Kia',model:'Sportage',trim:'EX',mileage:12000,intent:'Trade-In',offerCount:5,offer1:32000,offer2:30500,offer3:28000,endDate:'2026-03-10'},
+  {year:2019,make:'Honda',model:'Civic',trim:'Sport',mileage:61000,intent:'Sell',offerCount:5,offer1:21000,offer2:19500,offer3:17500,endDate:'2026-02-08'},
+  {year:2022,make:'Audi',model:'Q5',trim:'Progressiv',mileage:31000,intent:'Trade-In',offerCount:3,offer1:52000,offer2:49000,offer3:46000,endDate:'2026-02-28'},
+  {year:2020,make:'Mercedes-Benz',model:'C-Class',trim:'C300',mileage:48000,intent:'Sell',offerCount:4,offer1:38000,offer2:35500,offer3:33000,endDate:'2026-01-18'},
+  {year:2021,make:'Nissan',model:'Rogue',trim:'SV',mileage:43000,intent:'Sell',offerCount:3,offer1:23000,offer2:21500,offer3:20000,endDate:'2026-03-05'},
+  {year:2019,make:'Volkswagen',model:'Jetta',trim:'Highline',mileage:78000,intent:'Sell',offerCount:2,offer1:16500,offer2:14500,offer3:null,endDate:'2026-02-20'},
+  {year:2022,make:'BMW',model:'X3',trim:'xDrive30i',mileage:22000,intent:'Trade-In',offerCount:4,offer1:57000,offer2:54000,offer3:51000,endDate:'2026-03-02'},
+  {year:2020,make:'Subaru',model:'Outback',trim:'Limited',mileage:52000,intent:'Sell',offerCount:3,offer1:26000,offer2:24200,offer3:22500,endDate:'2026-02-14'},
+  {year:2021,make:'Toyota',model:'RAV4',trim:'XLE',mileage:37000,intent:'Trade-In',offerCount:5,offer1:36500,offer2:34500,offer3:32000,endDate:'2026-01-28'},
+];
+
+// Merge real listings
+(function(){
+  const stored=JSON.parse(localStorage.getItem('dt_listings')||'{}');
+  const cutoff=new Date(); cutoff.setFullYear(cutoff.getFullYear()-1);
+  Object.values(stored).forEach(l=>{
+    if(!l.offers||!l.offers.length) return;
+    const amounts=l.offers.map(o=>parseFloat(String(o.amount).replace(/[^0-9.]/g,''))).filter(Boolean).sort((a,b)=>b-a);
+    if(!amounts.length) return;
+    const endDate=l.endDate||l.listed||'';
+    if(endDate&&new Date(endDate)<cutoff) return;
+    MARKET_DATA.push({year:parseInt(l.year)||0,make:l.make||'',model:l.model||'',trim:l.trim||'',mileage:parseInt(String(l.mileage).replace(/[^0-9]/g,''))||0,intent:l.intent||'',offerCount:amounts.length,offer1:amounts[0]||null,offer2:amounts[1]||null,offer3:amounts[2]||null,endDate});
+  });
+})();
+
+let sortKey='endDate',sortDir=-1,activePeriod=365;
+const MIN_Y=1990,MAX_Y=2026;
+
+function syncSliders(){
+  let lo=+document.getElementById('year-min').value;
+  let hi=+document.getElementById('year-max').value;
+  if(lo>hi){const t=lo;lo=hi;hi=t;}
+  document.getElementById('year-display').textContent=lo+' – '+hi;
+  const pct=v=>((v-MIN_Y)/(MAX_Y-MIN_Y))*100;
+  const fill=document.getElementById('slider-fill');
+  fill.style.left=pct(lo)+'%'; fill.style.width=(pct(hi)-pct(lo))+'%';
+  render();
+}
+syncSliders();
+
+function setPeriod(days,el){
+  activePeriod=days;
+  document.querySelectorAll('.period-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); render();
+}
+
+function onMakeChange(){
+  const make=document.getElementById('mg-make').value;
+  const modelSel=document.getElementById('mg-model');
+  const trimSel=document.getElementById('mg-trim');
+  modelSel.innerHTML='<option value="">All Models</option>';
+  if(make&&MODEL_MAP[make]){
+    MODEL_MAP[make].forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;modelSel.appendChild(o);});
+  }
+  document.getElementById('mg-model-other').style.display='none';
+  document.getElementById('mg-model-other').value='';
+  trimSel.innerHTML='<option value="">All Trims</option>';
+  render();
+}
+
+function onModelChange(){
+  const val=document.getElementById('mg-model').value;
+  const other=document.getElementById('mg-model-other');
+  other.style.display=val==='OTHER'?'block':'none';
+  if(val!=='OTHER') other.value='';
+  const make=document.getElementById('mg-make').value;
+  const trimSel=document.getElementById('mg-trim');
+  trimSel.innerHTML='<option value="">All Trims</option>';
+  if(make&&val&&val!=='OTHER'){
+    const trims=[...new Set(MARKET_DATA.filter(r=>r.make===make&&r.model===val).map(r=>r.trim))].filter(Boolean).sort();
+    trims.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;trimSel.appendChild(o);});
+  }
+  render();
+}
+
+function getRows(){
+  const make=document.getElementById('mg-make').value;
+  const modelRaw=document.getElementById('mg-model').value;
+  const modelOther=document.getElementById('mg-model-other').value.trim().toLowerCase();
+  const model=modelRaw==='OTHER'?modelOther:modelRaw;
+  const trim=document.getElementById('mg-trim').value;
+  const intent=document.getElementById('mg-intent').value;
+  const maxMile=parseInt(document.getElementById('mg-mileage').value)||0;
+  let lo=+document.getElementById('year-min').value;
+  let hi=+document.getElementById('year-max').value;
+  if(lo>hi){const t=lo;lo=hi;hi=t;}
+  const now=new Date();
+  return MARKET_DATA.filter(r=>{
+    if(r.year<lo||r.year>hi) return false;
+    if(make&&r.make!==make) return false;
+    if(model&&r.model.toLowerCase()!==model.toLowerCase()) return false;
+    if(trim&&r.trim!==trim) return false;
+    if(intent&&!r.intent.toLowerCase().includes(intent==='sell'?'sell':'trade')) return false;
+    if(maxMile&&r.mileage>maxMile) return false;
+    if(r.endDate&&(now-new Date(r.endDate))/86400000>activePeriod) return false;
+    return true;
+  }).sort((a,b)=>{
+    const va=a[sortKey]||0, vb=b[sortKey]||0;
+    if(typeof va==='string') return sortDir*va.localeCompare(vb);
+    return sortDir*(va<vb?-1:va>vb?1:0);
+  });
+}
+
+function fmt$(n){return n!=null?'$'+Number(n).toLocaleString():'—';}
+
+function render(){
+  const rows=getRows();
+  const total=rows.reduce((s,r)=>s+r.offerCount,0);
+  const avgH=rows.length?Math.round(rows.reduce((s,r)=>s+(r.offer1||0),0)/rows.length):0;
+  const all=rows.flatMap(r=>[r.offer1,r.offer2,r.offer3].filter(Boolean));
+  const avgAll=all.length?Math.round(all.reduce((a,b)=>a+b,0)/all.length):0;
+  const w3=rows.filter(r=>r.offer3);
+  const avgSpread=w3.length?Math.round(w3.reduce((s,r)=>s+(r.offer1-r.offer3),0)/w3.length):0;
+  // Repopulate make dropdown preserving selection
+  const makeEl=document.getElementById('mg-make');
+  const selMake=makeEl.value;
+  const makes=[...new Set(MARKET_DATA.map(r=>r.make))].sort();
+  makeEl.innerHTML='<option value="">All Makes</option>'+makes.map(m=>`<option value="${m}"${selMake===m?' selected':''}>${m}</option>`).join('');
+
+  document.getElementById('mg-count').textContent=`${rows.length} record${rows.length!==1?'s':''}`;
+
+  document.getElementById('mg-tbody').innerHTML=rows.length===0
+    ?`<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:28px;">No records match the current filters.</td></tr>`
+    :rows.map(r=>{
+      const pill=r.intent.toLowerCase().includes('trade')
+        ?`<span class="pill pill-amber">Trade-In</span>`
+        :`<span class="pill pill-green">Sell</span>`;
+      const daysSince=r.endDate?(new Date()-new Date(r.endDate))/86400000:999;
+      const dc=daysSince<60?'date-recent':'date-old';
+      return `<tr>
+        <td class="td-mono">${r.year}</td>
+        <td style="font-weight:600">${r.make}</td>
+        <td>${r.model}</td>
+        <td class="td-muted">${r.trim}</td>
+        <td class="td-mono">${r.mileage?Number(r.mileage).toLocaleString()+' km':'—'}</td>
+        <td>${pill}</td>
+        <td class="td-mono td-right">${r.offerCount}</td>
+        <td class="td-right"><span class="offer-high">${fmt$(r.offer1)}</span></td>
+        <td class="td-right offer-second">${fmt$(r.offer2)}</td>
+        <td class="td-right offer-third">${fmt$(r.offer3)}</td>
+        <td class="td-mono td-right ${dc}">${r.endDate||'—'}</td>
+      </tr>`;
+    }).join('');
+}
+
+function sort(key){if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=-1;}render();}
+
+function exportCSV(){
+  const rows=getRows();
+  const h=['Year','Make','Model','Trim','Mileage','Type','Offer Count','High Offer','Second Offer','Third Offer','Offer Period Ended'];
+  const csv=[h.join(','),...rows.map(r=>[r.year,r.make,r.model,r.trim,r.mileage,r.intent,r.offerCount,r.offer1||'',r.offer2||'',r.offer3||'',r.endDate||''].join(','))].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='dealrtrade-market-guide.csv'; a.click();
+}
+
+render();
+</script>
+
+<!-- SITE FOOTER -->
+<footer style="text-align:center;padding:20px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;margin-top:auto;">
+  <span>&#169; 2026 DealrTrade</span>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="/cdn-cgi/l/email-protection" class="__cf_e

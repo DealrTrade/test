@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Dealer Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
+
+    :root {
+      --navy: #f2f4f8;
+      --navy-mid: #e8ebf0;
+      --navy-card: #ffffff;
+      --navy-border: #ced5e2;
+      --blue: #2B9FD9;
+      --blue-light: #1a7db5;
+      --teal: #2B9FD9;
+      --green:       #1a8c5a;
+      --green-dim:   #dcf5ea;
+      --amber:       #b07d10;
+      --red:         #c0392b;
+      --white:       #1a1f2e;
+      --muted:       #5a647a;
+      --radius:      12px;
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--navy-border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.1rem;
+      color: var(--white); cursor: pointer;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; background: var(--blue);
+      border-radius: 8px; display: grid; place-items: center;
+    }
+    .logo-icon svg { width: 17px; height: 17px; fill: white; }
+    .nav-right { display: flex; gap: 8px; align-items: center; }
+    .nav-dealer { font-size: 0.82rem; color: var(--muted); margin-right: 8px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 7px;
+      font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.83rem;
+      cursor: pointer; border: none; transition: all 0.18s;
+    }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--navy-border); }
+    .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
+    .btn-primary { background: var(--blue); color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-success { background: #059669; color: white; }
+    .btn-success:hover { background: #047857; }
+    .btn-outline { background: transparent; color: var(--blue-light); border: 1px solid var(--blue); }
+    .btn-outline:hover { background: rgba(59,130,246,0.1); }
+
+    /* ── VIEWS ── */
+    #view-list    { display: block; }
+    #view-detail  { display: none; }
+    #view-billing { display: none; }
+
+    /* ── BILLING VIEW ── */
+    .billing-wrap { max-width: 860px; margin: 0 auto; padding: 32px; }
+    .billing-header { margin-bottom: 24px; }
+    .billing-header h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    .billing-header p  { font-size: 0.85rem; color: var(--muted); }
+
+    .billing-status-card {
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .billing-status-card.active  { border-left: 3px solid var(--green); }
+    .billing-status-card.trial   { border-left: 3px solid var(--blue); }
+    .billing-status-card.pastdue { border-left: 3px solid var(--amber); }
+    .bs-item { flex: 1; min-width: 120px; }
+    .bs-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; font-family: 'Inter', sans-serif; font-weight: 600; }
+    .bs-value { font-size: 1rem; font-weight: 700; color: var(--white); }
+    .bs-value.green  { color: var(--green); }
+    .bs-value.blue   { color: var(--blue-light); }
+    .bs-value.amber  { color: var(--amber); }
+    .bs-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    .billing-notice {
+      border-radius: 9px; padding: 11px 15px; margin-bottom: 20px;
+      font-size: 0.8rem; display: flex; align-items: flex-start; gap: 9px; line-height: 1.5;
+    }
+    .billing-notice svg { width: 15px; height: 15px; flex-shrink: 0; fill: none; stroke-width: 2; margin-top: 1px; }
+    .billing-notice.info  { background: rgba(43,159,217,0.1); border: 1px solid rgba(43,159,217,0.25); color: #7dd3fc; }
+    .billing-notice.info svg  { stroke: var(--blue-light); }
+    .billing-notice.warn  { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); color: var(--amber); }
+    .billing-notice.warn svg  { stroke: var(--amber); }
+
+    .invoice-table-wrap {
+      background: var(--navy-mid); border: 1px solid var(--navy-border); border-radius: 12px; overflow: hidden;
+    }
+    .invoice-table-head {
+      padding: 14px 18px; border-bottom: 1px solid var(--navy-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .invoice-table-head span { font-weight: 700; font-size: 0.9rem; }
+    .invoice-table-head p { font-size: 0.75rem; color: var(--muted); }
+    .inv-table { width: 100%; border-collapse: collapse; }
+    .inv-table thead th {
+      padding: 9px 18px; text-align: left;
+      font-size: 0.68rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--navy-border);
+    }
+    .inv-table tbody tr { border-bottom: 1px solid var(--navy-border); transition: background 0.1s; }
+    .inv-table tbody tr:last-child { border-bottom: none; }
+    .inv-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+    .inv-table td { padding: 12px 18px; font-size: 0.82rem; vertical-align: middle; }
+    .inv-paid  { color: var(--green); font-size: 0.7rem; font-weight: 700; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25); padding: 2px 8px; border-radius: 4px; display:inline-block; }
+    .inv-due   { color: var(--amber); font-size: 0.7rem; font-weight: 700; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); padding: 2px 8px; border-radius: 4px; display:inline-block; }
+    .inv-void  { color: var(--muted);  font-size: 0.7rem; font-weight: 700; background: rgba(107,122,153,0.1); border: 1px solid rgba(107,122,153,0.2); padding: 2px 8px; border-radius: 4px; display:inline-block; }
+    .btn-dl {
+      padding: 5px 12px; background: transparent; border: 1px solid var(--navy-border);
+      border-radius: 6px; color: var(--muted); font-family: 'Inter', sans-serif;
+      font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-dl svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-dl:hover { border-color: var(--blue); color: var(--blue-light); }
+
+    /* ── PRINT / PDF INVOICE ── */
+    #invoice-print-frame {
+      position: fixed; left: -9999px; top: 0;
+      width: 794px; background: white; color: #111;
+      font-family: 'Inter', sans-serif; font-size: 13px;
+      padding: 48px; line-height: 1.5;
+    }
+    @media print {
+      body > *:not(#invoice-print-frame) { display: none !important; }
+      #invoice-print-frame {
+        position: static; left: auto; width: 100%;
+        padding: 0; margin: 0; box-shadow: none;
+      }
+    }
+
+    /* ══════════════════════════════
+       LISTINGS VIEW
+    ══════════════════════════════ */
+    .list-header {
+      padding: 28px 32px 16px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .list-header h1 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; }
+    .list-header p  { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+
+    .stats-row {
+      display: flex; gap: 12px;
+      padding: 0 32px 20px;
+    }
+    .stat-chip {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 8px; padding: 10px 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .stat-chip-val { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--white); }
+    .stat-chip-label { font-size: 0.75rem; color: var(--muted); }
+
+    .search-bar {
+      margin: 0 32px 20px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%; padding: 10px 16px 10px 40px;
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 9px; color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-bar input::placeholder { color: var(--muted); }
+    .search-bar input:focus { border-color: var(--blue); }
+    .search-bar svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 2;
+      pointer-events: none;
+    }
+
+    .listings { padding: 0 32px 40px; display: flex; flex-direction: column; gap: 10px; }
+
+    .listing-card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: var(--radius); padding: 16px 20px;
+      display: flex; align-items: center; gap: 16px;
+      cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+    }
+    .listing-card:hover { border-color: rgba(59,130,246,0.5); transform: translateY(-1px); }
+
+    .listing-thumb {
+      width: 90px; height: 64px; border-radius: 8px;
+      background: linear-gradient(135deg, #1e3a5f, #ced5e2);
+      flex-shrink: 0; overflow: hidden; display: grid; place-items: center;
+      position: relative;
+    }
+    .listing-thumb svg { width: 28px; height: 28px; stroke: var(--blue-light); fill: none; stroke-width: 1.5; }
+    .listing-thumb img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; border-radius: 8px;
+    }
+
+    .listing-info { flex: 1; min-width: 0; }
+    .listing-title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 5px; }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+    .tag {
+      font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 500;
+      background: rgba(59,130,246,0.12); color: var(--blue-light);
+      border: 1px solid rgba(59,130,246,0.22);
+    }
+    .tag-green { background: rgba(52,211,153,0.1); color: var(--green); border-color: rgba(52,211,153,0.25); }
+    .tag-amber { background: rgba(251,191,36,0.1); color: var(--amber); border-color: rgba(251,191,36,0.25); }
+    .listing-meta { font-size: 0.78rem; color: var(--muted); }
+    .listing-meta span { color: var(--blue-light); }
+
+    .listing-right { text-align: right; flex-shrink: 0; }
+    .offer-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 2px; }
+    .offer-amount { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--green); }
+    .offer-count { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+    .time-left { font-size: 0.72rem; color: var(--blue-light); display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+    .time-left svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .time-expired { color: var(--red); }
+
+    /* ══════════════════════════════
+       DETAIL VIEW
+    ══════════════════════════════ */
+    .detail-back {
+      display: flex; align-items: center; gap: 8px;
+      padding: 18px 32px 0;
+      color: var(--muted); font-size: 0.85rem; cursor: pointer;
+      width: fit-content;
+    }
+    .detail-back:hover { color: var(--white); }
+    .detail-back svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    .detail-header { padding: 12px 32px 24px; }
+    .detail-header h1 { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 700; }
+    .detail-header p  { color: var(--muted); font-size: 0.88rem; margin-top: 2px; }
+
+    .detail-body {
+      display: grid; grid-template-columns: 1fr 340px;
+      gap: 20px; padding: 0 32px 40px; align-items: start;
+    }
+
+    .detail-left { display: flex; flex-direction: column; gap: 16px; }
+    .detail-right { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 72px; }
+
+    .card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: var(--radius); padding: 20px 22px;
+    }
+    .card-title {
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.92rem;
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px; color: var(--white);
+    }
+    .card-title svg { width: 16px; height: 16px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+
+    /* Photos */
+    .photo-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+    .photo-box {
+      width: 140px; height: 100px; border-radius: 8px;
+      background: linear-gradient(135deg, #1e3a5f, #ced5e2);
+      overflow: hidden; display: grid; place-items: center;
+      border: 1px solid var(--navy-border);
+    }
+    .photo-box svg { width: 28px; height: 28px; stroke: var(--blue-light); fill: none; stroke-width: 1.5; opacity: 0.5; }
+    .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Vehicle details grid */
+    .detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .detail-field label { font-size: 0.75rem; color: var(--muted); display: block; margin-bottom: 3px; }
+    .detail-field span  { font-size: 0.9rem; font-weight: 500; color: var(--white); }
+
+    /* Trade-for list */
+    .trade-list { display: flex; flex-direction: column; gap: 6px; }
+    .trade-item {
+      background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.18);
+      border-radius: 7px; padding: 8px 12px; font-size: 0.85rem; color: var(--blue-light);
+    }
+
+    /* Timeline */
+    .timeline-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .timeline-row:last-child { margin-bottom: 0; }
+    .tl-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+    .tl-val   { font-size: 0.88rem; font-weight: 500; }
+
+    .countdown {
+      background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 8px; padding: 10px 14px; text-align: center; margin-top: 10px;
+    }
+    .countdown-val { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--blue-light); }
+    .countdown-label { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* Offers */
+    .highest-offer { text-align: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--navy-border); }
+    .highest-label  { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+    .highest-amount { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 800; color: var(--green); }
+    .highest-count  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    .offers-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .offer-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; border-radius: 7px;
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      font-size: 0.85rem;
+    }
+    .offer-row.your-offer {
+      background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.35);
+      color: var(--teal); font-weight: 600;
+    }
+    .offer-row-label { color: var(--muted); }
+    .offer-row.your-offer .offer-row-label { color: var(--teal); }
+    .offer-row-val { font-family: 'Inter', sans-serif; font-weight: 700; }
+
+    /* Submit offer form */
+    .offer-form { display: flex; flex-direction: column; gap: 10px; }
+    .offer-input-wrap { position: relative; }
+    .offer-input-wrap span {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .offer-input {
+      width: 100%; padding: 10px 14px 10px 26px;
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 8px; color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
+      outline: none; transition: border-color 0.2s;
+    }
+    .offer-input:focus { border-color: var(--teal); }
+    .offer-note {
+      font-size: 0.75rem; color: var(--muted); line-height: 1.4;
+      background: rgba(59,130,246,0.06); border-radius: 6px; padding: 8px 10px;
+    }
+
+    /* Offer period closed state */
+    .offer-period-closed {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 8px; padding: 18px 16px; text-align: center;
+      background: rgba(248,113,113,0.05);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 9px;
+    }
+    .offer-period-closed svg { width: 22px; height: 22px; stroke: var(--red); fill: none; stroke-width: 1.8; opacity: 0.8; }
+    .offer-period-closed-title { font-weight: 700; font-size: 0.88rem; color: var(--red); }
+    .offer-period-closed-sub { font-size: 0.76rem; color: var(--muted); line-height: 1.45; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 2px; margin-bottom: 16px; background: var(--navy-mid); border-radius: 8px; padding: 3px; }
+    .tab {
+      flex: 1; text-align: center; padding: 7px;
+      border-radius: 6px; font-size: 0.82rem; cursor: pointer;
+      color: var(--muted); transition: all 0.18s;
+    }
+    .tab.active { background: var(--navy-card); color: var(--white); font-weight: 600; }
+
+    @media (max-width: 900px) {
+      .detail-body { grid-template-columns: 1fr; }
+      .detail-right { position: static; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .listing-card { animation: fadeUp 0.3s ease both; }
+    .listing-card:nth-child(2) { animation-delay: 0.07s; }
+    .listing-card:nth-child(3) { animation-delay: 0.14s; }
+    .listing-card:nth-child(4) { animation-delay: 0.21s; }
+
+    .divider { height: 1px; background: var(--navy-border); margin: 2px 0 14px; }
+
+    /* ══════════════════════════════
+       COMPLETED OFFERS SECTION
+    ══════════════════════════════ */
+    .section-label {
+      padding: 0 32px 10px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .section-label-left h2 {
+      font-size: 1rem; font-weight: 700; color: var(--white);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label-left h2 svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; }
+    .section-label-left p { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .section-label-right { font-size: 0.75rem; color: var(--muted); padding-bottom: 2px; }
+
+    .completed-strip {
+      padding: 0 32px 40px;
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+
+    .completed-card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: var(--radius); padding: 14px 16px;
+      display: flex; align-items: center; gap: 13px;
+      cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+      flex: 1; min-width: 260px; max-width: calc(50% - 5px);
+    }
+    .completed-card:hover { border-color: rgba(52,211,153,0.45); transform: translateY(-1px); }
+    .completed-card.won { border-left: 3px solid var(--green); }
+
+    .completed-thumb {
+      width: 72px; height: 52px; border-radius: 7px;
+      background: linear-gradient(135deg, #0d2a1a, #1a3a2a);
+      flex-shrink: 0; overflow: hidden; display: grid; place-items: center;
+      position: relative;
+    }
+    .completed-thumb svg { width: 22px; height: 22px; stroke: var(--green); fill: none; stroke-width: 1.5; opacity: 0.55; }
+    .completed-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 7px; }
+
+    .completed-info { flex: 1; min-width: 0; }
+    .completed-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .completed-meta { font-size: 0.72rem; color: var(--muted); }
+    .completed-meta-won { font-size: 0.72rem; color: var(--green); margin-top: 2px; }
+
+    .completed-right { text-align: right; flex-shrink: 0; }
+    .won-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+      background: rgba(52,211,153,0.12); color: var(--green);
+      border: 1px solid rgba(52,211,153,0.3); margin-bottom: 5px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .won-badge svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+    .outbid-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+      background: rgba(139,155,191,0.08); color: var(--muted);
+      border: 1px solid rgba(139,155,191,0.2); margin-bottom: 5px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .completed-amount { font-size: 1.05rem; font-weight: 800; color: var(--green); line-height: 1; }
+    .completed-amount.outbid { color: var(--muted); }
+    .completed-expires { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+    .customer-contact {
+      margin-top: 10px; padding: 11px 14px;
+      background: rgba(43,159,217,0.06);
+      border: 1px solid rgba(43,159,217,0.18);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .contact-name {
+      font-weight: 700; font-size: 0.85rem; color: var(--white);
+      display: flex; align-items: center; gap: 7px; margin-bottom: 5px;
+    }
+    .contact-name svg { width: 13px; height: 13px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+    .contact-details { display: flex; gap: 16px; flex-wrap: wrap; }
+    .contact-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .contact-item svg { width: 12px; height: 12px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; }
+    .contact-item a {
+      color: var(--blue-light); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .contact-item a:hover { color: var(--white); }
+
+    .completed-empty {
+      padding: 0 32px 32px;
+      color: var(--muted); font-size: 0.85rem;
+    }
+
+    .section-divider {
+      margin: 8px 32px 24px;
+      height: 1px; background: var(--navy-border);
+    }
+
+    /* ── Q&A MESSAGING ── */
+    .qa-card { margin-top: 0; }
+    .qa-thread { display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; margin-bottom: 12px; padding-right: 2px; }
+    .qa-thread::-webkit-scrollbar { width: 4px; }
+    .qa-thread::-webkit-scrollbar-track { background: transparent; }
+    .qa-thread::-webkit-scrollbar-thumb { background: var(--navy-border); border-radius: 2px; }
+    .qa-msg { border-radius: 9px; padding: 9px 12px; font-size: 0.8rem; line-height: 1.55; }
+    .qa-msg-q { background: rgba(43,159,217,0.08); border: 1px solid rgba(43,159,217,0.2); }
+    .qa-msg-a { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.2); }
+    .qa-msg-meta { font-size: 0.68rem; color: var(--muted); margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; }
+    .qa-msg-meta .qa-type { font-weight: 700; letter-spacing: 0.04em; }
+    .qa-msg-meta .qa-type.q { color: var(--blue-light); }
+    .qa-msg-meta .qa-type.a { color: var(--green); }
+    .qa-msg-body { color: var(--white); }
+    .qa-empty { color: var(--muted); font-size: 0.8rem; text-align: center; padding: 18px 0; }
+    .qa-input-wrap { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--navy-border); padding-top: 12px; }
+    .qa-textarea { width: 100%; padding: 9px 11px; background: var(--navy-mid); border: 1px solid var(--navy-border); border-radius: 8px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.82rem; resize: vertical; min-height: 64px; outline: none; transition: border-color 0.2s; line-height: 1.5; }
+    .qa-textarea:focus { border-color: var(--blue); }
+    .qa-textarea::placeholder { color: var(--muted); }
+    .qa-send-btn { align-self: flex-end; padding: 7px 16px; background: var(--blue); border: none; border-radius: 7px; color: white; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.18s; }
+    .qa-send-btn:hover { background: #2080b8; }
+    .qa-send-btn svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2; }
+    .qa-notice { font-size: 0.72rem; color: var(--muted); line-height: 1.5; font-style: italic; }
+
+    /* ── LIGHTBOX GALLERY ── */
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+    .photo-box {
+      aspect-ratio: 4/3; border-radius: 8px; overflow: hidden;
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      cursor: pointer; position: relative; transition: transform 0.15s;
+    }
+    .photo-box:hover { transform: scale(1.03); border-color: var(--blue); }
+    .photo-box svg { position: absolute; inset: 0; margin: auto; width: 28px; height: 28px; stroke: var(--blue-light); fill: none; stroke-width: 1.5; opacity: 0.5; }
+    .photo-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-box .photo-expand-icon {
+      position: absolute; bottom: 5px; right: 5px;
+      background: rgba(0,0,0,0.55); border-radius: 4px; padding: 3px;
+      opacity: 0; transition: opacity 0.15s;
+    }
+    .photo-box:hover .photo-expand-icon { opacity: 1; }
+    .photo-box .photo-expand-icon svg { width: 12px; height: 12px; stroke: white; position: static; margin: 0; opacity: 1; }
+
+    /* Lightbox */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.92); z-index: 1000;
+      align-items: center; justify-content: center;
+      touch-action: pan-y;
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-inner { position: relative; max-width: 92vw; max-height: 88vh; display: flex; align-items: center; }
+    .lightbox-img {
+      max-width: 88vw; max-height: 84vh;
+      border-radius: 10px; object-fit: contain;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      user-select: none; -webkit-user-drag: none;
+    }
+    .lightbox-close {
+      position: fixed; top: 18px; right: 22px;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: none;
+      color: white; font-size: 1.3rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; z-index: 1001;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-arrow {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: none;
+      color: white; font-size: 1.4rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; z-index: 1001;
+    }
+    .lightbox-arrow:hover { background: rgba(255,255,255,0.28); }
+    .lightbox-arrow.prev { left: 14px; }
+    .lightbox-arrow.next { right: 14px; }
+    .lightbox-arrow svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2.5; }
+    .lightbox-counter {
+      position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.6); color: white; font-size: 0.82rem;
+      padding: 4px 14px; border-radius: 20px; z-index: 1001;
+    }
+    .lightbox-dots {
+      position: fixed; bottom: 46px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 1001;
+    }
+    .lightbox-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.35); transition: background 0.15s;
+    }
+    .lightbox-dot.active { background: white; }
+    .lightbox-caption {
+      position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.6); color: rgba(255,255,255,0.75); font-size: 0.78rem;
+      padding: 4px 14px; border-radius: 6px; z-index: 1001; white-space: nowrap;
+    }
+
+    /* ── MOBILE RESPONSIVE ── */
+
+    @media (max-width: 900px) {
+      .detail-body { grid-template-columns: 1fr !important; }
+      .detail-right { position: static !important; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 10px 14px; gap: 8px; flex-wrap: nowrap; }
+      .nav-right { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .nav-right::-webkit-scrollbar { display: none; }
+      .nav-dealer { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.82rem; }
+      .btn { padding: 6px 10px; font-size: 0.76rem; }
+      .btn svg { display: none; }
+      .list-header { padding: 16px 14px 8px; }
+      .list-header h1 { font-size: 1.1rem; }
+      .search-bar { margin: 0 14px 10px; }
+      .listings { padding: 0 14px 40px; }
+      .listing-card { flex-direction: column; padding: 12px; gap: 10px; }
+      .listing-thumb { width: 100%; height: 160px; flex-shrink: unset; border-radius: 8px; }
+      .listing-info { width: 100%; }
+      .listing-right { text-align: left; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+      .offer-amount { font-size: 1.2rem; }
+      .time-left { font-size: 0.72rem; }
+      .completed-strip { flex-direction: column; padding: 0 14px; }
+      .completed-card { max-width: 100% !important; }
+      .detail-header { padding: 14px; }
+      .detail-back { padding: 10px 14px; }
+      .detail-body { padding: 0 14px 40px; gap: 12px; }
+      .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .card { padding: 14px; }
+      .qa-card .qa-thread { max-height: 200px; }
+      .lightbox-arrow.prev { left: 6px; }
+      .lightbox-arrow.next { right: 6px; }
+      .lightbox-img { max-width: 96vw; max-height: 70vh; }
+    }
+    @media (max-width: 480px) {
+      .listing-thumb { height: 140px; }
+      .photo-grid { grid-template-columns: repeat(2, 1fr); }
+      .qa-notif-btn span:not(.qa-notif-badge) { display: none; }
+    }
+
+
+    /* ── ADMIN VIEW BANNER ── */
+    .admin-viewing-bar {
+      display: none;
+      background: rgba(248,113,113,0.12);
+      border-bottom: 2px solid rgba(248,113,113,0.45);
+      padding: 10px 20px;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: #f87171;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 12px rgba(248,113,113,0.2);
+    }
+    /* Push page content down when bar is visible */
+    body.admin-viewing { padding-top: 44px; }
+    .admin-viewing-bar svg {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      stroke: #f87171;
+      fill: none;
+      stroke-width: 2;
+    }
+    .admin-viewing-bar strong { color: white; }
+    .btn-return-admin {
+      margin-left: auto;
+      padding: 5px 14px;
+      background: rgba(248,113,113,0.15);
+      border: 1px solid rgba(248,113,113,0.4);
+      border-radius: 6px;
+      color: #f87171;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-return-admin:hover { background: rgba(248,113,113,0.3); color: white; }
+
+    /* ── MESSAGES NAV BUTTON ── */
+    .qa-notif-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      background: transparent;
+      border: 1px solid var(--navy-border);
+      border-radius: 7px;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .qa-notif-btn:hover { color: var(--white); border-color: var(--blue); }
+    .qa-notif-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+    .qa-notif-badge {
+      display: none;
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #f87171;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 800;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      padding: 0 4px;
+      align-items: center;
+      justify-content: center;
+      line-height: 16px;
+      text-align: center;
+    }
+    .qa-notif-badge.active { display: flex; }
+  
+    /* ── Tablet (iPad portrait 769-1024px) ── */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .listing-card { padding: 14px; gap: 12px; }
+      .detail-body { padding: 0 20px 40px; gap: 14px; }
+    }
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      nav { padding: 8px 14px; height: 44px; }
+      .nav-right { gap: 5px; }
+      .btn { padding: 5px 9px; font-size: 0.72rem; }
+      .list-header { padding: 10px 14px 6px; }
+      .list-header h1 { font-size: 1rem; }
+      .search-bar { margin: 0 14px 8px; }
+      .listings { padding: 0 14px 32px; }
+      .listing-card { flex-direction: row; padding: 10px; gap: 10px; }
+      .listing-thumb { width: 100px; height: 80px; flex-shrink: 0; border-radius: 6px; }
+      .listing-info { flex: 1; }
+      .detail-body { padding: 0 14px 32px; gap: 10px; }
+      .detail-header { padding: 10px 14px; }
+      .card { padding: 12px; }
+      .lightbox-img { max-height: 80vh; max-width: 90vw; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  
+  <!-- ADMIN VIEWING BANNER (shown when admin is impersonating) -->
+  <div class="admin-viewing-bar" id="admin-viewing-bar">
+    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>Admin view — browsing as <strong id="admin-view-name">—</strong>. Changes here affect their real account data.</span>
+    <button class="btn-return-admin" onclick="returnToAdmin()">← Return to Admin Dashboard</button>
+  </div>
+
+<nav>
+    <div class="logo" onclick="showList()">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+    </div>
+    <div class="nav-right">
+      <span class="nav-dealer" id="nav-dealer-name" style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Elite Autohaus</span>
+      <button class="btn btn-ghost" onclick="showBilling()">Billing</button>
+      <button class="qa-notif-btn" id="qa-notif-btn" onclick="showQAInbox()">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+        <span class="qa-notif-badge" id="qa-notif-badge"></span>
+      </button>
+      <button id="nav-market-btn" class="btn btn-ghost" onclick="window.location.href='market-guide.html'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Market Guide
+      </button>
+      <button class="btn btn-ghost" onclick="window.location.href='dealer-settings.html'">⚙ Settings</button>
+      <button class="btn btn-ghost" onclick="window.location.href='dealer-login.html'">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- ══ LISTINGS VIEW ══ -->
+  <div id="view-list">
+    <div class="list-header">
+      <div>
+        <h1>Available Listings</h1>
+        <p>Vehicles matching your dealership brands</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-chip">
+        <div>
+          <div class="stat-chip-val" id="stat-active-listings">0</div>
+          <div class="stat-chip-label">Active Listings</div>
+        </div>
+      </div>
+      <div class="stat-chip">
+        <div>
+          <div class="stat-chip-val" id="stat-your-offers">0</div>
+          <div class="stat-chip-label">Your Active Offers</div>
+        </div>
+      </div>
+      <div class="stat-chip">
+        <div>
+          <div class="stat-chip-val" style="color:var(--green)" id="stat-leading">0</div>
+          <div class="stat-chip-label">Leading Offers</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search by make, model, or year..." oninput="filterListings(this.value)" />
+    </div>
+
+    <div class="listings" id="listings-container"></div>
+    <!-- ══ COMPLETED OFFERS SECTION ══ -->
+    <div class="section-divider"></div>
+
+    <div class="section-label">
+      <div class="section-label-left">
+        <h2>
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Top Completed Offers
+        </h2>
+        <p>Your offers on expired listings · visible for 30 days after close</p>
+      </div>
+      <div class="section-label-right" id="completed-count-label"></div>
+    </div>
+
+    <div class="completed-strip" id="completed-strip">
+      <!-- Populated by JS -->
+    </div>
+
+  </div>
+
+  <!-- ══ BILLING VIEW ══ -->
+  <div id="view-billing">
+    <div class="billing-wrap">
+      <div class="billing-header">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <button class="btn btn-ghost" onclick="showList()" style="padding:5px 10px;font-size:0.75rem;">
+            <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5;"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+        <h1>Billing & Invoices</h1>
+        <p>Your DealrTrade subscription details and invoice history</p>
+      </div>
+
+      <!-- Status card -->
+      <div class="billing-status-card active" id="dealer-status-card">
+        <div class="bs-item">
+          <div class="bs-label">Subscription Status</div>
+          <div class="bs-value green" id="bs-status">Active</div>
+        </div>
+        <div class="bs-item">
+          <div class="bs-label">Monthly Rate</div>
+          <div class="bs-value" id="bs-rate">$299.00 + HST</div>
+        </div>
+        <div class="bs-item">
+          <div class="bs-label">Total / Month</div>
+          <div class="bs-value green" id="bs-total">$337.87</div>
+          <div class="bs-sub">Includes 13% HST</div>
+        </div>
+        <div class="bs-item">
+          <div class="bs-label">Next Charge</div>
+          <div class="bs-value" id="bs-next-charge">April 1, 2026</div>
+        </div>
+        <div class="bs-item">
+          <div class="bs-label">Card on File</div>
+          <div class="bs-value blue" id="bs-card">Visa •••• 4242</div>
+        </div>
+      </div>
+
+      <!-- Notice (shown when past due or trial) -->
+      <div class="billing-notice warn" id="billing-pastdue-notice" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Your last payment failed. Please update your payment method to avoid service interruption. <strong id="billing-grace-msg">You have 7 days before access is suspended.</strong></span>
+      </div>
+      <div class="billing-notice info" id="billing-trial-notice" style="display:none;">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>You're on a <strong>free trial</strong> — no charges until <span id="billing-trial-end">—</span>. Your card will be automatically charged when your trial ends.</span>
+      </div>
+
+      <!-- Payment method update CTA (always shown) -->
+      <div style="background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+        <div>
+          <div style="font-weight:600;font-size:0.85rem;margin-bottom:2px;">Payment Method</div>
+          <div style="font-size:0.78rem;color:var(--muted);" id="payment-method-display">Visa •••• 4242 · Expires 08/27</div>
+        </div>
+        <button class="btn btn-ghost" onclick="updatePaymentMethod()" style="font-size:0.78rem;">Update Card</button>
+      </div>
+
+      <!-- Invoice table -->
+      <div class="invoice-table-wrap">
+        <div class="invoice-table-head">
+          <div>
+            <span>Invoice History</span>
+            <p>Download PDF copies for your records</p>
+          </div>
+        </div>
+        <table class="inv-table">
+          <thead><tr>
+            <th>Invoice #</th>
+            <th>Period</th>
+            <th>Base</th>
+            <th>HST (13%)</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Download</th>
+          </tr></thead>
+          <tbody id="dealer-invoice-tbody"></tbody>
+        </table>
+      </div>
+
+      <p style="font-size:0.72rem;color:var(--muted);margin-top:14px;line-height:1.6;">
+        For billing questions or disputes, contact <a href="/cdn-cgi/l/email-protection#72111d1c06131106321617131e0006001316175c111d1f">[email&#160;protected]</a>. HST registration number: 123456789 RT0001. All amounts in Canadian dollars.
+      </p>
+    </div>
+  </div>
+
+  <!-- Hidden invoice print frame -->
+  <div id="invoice-print-frame"></div>
+
+  <!-- ══ DETAIL VIEW ══ -->
+  <div id="view-detail">
+    <div class="detail-back" onclick="showList()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Listings
+    </div>
+
+    <div class="detail-header">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+        <div>
+          <h1 id="detail-title">2022 Toyota Camry</h1>
+          <p id="detail-trim">XLE</p>
+        </div>
+        <div id="detail-customer-contact" style="display:none">
+          <div style="background:rgba(43,159,217,0.08);border:1px solid rgba(43,159,217,0.3);border-radius:12px;padding:14px 20px;">
+            <div style="font-size:0.7rem;color:var(--blue-light);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Customer Contact</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue-light)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span id="dh-customer-name" style="font-weight:800;font-size:1.15rem;color:var(--white);">—</span>
+            </div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:7px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-light)" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <a id="dh-customer-phone" href="#" style="color:var(--white);text-decoration:none;font-size:0.95rem;font-weight:600;">—</a>
+              </div>
+              <div style="display:flex;align-items:center;gap:7px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--blue-light)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a id="dh-customer-email" href="#" style="color:var(--white);text-decoration:none;font-size:0.95rem;font-weight:600;">—</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <!-- LEFT -->
+      <div class="detail-left">
+
+        <!-- Interior Photos -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Interior Photos
+          </div>
+          <div class="photo-grid" id="interior-photos"></div>
+        </div>
+
+        <!-- Exterior Photos -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Exterior Photos
+          </div>
+          <div class="photo-grid" id="exterior-photos"></div>
+        </div>
+
+        <!-- Damage Photos -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Damage Photos
+          </div>
+          <div class="photo-grid" id="damage-photos"></div>
+        </div>
+
+        <!-- Vehicle Details -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Vehicle Details
+          </div>
+          <div class="detail-grid">
+            <div class="detail-field"><label>VIN</label><span id="d-vin">—</span></div>
+            <div class="detail-field"><label>Mileage</label><span id="d-mileage">—</span></div>
+            <div class="detail-field"><label>Intent</label><span id="d-intent">—</span></div>
+            <div class="detail-field"><label>Purchase Type</label><span id="d-purchase-type">—</span></div>
+            <div class="detail-field"><label>Accident History</label><span id="d-accident">—</span></div>
+            <div class="detail-field"><label>Maintenance History</label><span id="d-maintenance">—</span></div>
+            <div class="detail-field"><label>Damages / Issues</label><span id="d-damages">—</span></div>
+          </div>
+        </div>
+
+        <!-- Trade For -->
+        <div class="card" id="trade-for-card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            Customer looking for (vehicle type)
+          </div>
+          <div class="trade-list" id="trade-list"></div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="detail-right">
+
+        <!-- Timeline -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Timeline
+          </div>
+          <div class="timeline-row">
+            <div><div class="tl-label">Listed</div><div class="tl-val" id="d-listed">—</div></div>
+            <div style="text-align:right"><div class="tl-label">Expires</div><div class="tl-val" id="d-expires">—</div></div>
+          </div>
+          <div class="countdown">
+            <div class="countdown-val" id="d-countdown">—</div>
+            <div class="countdown-label">remaining in offer period</div>
+          </div>
+        </div>
+
+        <!-- Current Offers -->
+        <div class="card">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Current Offers
+          </div>
+          <div class="highest-offer">
+            <div class="highest-label">Highest Offer</div>
+            <div class="highest-amount" id="d-highest">—</div>
+            <div class="highest-count" id="d-offer-count">—</div>
+          </div>
+          <div class="offers-list" id="d-offers-list"></div>
+          <div class="divider"></div>
+
+          <!-- Submit / Update Offer -->
+          <div id="offer-form-section">
+          <div class="card-title" style="margin-bottom:10px">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Submit / Update Your Offer
+          </div>
+          <div class="offer-form">
+            <div class="offer-input-wrap">
+              <span>$</span>
+              <input class="offer-input" type="number" id="offer-input" placeholder="0" min="0" step="500" />
+            </div>
+            <div class="offer-note">
+              💡 Dealers can see the current highest offer but not who placed it. You can update your offer at any time before the listing expires.
+            </div>
+            <button class="btn btn-success" id="submit-offer-btn" onclick="submitOffer()" style="width:100%;justify-content:center;padding:11px">
+              Submit Offer
+            </button>
+          </div>
+          </div>
+
+          <!-- Offer period closed state (shown when listing is expired) -->
+          <div id="offer-period-closed-msg" style="display:none">
+            <div class="offer-period-closed">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <div class="offer-period-closed-title">Offer Period Closed</div>
+              <div class="offer-period-closed-sub">The offer window for this listing has expired. No further changes can be made.</div>
+            </div>
+            <!-- Mark Deal Complete — only shown to top-3 dealers on expired listings that haven't been marked yet -->
+            <div id="mark-deal-wrap" style="display:none;margin-top:14px;">
+              <button onclick="openDealOutcomePrompt(activeListingId)" style="width:100%;padding:11px;background:var(--teal);border:none;border-radius:9px;color:#f2f4f8;font-family:'DM Sans',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;">
+                <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#f2f4f8;fill:none;stroke-width:2.5;"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                Report Deal Outcome
+              </button>
+              <p style="font-size:0.7rem;color:var(--muted);text-align:center;margin-top:6px;line-height:1.4;">Required for all top-3 offers. Select the outcome that applies to this listing.</p>
+            </div>
+            <div id="deal-confirmed-badge" style="display:none;margin-top:14px;border-radius:9px;padding:12px 14px;align-items:center;gap:10px;">
+              <svg id="dcb-icon" viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke-width:2;flex-shrink:0;"></svg>
+              <div>
+                <div style="font-size:0.82rem;font-weight:700;" id="dcb-title">Outcome Reported</div>
+                <div style="font-size:0.72rem;color:var(--muted)" id="deal-confirmed-sub">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Q&A Messaging Card -->
+        <div class="card qa-card" id="qa-section">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Questions &amp; Answers
+          </div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;line-height:1.55;">Ask the seller an anonymous question about this vehicle. All questions and answers are visible to all dealers on this listing.</p>
+          <div class="qa-thread" id="qa-thread-dealer"></div>
+          <div class="qa-input-wrap" id="qa-input-section">
+            <textarea class="qa-textarea" id="qa-input" placeholder="Ask a question about condition, service history, modifications…"></textarea>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+              <span class="qa-notice">Your dealership name will not be shown to the seller.</span>
+              <button class="qa-send-btn" onclick="sendDealerQuestion()">
+                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Send Question
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- Mark Deal Complete Modal -->
+  <!-- MANDATORY DEAL OUTCOME PROMPT — not dismissible, must choose an option -->
+  <div id="deal-outcome-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);z-index:600;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#1c2333;border:1px solid #2a3450;border-radius:16px;padding:28px;width:100%;max-width:480px;animation:fadeUp 0.2s ease both;box-shadow:0 24px 60px rgba(0,0,0,0.6);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+        <div style="width:44px;height:44px;border-radius:10px;background:rgba(43,159,217,0.12);border:1px solid rgba(43,159,217,0.3);display:grid;place-items:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--teal);fill:none;stroke-width:2;"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--teal);margin-bottom:2px;">Deal Outcome Required</div>
+          <h3 style="font-size:1rem;font-weight:800;line-height:1.2;" id="dop-title">Did you complete a deal with this customer?</h3>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.03);border:1px solid #2a3450;border-radius:10px;padding:14px;margin-bottom:18px;">
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:3px;">Listing</div>
+        <div style="font-size:0.9rem;font-weight:700;" id="dop-vehicle">—</div>
+        <div style="font-size:0.74rem;color:var(--muted);margin-top:4px;" id="dop-rank-line">—</div>
+      </div>
+
+      <p style="font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:20px;">
+        DealrTrade requires deal outcome reporting to maintain platform analytics and dealer performance scores. Your response is confidential and only shared in aggregate with DealrTrade staff.
+      </p>
+
+      <!-- YES branch — expands detail fields -->
+      <div id="dop-yes-fields" style="display:none;margin-bottom:16px;background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:14px;">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--green);margin-bottom:12px;">Deal Details</div>
+        <div style="margin-bottom:10px;">
+          <label style="display:block;font-size:0.7rem;color:var(--muted);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Deal Type</label>
+          <select id="dop-type" style="width:100%;padding:9px 12px;background:#1c2333;border:1px solid #2a3450;border-radius:7px;color:#e8edf5;font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;cursor:pointer;">
+            <option value="trade-in">Trade-In</option>
+            <option value="sale">Outright Sale</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:0.7rem;color:var(--muted);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Final Deal Value ($)</label>
+          <input id="dop-value" type="number" placeholder="e.g. 28500" style="width:100%;padding:9px 12px;background:#1c2333;border:1px solid #2a3450;border-radius:7px;color:#e8edf5;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;" />
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button id="dop-yes-btn" onclick="dealOutcomeSelectYes()" style="width:100%;padding:13px;background:var(--green);border:none;border-radius:10px;color:#0a1f12;font-family:'DM Sans',sans-serif;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+          Yes — Deal Completed with Customer
+        </button>
+        <button onclick="dealOutcomeNo()" style="width:100%;padding:13px;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);border-radius:10px;color:#f87171;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s;">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;display:inline;vertical-align:middle;margin-right:6px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          No — Customer Did Not Proceed with Us
+        </button>
+        <button onclick="dealOutcomeNotComplete()" style="width:100%;padding:13px;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:10px;color:#fbbf24;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:all 0.2s;">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;display:inline;vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Deal Not Complete — Still in Negotiation
+        </button>
+        <button id="dop-notyet-btn" onclick="dealOutcomeNotYet()" style="width:100%;padding:11px;background:rgba(255,255,255,0.04);border:1px solid #2a3450;border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:500;font-size:0.82rem;cursor:pointer;transition:all 0.2s;" title="Snooze for 3 days — only available for 10 days after offer period closes">
+          Not Yet — Remind Me in 3 Days
+        </button>
+      </div>
+      <div id="dop-notyet-note" style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:8px;line-height:1.4;"></div>
+    </div>
+  </div>
+
+  <!-- KEEP old overlay stub so no ref breaks (hidden, replaced) -->
+  <div id="mark-deal-overlay" style="display:none"></div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightbox" onclick="lightboxBgClick(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-arrow prev" onclick="lightboxNav(-1)">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="lightbox-inner">
+      <img class="lightbox-img" id="lightbox-img" src="" alt="" draggable="false" />
+    </div>
+    <button class="lightbox-arrow next" onclick="lightboxNav(1)">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <div class="lightbox-counter" id="lightbox-counter"></div>
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+    <div class="lightbox-dots" id="lightbox-dots"></div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    const NOW = Date.now();
+    const DAY_MS = 86400000;
+    const SNIPER_WINDOW_MS = 2 * 60 * 1000;   // 2 minutes
+    const SNIPER_EXTEND_MS = 60 * 1000;        // extend by 60 seconds
+
+    // ── EmailJS config ──
+    window.EMAILJS_PUBLIC_KEY = window.EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+    window.EMAILJS_SERVICE_ID = window.EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+    (function(){ if(typeof emailjs!=='undefined'&&window.EMAILJS_PUBLIC_KEY!=='YOUR_PUBLIC_KEY') emailjs.init({publicKey:window.EMAILJS_PUBLIC_KEY}); })();
+
+    function dtSendEmail(templateId, params) {
+      if(typeof emailjs==='undefined'||window.EMAILJS_PUBLIC_KEY==='YOUR_PUBLIC_KEY'){
+        console.info('[DealrTrade Email]', templateId, params); return;
+      }
+      emailjs.send(window.EMAILJS_SERVICE_ID, templateId, params)
+        .catch(function(e){ console.warn('[DealrTrade Email] failed:', templateId, e); });
+    }
+
+    // ── Dealer notification helpers ──
+    // Key: dt_notif_sent_<vin>_<type>_<dealerId>  → prevents double-send
+    function notifSent(vin, type, dealerId) {
+      return !!localStorage.getItem('dt_notif_sent_' + vin + '_' + type + '_' + dealerId);
+    }
+    function markNotifSent(vin, type, dealerId) {
+      localStorage.setItem('dt_notif_sent_' + vin + '_' + type + '_' + dealerId, '1');
+    }
+    function storeInAppNotif(dealerName, notif) {
+      var key = 'dt_dealer_notif_' + dealerName;
+      var arr = JSON.parse(localStorage.getItem(key) || '[]');
+      arr.unshift(notif);
+      if(arr.length > 50) arr.length = 50;
+      localStorage.setItem(key, JSON.stringify(arr));
+    }
+
+    // Get primary contact user for a dealership
+    function getDealerContact(dealerName) {
+      var users = JSON.parse(localStorage.getItem('dt_dealer_users') || '[]');
+      return users.find(function(u){ return u.dealerName === dealerName && u.status === 'active' && (u.role === 'Dealer Principal / Owner' || u.role === 'Dealer Admin'); })
+        || users.find(function(u){ return u.dealerName === dealerName && u.status === 'active'; });
+    }
+
+    // Notify ALL dealers who match the listing make (outbid / countdown / new offer)
+    function getMatchingDealers(listing) {
+      var users = JSON.parse(localStorage.getItem('dt_dealer_users') || '[]');
+      var profiles = JSON.parse(localStorage.getItem('dt_dealer_profiles') || '{}');
+      var seen = new Set(); var matched = [];
+      users.forEach(function(u) {
+        if(u.status !== 'active' || seen.has(u.dealerName)) return;
+        seen.add(u.dealerName);
+        var profile = profiles[u.dealerId] || profiles[u.dealerName] || {};
+        var buys = (profile.buys && profile.buys.length ? profile.buys : (profile.sells || [])).map(function(b){ return b.toLowerCase(); });
+        if(buys.includes((listing.make||'').toLowerCase())) matched.push(u.dealerName);
+      });
+      return matched;
+    }
+
+    // ── OUTBID notification (sent to previous leader when beaten) ──
+    function notifyOutbid(listing, previousLeaderName) {
+      if(!previousLeaderName || !listing) return;
+      var vin = listing.vin || listing.id;
+      var notifType = 'outbid_' + Date.now(); // unique per event
+      var contact = getDealerContact(previousLeaderName);
+      if(!contact) return;
+      storeInAppNotif(previousLeaderName, {
+        type: 'outbid', vin: vin, title: listing.title,
+        highest: listing.highest, ts: Date.now(), read: false,
+      });
+      dtSendEmail('dealer_outbid', {
+        to_name: contact.firstName + ' ' + contact.lastName,
+        to_email: contact.email,
+        dealer_name: previousLeaderName,
+        vehicle: listing.title + (listing.trim ? ' ' + listing.trim : ''),
+        new_high: listing.highest,
+        expires: listing.expires,
+        portal_url: window.location.origin + '/dealer-portal.html',
+      });
+    }
+
+    // ── COUNTDOWN milestone notifications ──
+    function checkCountdownMilestones(listing) {
+      var ms = getListingMsLeft(listing);
+      if(ms <= 0) return;
+      var vin = listing.vin || listing.id;
+      var milestones = [
+        { key:'24h', ms: 24*60*60*1000, label:'24 hours', template:'dealer_countdown' },
+        { key:'2h',  ms:  2*60*60*1000, label:'2 hours',  template:'dealer_countdown' },
+        { key:'1h',  ms:  1*60*60*1000, label:'1 hour',   template:'dealer_countdown' },
+        { key:'15m', ms:     15*60*1000, label:'15 minutes',template:'dealer_countdown'},
+      ];
+      var dealers = getMatchingDealers(listing);
+      milestones.forEach(function(m) {
+        if(ms > m.ms) return; // not yet within this window
+        dealers.forEach(function(dealerName) {
+          if(notifSent(vin, m.key, dealerName)) return;
+          markNotifSent(vin, m.key, dealerName);
+          var contact = getDealerContact(dealerName);
+          if(!contact) return;
+          storeInAppNotif(dealerName, {
+            type: 'countdown', milestone: m.label, vin: vin,
+            title: listing.title, highest: listing.highest, ts: Date.now(), read: false,
+          });
+          dtSendEmail(m.template, {
+            to_name: contact.firstName + ' ' + contact.lastName,
+            to_email: contact.email,
+            dealer_name: dealerName,
+            vehicle: listing.title + (listing.trim ? ' ' + listing.trim : ''),
+            time_left: m.label,
+            current_high: listing.highest || 'No offers yet',
+            expires: listing.expires,
+            portal_url: window.location.origin + '/dealer-portal.html',
+          });
+        });
+      });
+    }
+
+    // ── CLOSE OF PERIOD: top-3 win emails + loser emails + customer reveal ──
+    function sendCloseOfPeriodEmails(listing) {
+      var vin = listing.vin || listing.id;
+      if(notifSent(vin, 'close', 'sent')) return;
+      markNotifSent(vin, 'close', 'sent');
+
+      // Sort offers highest first
+      var sorted = (listing.offers || []).slice().sort(function(a,b){
+        return (parseFloat(String(b.amount||'0').replace(/[^0-9.]/g,''))||0)
+             - (parseFloat(String(a.amount||'0').replace(/[^0-9.]/g,''))||0);
+      });
+      var top3Names = sorted.slice(0,3).map(function(o){ return o.label||o.dealerName||''; });
+
+      // Winner emails (top 3)
+      sorted.forEach(function(offer, idx) {
+        var dealerName = offer.label || offer.dealerName || '';
+        if(!dealerName) return;
+        var isTop = idx < 3;
+        var contact = getDealerContact(dealerName);
+        if(!contact) return;
+
+        if(isTop) {
+          storeInAppNotif(dealerName, {
+            type: 'winner', rank: idx+1, vin: vin,
+            title: listing.title, amount: offer.amount, ts: Date.now(), read: false,
+          });
+          dtSendEmail('dealer_top3_winner', {
+            to_name: contact.firstName + ' ' + contact.lastName,
+            to_email: contact.email,
+            dealer_name: dealerName,
+            vehicle: listing.title + (listing.trim ? ' ' + listing.trim : ''),
+            rank: idx + 1,
+            your_offer: offer.amount,
+            customer_name: (listing.customer && listing.customer.name) || 'the customer',
+            customer_phone: (listing.customer && listing.customer.phone) || '',
+            customer_email: (listing.customer && listing.customer.email) || '',
+            portal_url: window.location.origin + '/dealer-portal.html',
+          });
+        } else {
+          storeInAppNotif(dealerName, {
+            type: 'not_top3', vin: vin,
+            title: listing.title, amount: offer.amount, ts: Date.now(), read: false,
+          });
+          dtSendEmail('dealer_not_top3', {
+            to_name: contact.firstName + ' ' + contact.lastName,
+            to_email: contact.email,
+            dealer_name: dealerName,
+            vehicle: listing.title + (listing.trim ? ' ' + listing.trim : ''),
+            your_offer: offer.amount,
+            top_offer: sorted[0] ? sorted[0].amount : '',
+            portal_url: window.location.origin + '/dealer-portal.html',
+          });
+        }
+      });
+    }
+
+    // ── 7-DAY FOLLOW-UP: ask top-3 dealers if they completed the deal ──
+    function checkDealerFollowUps() {
+      var now = Date.now();
+      var SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+      var allListings = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+      Object.values(allListings).forEach(function(l) {
+        if(l.status !== 'expired' && !l.expiredAt) return;
+        var expiredAt = l.expiredAt || (l.expires ? new Date(l.expires).getTime() : 0);
+        if(!expiredAt || (now - expiredAt) < SEVEN_DAYS) return;
+        var vin = l.vin || l.id;
+        if(notifSent(vin, 'followup7d', 'sent')) return;
+        markNotifSent(vin, 'followup7d', 'sent');
+        var sorted = (l.offers || []).slice().sort(function(a,b){
+          return (parseFloat(String(b.amount||'0').replace(/[^0-9.]/g,''))||0)
+               - (parseFloat(String(a.amount||'0').replace(/[^0-9.]/g,''))||0);
+        });
+        sorted.slice(0,3).forEach(function(offer) {
+          var dealerName = offer.label || offer.dealerName || '';
+          if(!dealerName) return;
+          var contact = getDealerContact(dealerName);
+          if(!contact) return;
+          storeInAppNotif(dealerName, {
+            type: 'followup7d', vin: vin,
+            title: l.title, amount: offer.amount, ts: Date.now(), read: false,
+          });
+          dtSendEmail('dealer_7day_followup', {
+            to_name: contact.firstName + ' ' + contact.lastName,
+            to_email: contact.email,
+            dealer_name: dealerName,
+            vehicle: (l.title||'') + (l.trim ? ' ' + l.trim : ''),
+            your_offer: offer.amount,
+            customer_name: (l.customer && l.customer.name) || 'the customer',
+            portal_url: window.location.origin + '/dealer-portal.html',
+          });
+        });
+      });
+    }
+
+    function parseDate(str) { return str ? new Date(str).getTime() : 0; }
+
+    // Returns ms remaining for an active listing (0 if expired/no expiry)
+    function getListingMsLeft(d) {
+      if (d.expiredAt) return 0;
+      var exp = d._extendedExpiry || parseDate(d.expires);
+      if (!exp) return 0;
+      return Math.max(0, exp - Date.now());
+    }
+
+    // Format ms into human-readable countdown string
+    function formatMsLeft(ms) {
+      if (ms <= 0) return 'Expired';
+      var totalSec = Math.floor(ms / 1000);
+      var days  = Math.floor(totalSec / 86400);
+      var hours = Math.floor((totalSec % 86400) / 3600);
+      var mins  = Math.floor((totalSec % 3600) / 60);
+      var secs  = totalSec % 60;
+      if (days > 0)  return days + 'd ' + hours + 'h left';
+      if (hours > 0) return hours + 'h ' + mins + 'm left';
+      if (mins > 0)  return mins + 'm ' + secs + 's left';
+      return secs + 's left';
+    }
+    const listings = {
+      audi: {
+        title: '2020 Audi A4', trim: 'Premium',
+        vin: '2CTALSECXB6329197', mileage: '85,000 km', intent: 'Trade-In', make: 'Audi',
+        purchaseType: 'Financing', accident: 'None', maintenance: 'Oil Change', damages: 'Dents Everywhere',
+        listed: 'Feb 12, 2026 12:45 AM', expires: 'Feb 18, 2026 7:45 PM',
+        expiredAt: parseDate('Feb 18, 2026 7:45 PM'),
+        countdown: 'Expired', highest: '$50,000', offerCount: '1 offer total',
+        offers: [{ label: 'Your Offer', amount: '$50,000', yours: true }],
+        vehicleTypes: ['Sedan', 'Luxury SUV'], interior: 2, exterior: 3, damage: 0,
+        customer: { name: 'James Whitfield', phone: '(416) 555-0192', email: 'j.whitfield@gmail.com' }
+      },
+      camry: {
+        title: '2022 Toyota Camry', trim: 'XLE',
+        vin: '4T1B11HK0MU123456', mileage: '45,000 km', intent: 'Sell', make: 'Toyota',
+        purchaseType: 'Cash Sale', accident: 'No accidents', maintenance: 'Regular maintenance at dealership', damages: 'Minor scratch on rear bumper',
+        listed: 'Feb 11, 2026 1:39 AM', expires: 'Feb 19, 2026 6:59 PM',
+        expiredAt: parseDate('Feb 19, 2026 6:59 PM'),
+        countdown: 'Expired', highest: '$28,500', offerCount: '4 offers total',
+        offers: [
+          { label: 'Dealer #1', amount: '$28,500', yours: false },
+          { label: 'Dealer #2', amount: '$27,800', yours: false },
+          { label: 'Dealer #3', amount: '$27,000', yours: false },
+          { label: 'Your Offer', amount: '$25,000', yours: true },
+        ],
+        vehicleTypes: [], interior: 2, exterior: 3, damage: 1,
+        customer: { name: 'Priya Nair', phone: '(647) 555-0374', email: 'priya.nair@outlook.com' }
+      },
+      accord: {
+        title: '2021 Honda Accord', trim: 'Sport',
+        vin: '1HGCV1F40MA123789', mileage: '62,000 km', intent: 'Trade-In', make: 'Honda',
+        purchaseType: 'Lease', accident: 'None', maintenance: 'Dealership serviced', damages: 'Small chip on hood',
+        listed: 'Mar 6, 2026 9:00 AM', expires: 'Mar 13, 2026 9:00 AM',
+        expiredAt: parseDate('Mar 13, 2026 9:00 AM'),
+        countdown: 'Expired', highest: '$24,000', offerCount: '3 offers total',
+        offers: [
+          { label: 'Dealer #1', amount: '$24,000', yours: false },
+          { label: 'Dealer #2', amount: '$23,200', yours: false },
+          { label: 'Your Offer', amount: '$22,500', yours: true },
+        ],
+        vehicleTypes: ['Sedan', 'Hybrid'], interior: 1, exterior: 2, damage: 1,
+        customer: { name: 'Marcus Bellamy', phone: '(905) 555-0817', email: 'marcus.bellamy@rogers.com' }
+      },
+      crv: {
+        title: '2023 Honda CR-V', trim: 'EX-L',
+        vin: '7FARW2H85PE012345', mileage: '18,000 km', intent: 'Trade-In', make: 'Honda',
+        purchaseType: 'Financing', accident: 'None', maintenance: 'Full dealer service history', damages: 'No visible damage',
+        listed:  (function(){ const d=new Date(); d.setDate(d.getDate()-2); return d.toISOString(); })(),
+        expires: (function(){ const d=new Date(); d.setDate(d.getDate()+3); return d.toISOString(); })(),
+        expiredAt: null, countdown: '3 days left', highest: '$36,000', offerCount: '2 offers total',
+        offers: [
+          { label: 'Dealer #1', amount: '$36,000', yours: false },
+          { label: 'Your Offer', amount: '$34,500', yours: true },
+        ],
+        vehicleTypes: ['Mid-Size SUV', 'Electric Vehicle'], interior: 2, exterior: 3, damage: 0,
+        customer: null
+      },
+      camrynew: {
+        title: '2023 Toyota Camry', trim: 'XSE V6',
+        vin: 'DEMO-CAMRY-2023-XSE', mileage: '28,000 km', intent: 'Sell', make: 'Toyota',
+        purchaseType: 'Financing', accident: 'None', maintenance: 'Toyota certified service history', damages: 'None',
+        listed:  (function(){ const d=new Date(); d.setDate(d.getDate()-1); return d.toISOString(); })(),
+        expires: (function(){ const d=new Date(); d.setDate(d.getDate()+4); return d.toISOString(); })(),
+        expiredAt: null, countdown: '4 days left', highest: null, offerCount: '0 offers total',
+        offers: [],
+        vehicleTypes: ['Sedan'], interior: 2, exterior: 3, damage: 0,
+        customer: { name: 'Sarah Kowalski', phone: '(905) 555-0231', email: 's.kowalski@gmail.com' }
+      },
+      f150: {
+        title: '2022 Ford F-150', trim: 'XLT',
+        vin: 'DEMO-F150-2022-XLT', mileage: '44,000 km', intent: 'Trade-In', make: 'Ford',
+        purchaseType: 'Financed', accident: 'None', maintenance: 'Regular oil changes', damages: 'Minor bed liner wear',
+        listed:  (function(){ const d=new Date(); d.setDate(d.getDate()-3); return d.toISOString(); })(),
+        expires: (function(){ const d=new Date(); d.setDate(d.getDate()+2); return d.toISOString(); })(),
+        expiredAt: null, countdown: '2 days left', highest: '$42,000', offerCount: '1 offer total',
+        offers: [{ label: 'Dealer #1', dealerName: 'Hamilton Ford', amount: '$42,000', yours: false }],
+        vehicleTypes: ['Truck'], interior: 2, exterior: 3, damage: 0,
+        customer: { name: 'David Lee', phone: '(416) 555-0509', email: 'd.lee@hotmail.com' }
+      }
+    };
+
+    // ── Listing Photos ──
+    const LISTING_PHOTOS = {
+      audi: {
+        exterior: ['https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=900&q=80','https://images.unsplash.com/photo-1542362567-b07e54358753?w=900&q=80','https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=900&q=80'],
+        interior: ['https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=900&q=80','https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=900&q=80'],
+        damage: [],
+      },
+      camry: {
+        exterior: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=900&q=80','https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?w=900&q=80','https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=900&q=80'],
+        interior: ['https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=900&q=80','https://images.unsplash.com/photo-1600705722908-bde59046a9fe?w=900&q=80'],
+        damage: ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80'],
+      },
+      accord: {
+        exterior: ['https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=900&q=80','https://images.unsplash.com/photo-1590362891991-f776e747a588?w=900&q=80'],
+        interior: ['https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=900&q=80'],
+        damage: ['https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=900&q=80'],
+      },
+      crv: {
+        exterior: ['https://images.unsplash.com/photo-1568844293986-8d0400bd4745?w=900&q=80','https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=900&q=80','https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=80'],
+        interior: ['https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=900&q=80','https://images.unsplash.com/photo-1596558450255-7c0b7be9d56a?w=900&q=80'],
+        damage: [],
+      },
+    };
+
+    function isExpired(d) { return !!d.expiredAt; }
+    function isInWindow(d) { return d.expiredAt && (NOW - d.expiredAt) < 30 * DAY_MS; }
+    function parseMoney(s) { const n = Number(String(s||0).replace(/[^0-9.]/g,'')); return isFinite(n)?n:0; }
+    function formatMoney(n) { return '$' + Math.round(n).toLocaleString(); }
+    function isWon(d) {
+      if (!d.offers||!d.offers.length) return false;
+      const my = d.offers.find(o=>o.yours);
+      if (!my) return false;
+      return parseMoney(my.amount) >= Math.max(...d.offers.map(o=>parseMoney(o.amount)));
+    }
+    function myOfferAmount(d) { const o = d.offers&&d.offers.find(o=>o.yours); return o?o.amount:'—'; }
+    function myOfferRank(d) {
+      if (!d.offers) return null;
+      const my = d.offers.find(o=>o.yours); if (!my) return null;
+      return [...d.offers].sort((a,b)=>parseMoney(b.amount)-parseMoney(a.amount)).findIndex(o=>o.yours)+1;
+    }
+    function daysUntilExpiry(d) {
+      if (!d.expiredAt) return null;
+      return Math.max(0, Math.ceil((30*DAY_MS-(NOW-d.expiredAt))/DAY_MS));
+    }
+    function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // Merge submitted listings
+    (function() {
+      const stored = JSON.parse(localStorage.getItem('dt_listings')||'{}');
+      const profile = JSON.parse(localStorage.getItem('dealerProfile')||'{}');
+      // buys = brands set in dealer-settings; sells = brands from seed/profile (franchise brands)
+      // buys takes priority; fall back to sells; if neither set, show all listings
+      const buysArr = profile.buys && profile.buys.length ? profile.buys : (profile.sells || []);
+      const sells = new Set(buysArr.map(b=>b.toLowerCase()));
+      const existingVins = new Set(Object.values(listings).map(l=>l.vin));
+      const sess2 = JSON.parse(localStorage.getItem('dealerSession')||'{}');
+      const myName = sess2.dealerName || '';
+
+      Object.values(stored).forEach(l => {
+        // Show listing if make matches the dealer's buys/sells brands, OR if dealer has no brands configured yet
+        const makeMatch = sells.size > 0 && sells.has((l.make||'').toLowerCase());
+        const noProfile = buysArr.length === 0;
+        if (!makeMatch && !noProfile) return;
+
+        // Map stored offers — mark which belongs to this session's dealer
+        const existingOffers = (l.offers || []).map(o => ({
+          ...o,
+          label: o.label || o.dealerName || 'Dealer',
+          dealerName: o.dealerName || o.label || 'Dealer',
+          yours: (o.dealerName || o.label || '') === myName,
+        }));
+        const highestAmt = l.highest || (existingOffers.length
+          ? '$' + Math.max(...existingOffers.map(o => parseFloat(String(o.amount||'0').replace(/[^0-9.]/g,''))||0)).toLocaleString()
+          : null);
+
+        if (existingVins.has(l.vin)) {
+          // Listing already in memory (e.g. demo) — just refresh its offers from storage
+          listings[l.vin].offers = existingOffers;
+          listings[l.vin].highest = highestAmt;
+          listings[l.vin].offerCount = existingOffers.length + ' offer' + (existingOffers.length !== 1 ? 's' : '');
+          if (l._extendedExpiry) listings[l.vin]._extendedExpiry = l._extendedExpiry;
+        } else {
+          // New listing from storage — add it
+          const expiryTs = l._extendedExpiry || (l.expires ? new Date(l.expires).getTime() : 0);
+          const isNowExpired = expiryTs > 0 && expiryTs < Date.now();
+          listings[l.vin] = {
+            title:l.title, trim:l.trim, make:l.make, vin:l.vin, mileage:l.mileage,
+            intent:l.intent, purchaseType:l.purchaseType||'', accident:l.accident||'None',
+            maintenance:l.maintenance||'—', damages:l.damages||'None',
+            listed:l.listed, expires:l.expires,
+            expiredAt: isNowExpired ? expiryTs : null,
+            countdown: isNowExpired ? 'Expired' : 'Active',
+            _extendedExpiry: l._extendedExpiry||null,
+            highest: highestAmt, offerCount: existingOffers.length + ' offer' + (existingOffers.length !== 1 ? 's' : ''),
+            offers: existingOffers, vehicleTypes:[],
+            interior:0, exterior:0, damage:0, customer:l.customer||null, fromForm:true,
+          };
+        }
+      });
+    })();
+
+    let activeListingId = null;
+
+    function applyVisibility() {
+      // renderAllListings already filters expired - this is a no-op kept for compatibility
+      document.querySelectorAll('.listing-card[data-listing-id]').forEach(card => {
+        const d = listings[card.dataset.listingId];
+        if (d) card.style.display = isExpired(d) ? 'none' : 'flex';
+      });
+    }
+
+    function renderCompletedOffers() {
+      const strip = document.getElementById('completed-strip');
+      const label = document.getElementById('completed-count-label');
+      const completed = Object.entries(listings)
+        .filter(([,d]) => isExpired(d) && isInWindow(d) && myOfferRank(d) !== null && myOfferRank(d) <= 3)
+        .sort(([,a],[,b]) => parseMoney(myOfferAmount(b))-parseMoney(myOfferAmount(a)));
+      if (!completed.length) {
+        strip.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;padding-bottom:8px;">No completed offers in the last 30 days.</p>';
+        label.textContent = ''; return;
+      }
+      label.textContent = completed.length + ' listing' + (completed.length!==1?'s':'');
+      strip.innerHTML = completed.map(([id,d]) => {
+        const won = isWon(d); const rank = myOfferRank(d);
+        const myAmt = myOfferAmount(d); const days = daysUntilExpiry(d);
+        const thumbSrc = localStorage.getItem('exteriorThumb_'+d.vin);
+        const thumb = thumbSrc ? `<img src="${thumbSrc}" alt="exterior"/>` : `<svg viewBox="0 0 24 24"><rect x="1" y="8" width="22" height="10" rx="2"/><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`;
+        const rankLabel = rank===1?'1st':rank===2?'2nd':'3rd';
+        const badge = won
+          ? `<span class="won-badge"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Won · ${rankLabel}</span>`
+          : `<span class="outbid-badge">${rankLabel} of ${d.offers.length}</span>`;
+        return `<div class="completed-card ${won?'won':''}" onclick="showDetail('${id}')" style="flex:1;min-width:260px;max-width:calc(50% - 5px)">
+          <div class="completed-thumb">${thumb}</div>
+          <div class="completed-info">
+            <div class="completed-title">${d.title}</div>
+            <div class="completed-meta">${d.trim} · ${d.mileage}</div>
+            <div class="${won?'completed-meta-won':'completed-meta'}">${won?'🏆 Highest offer':'Highest: '+d.highest}</div>
+          </div>
+          <div class="completed-right">${badge}<div class="completed-amount ${won?'':'outbid'}">${myAmt}</div><div class="completed-expires">Removes in ${days}d</div></div>
+        </div>`;
+      }).join('');
+    }
+
+    function loadThumbnails() {
+      document.querySelectorAll('.listing-thumb[data-vin]').forEach(thumb => {
+        const src = localStorage.getItem('exteriorThumb_'+thumb.dataset.vin);
+        if (src) { const img = document.createElement('img'); img.src=src; img.alt='photo'; thumb.appendChild(img); }
+      });
+    }
+
+    function loadDealerProfile() {
+      const p = JSON.parse(localStorage.getItem('dealerProfile')||'null');
+      if (p && p.name) document.getElementById('nav-dealer-name').textContent = p.name;
+    }
+
+    function filterListings(query) {
+      const q = (query || '').toLowerCase().trim();
+      document.querySelectorAll('.listing-card').forEach(card => {
+        const id = card.dataset.listingId;
+        const d = listings[id];
+        if (!d) return;
+        const text = ((d.title || '') + ' ' + (d.trim || '') + ' ' + (d.make || '') + ' ' + (d.mileage || '')).toLowerCase();
+        card.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    }
+
+    function renderAllListings() {
+      const container = document.getElementById('listings-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const carSVG = `<svg viewBox="0 0 24 24"><rect x="1" y="8" width="22" height="10" rx="2"/><path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`;
+
+      Object.entries(listings).forEach(([id, d]) => {
+        // Skip expired listings (they show in Completed Offers section)
+        if (isExpired(d)) return;
+
+        const intentTag = d.intent && d.intent.toLowerCase().includes('trade')
+          ? `<span class="tag tag-amber">${d.intent}</span>`
+          : `<span class="tag tag-green">${d.intent || 'Sell'}</span>`;
+
+        const thumbSrc = localStorage.getItem('exteriorThumb_' + d.vin);
+        // Use LISTING_PHOTOS first frame if available, else localStorage thumb, else SVG
+        const photoUrl = (LISTING_PHOTOS[id] && LISTING_PHOTOS[id].exterior && LISTING_PHOTOS[id].exterior[0]) || thumbSrc || null;
+        const thumbContent = photoUrl
+          ? `<img src="${photoUrl}" alt="vehicle" style="width:100%;height:100%;object-fit:cover;border-radius:9px;">`
+          : carSVG;
+
+        const myOff = d.offers && d.offers.find(o => o.yours);
+        const highOff = d.highest || (d.offers && d.offers.length ? formatMoney(Math.max(...d.offers.map(o => parseMoney(o.amount)))) : null);
+
+        const myIsHigh = myOff && highOff && parseMoney(myOff.amount) >= parseMoney(highOff);
+        const offerRight = highOff
+          ? `<div class="offer-label">${myIsHigh ? '🏆 You&#39;re Leading' : 'Current Highest Offer'}</div>
+             <div class="offer-amount" style="color:${myIsHigh ? 'var(--green)' : 'var(--white)'};font-weight:${myIsHigh ? '800' : '700'}">${highOff}</div>
+             <div class="offer-count" style="color:${myIsHigh ? 'var(--green)' : 'var(--muted)'}">${d.offers ? d.offers.length : 0} offer${(d.offers && d.offers.length !== 1) ? 's' : ''}${myOff && !myIsHigh ? ' · outbid' : ''}</div>`
+          : `<div class="offer-label">Offers</div>
+             <div class="offer-amount" style="font-size:0.9rem;color:var(--muted)">No offers yet</div>
+             <div class="offer-count">Be the first</div>`;
+
+        const msLeft = getListingMsLeft(d);
+        const countdownStr = isExpired(d) ? 'Expired' : (msLeft > 0 ? formatMsLeft(msLeft) : (d.countdown || 'Active'));
+        const timeTag = isExpired(d) || countdownStr === 'Expired'
+          ? `<div class="time-left time-expired"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Expired</div>`
+          : `<div class="time-left"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${countdownStr}</div>`;
+
+        const card = document.createElement('div');
+        card.className = 'listing-card';
+        card.dataset.listingId = id;
+        card.style.cursor = 'pointer';
+        card.onclick = () => showDetail(id);
+        card.innerHTML = `
+          <div class="listing-thumb" data-vin="${d.vin}" style="overflow:hidden;">${thumbContent}</div>
+          <div class="listing-info">
+            <div class="listing-title">${d.title}${d.trim ? `<span style="font-weight:400;color:var(--muted);font-size:0.88rem;margin-left:6px">${d.trim}</span>` : ''}</div>
+            <div class="tags">
+              ${intentTag}
+              ${d.purchaseType ? `<span class="tag">${d.purchaseType}</span>` : ''}
+            </div>
+            <div class="listing-meta">VIN: ${d.vin} · ${d.mileage}</div>
+            ${d.vehicleTypes && d.vehicleTypes.length ? `<div class="listing-meta" style="margin-top:3px"><span>Looking for: ${d.vehicleTypes.join(', ')}</span></div>` : ''}
+          </div>
+          <div class="listing-right">
+            ${offerRight}
+            ${timeTag}
+          </div>`;
+        container.appendChild(card);
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);font-size:0.9rem;">No active listings matching your dealership brands. Make sure your brand preferences are set in <a href="dealer-settings.html" style="color:var(--blue)">Settings → Brands</a>.</div>';
+      }
+
+      // Update stats chips dynamically
+      const activeEntries = Object.values(listings).filter(d => !isExpired(d));
+      const yourOffers = activeEntries.filter(d => d.offers && d.offers.find(o => o.yours));
+      const leading = yourOffers.filter(d => {
+        const my = d.offers.find(o => o.yours);
+        return my && parseMoney(my.amount) >= Math.max(...d.offers.map(o => parseMoney(o.amount)));
+      });
+      const elActive = document.getElementById('stat-active-listings');
+      const elYours  = document.getElementById('stat-your-offers');
+      const elLead   = document.getElementById('stat-leading');
+      if (elActive) elActive.textContent = activeEntries.length;
+      if (elYours)  elYours.textContent  = yourOffers.length;
+      if (elLead)   elLead.textContent   = leading.length;
+    }
+
+    loadDealerProfile();
+    renderAllListings();
+    loadThumbnails();
+    applyVisibility();
+    renderCompletedOffers();
+
+    function recalcListingSummary(id) {
+      const d = listings[id]; if (!d) return;
+      const hi = Math.max(0,...d.offers.map(o=>parseMoney(o.amount)));
+      d.highest = formatMoney(hi);
+      d.offerCount = d.offers.length + ' offer' + (d.offers.length!==1?'s':'') + ' total';
+    }
+
+    function renderOffers(id) {
+      const d = listings[id]; if (!d) return;
+      document.getElementById('d-highest').textContent = d.highest||'—';
+      document.getElementById('d-offer-count').textContent = d.offerCount||'0 offers';
+      document.getElementById('d-offers-list').innerHTML = (d.offers||[]).map(o =>
+        `<div class="offer-row ${o.yours?'your-offer':''}"><span class="offer-row-label">${o.yours ? 'Your Offer' : (o.label||o.dealerName||'Dealer')}</span><span class="offer-row-val">${o.amount}</span></div>`
+      ).join('');
+    }
+
+    function updateListingCardUI(id) {
+      const d = listings[id]; if (!d) return;
+      const card = document.querySelector(`.listing-card[data-listing-id="${id}"]`);
+      if (!card) return;
+      const a = card.querySelector('.offer-amount'); const ct = card.querySelector('.offer-count');
+      if (a) a.textContent = d.highest; if (ct) ct.textContent = d.offers.length+' offer'+(d.offers.length!==1?'s':'');
+    }
+
+    // ── Photo Gallery ──
+    function renderPhotoGrid(containerId, photos, section, listingId) {
+      const el = document.getElementById(containerId); if (!el) return;
+      if (!photos||!photos.length) { el.innerHTML='<span style="color:var(--muted);font-size:0.82rem">No photos uploaded</span>'; return; }
+      el.innerHTML = photos.map((url,i) => `
+        <div class="photo-box" onclick="openLightbox('${listingId}','${section}',${i})">
+          <img src="${url}" alt="${section} ${i+1}" loading="lazy"/>
+          <div class="photo-expand-icon"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+        </div>`).join('');
+    }
+
+    let _lbAll=[], _lbIdx=0, _lbTouchX=0;
+    function buildLightboxAll(id) {
+      const p = LISTING_PHOTOS[id]||{};
+      _lbAll = [];
+      (p.exterior||[]).forEach(u=>_lbAll.push({url:u,label:'Exterior'}));
+      (p.interior||[]).forEach(u=>_lbAll.push({url:u,label:'Interior'}));
+      (p.damage||[]).forEach(u=>_lbAll.push({url:u,label:'Damage'}));
+    }
+    function openLightbox(id, section, idx) {
+      buildLightboxAll(id);
+      const p = LISTING_PHOTOS[id]||{};
+      let off = 0;
+      if (section==='interior') off=(p.exterior||[]).length;
+      if (section==='damage') off=(p.exterior||[]).length+(p.interior||[]).length;
+      _lbIdx = off+idx; showLightboxAt(_lbIdx);
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+    function showLightboxAt(idx) {
+      if (!_lbAll.length) return;
+      _lbIdx=(idx+_lbAll.length)%_lbAll.length;
+      const item=_lbAll[_lbIdx];
+      document.getElementById('lightbox-img').src=item.url;
+      document.getElementById('lightbox-counter').textContent=(_lbIdx+1)+' / '+_lbAll.length;
+      document.getElementById('lightbox-caption').textContent=item.label;
+      document.getElementById('lightbox-dots').innerHTML=_lbAll.map((_,i)=>`<div class="lightbox-dot ${i===_lbIdx?'active':''}"></div>`).join('');
+    }
+    function lightboxNav(dir){showLightboxAt(_lbIdx+dir);}
+    function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
+    function lightboxBgClick(e){if(e.target===document.getElementById('lightbox'))closeLightbox();}
+    document.addEventListener('keydown',e=>{
+      if(!document.getElementById('lightbox').classList.contains('open'))return;
+      if(e.key==='ArrowRight')lightboxNav(1);
+      if(e.key==='ArrowLeft')lightboxNav(-1);
+      if(e.key==='Escape')closeLightbox();
+    });
+    document.getElementById('lightbox').addEventListener('touchstart',e=>{_lbTouchX=e.touches[0].clientX;},{passive:true});
+    document.getElementById('lightbox').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-_lbTouchX;if(Math.abs(dx)>40)lightboxNav(dx<0?1:-1);},{passive:true});
+
+    function showDetail(id) {
+      activeListingId = id;
+      const d = listings[id]; if (!d) return;
+      document.getElementById('detail-title').textContent = d.title;
+      document.getElementById('detail-trim').textContent = d.trim;
+      document.getElementById('d-vin').textContent = d.vin;
+      document.getElementById('d-mileage').textContent = d.mileage;
+      document.getElementById('d-intent').textContent = d.intent;
+      document.getElementById('d-purchase-type').textContent = d.purchaseType||'—';
+      document.getElementById('d-accident').textContent = d.accident;
+      document.getElementById('d-maintenance').textContent = d.maintenance;
+      document.getElementById('d-damages').textContent = d.damages;
+      document.getElementById('d-listed').textContent = d.listed;
+      document.getElementById('d-expires').textContent = d.expires;
+      // Use live ms-based countdown on open
+      var msNow = getListingMsLeft(d);
+      document.getElementById('d-countdown').textContent = msNow > 0 ? formatMsLeft(msNow) : (d.expiredAt ? 'Expired' : d.countdown);
+
+      // Build photo set: demo listings → LISTING_PHOTOS, submitted → localStorage
+      let photos = LISTING_PHOTOS[id] || null;
+      if (!photos) {
+        const stored = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+        const storedL = stored[d.vin] || stored[id] || {};
+        const extThumb = localStorage.getItem('exteriorThumb_' + (d.vin||id));
+        const pd = storedL.photos || {};
+        photos = {
+          exterior: (pd.exterior && pd.exterior.length) ? pd.exterior : (extThumb ? [extThumb] : []),
+          interior: pd.interior || [],
+          damage:   pd.damage   || [],
+          other:    pd.other    || [],
+        };
+      }
+      renderPhotoGrid('exterior-photos', photos.exterior||[], 'exterior', id);
+      renderPhotoGrid('interior-photos', photos.interior||[], 'interior', id);
+      renderPhotoGrid('damage-photos',   photos.damage||[],   'damage',   id);
+
+      recalcListingSummary(id); renderOffers(id);
+
+      const tradeCard = document.getElementById('trade-for-card');
+      const types = Array.isArray(d.vehicleTypes)?d.vehicleTypes:[];
+      if (d.intent==='Trade-In'&&types.length>0) {
+        tradeCard.style.display='block';
+        document.getElementById('trade-list').innerHTML=types.map(t=>`<div class="trade-item">🚙 ${t}</div>`).join('');
+      } else { tradeCard.style.display='none'; }
+
+      const myOffer = d.offers&&d.offers.find(o=>o.yours);
+      const offerForm = document.getElementById('offer-form-section');
+      const closedMsg = document.getElementById('offer-period-closed-msg');
+      const headerContact = document.getElementById('detail-customer-contact');
+
+      if (isExpired(d)) {
+        // Restore saved outcome from localStorage if not already on object
+        if (!d.dealOutcome) {
+          const stored = localStorage.getItem(getOutcomeKey(id));
+          if (stored) { try { d.dealOutcome = JSON.parse(stored); } catch(e){} }
+        }
+        offerForm.style.display='none'; closedMsg.style.display='block';
+        const rank = myOfferRank(d);
+        if (d.customer&&rank!==null&&rank<=3) {
+          document.getElementById('dh-customer-name').textContent=d.customer.name;
+          const ph=document.getElementById('dh-customer-phone'); ph.textContent=d.customer.phone; ph.href='tel:'+d.customer.phone;
+          const em=document.getElementById('dh-customer-email'); em.textContent=d.customer.email; em.href='mailto:'+d.customer.email;
+          headerContact.style.display='block';
+        } else { headerContact.style.display='none'; }
+        const markWrap=document.getElementById('mark-deal-wrap');
+        const dealBadge=document.getElementById('deal-confirmed-badge');
+        if (rank!==null&&rank<=3) {
+          const outcome = d.dealOutcome;
+          if (outcome) {
+            markWrap.style.display='none';
+            dealBadge.style.display='flex';
+            const badge = document.getElementById('deal-confirmed-badge');
+            const titleEl = document.getElementById('dcb-title');
+            const subEl = document.getElementById('deal-confirmed-sub');
+            const iconEl = document.getElementById('dcb-icon');
+            if (outcome.result==='yes') {
+              badge.style.cssText='display:flex;margin-top:14px;border-radius:9px;padding:12px 14px;align-items:center;gap:10px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.25);';
+              iconEl.innerHTML='<polyline points="20 6 9 17 4 12"/>'; iconEl.style.stroke='var(--green)';
+              titleEl.style.color='var(--green)'; titleEl.textContent='Deal Completed';
+              subEl.textContent=(outcome.dealType||'')+(outcome.value?' · '+outcome.value:'')+' · '+outcome.date;
+            } else if (outcome.result==='no') {
+              badge.style.cssText='display:flex;margin-top:14px;border-radius:9px;padding:12px 14px;align-items:center;gap:10px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);';
+              iconEl.innerHTML='<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'; iconEl.style.stroke='#f87171';
+              titleEl.style.color='#f87171'; titleEl.textContent='No Deal — Customer Did Not Proceed';
+              subEl.textContent='Reported '+outcome.date;
+            } else if (outcome.result==='not-complete') {
+              badge.style.cssText='display:flex;margin-top:14px;border-radius:9px;padding:12px 14px;align-items:center;gap:10px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);';
+              iconEl.innerHTML='<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'; iconEl.style.stroke='#fbbf24';
+              titleEl.style.color='#fbbf24'; titleEl.textContent='Deal Not Complete — In Negotiation';
+              subEl.textContent='Reported '+outcome.date;
+            }
+          } else { markWrap.style.display='block'; dealBadge.style.display='none'; }
+        } else { markWrap.style.display='none'; dealBadge.style.display='none'; }
+      } else {
+        offerForm.style.display='block'; closedMsg.style.display='none'; headerContact.style.display='none';
+        if (myOffer) document.getElementById('offer-input').value=myOffer.amount.replace(/[$,]/g,'');
+        else document.getElementById('offer-input').value='';
+      }
+
+      renderQADealer(id);
+      // Show unread count on Q&A card title
+      const qaKey2 = getListingVin(id);
+      const unread2 = getQA(qaKey2).filter(m => m.type === 'question' && !m.answered).length;
+      const qaTitle = document.querySelector('.qa-card .card-title');
+      if (qaTitle) {
+        qaTitle.innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Questions &amp; Answers' +
+          (unread2 > 0 ? ' <span style="background:var(--red);color:white;font-size:0.65rem;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px">' + unread2 + ' unanswered</span>' : '');
+      }
+      document.getElementById('view-list').style.display='none';
+      document.getElementById('view-detail').style.display='block';
+      document.getElementById('view-billing').style.display='none';
+      window.scrollTo(0,0);
+    }
+
+    function showList() {
+      document.getElementById('view-list').style.display='block';
+      document.getElementById('view-detail').style.display='none';
+      document.getElementById('view-billing').style.display='none';
+      window.scrollTo(0,0);
+    }
+
+    function submitOffer() {
+      const val = parseFloat(document.getElementById('offer-input').value);
+      if (!val||val<1) { showToast('Please enter a valid offer amount','error'); return; }
+      const d = listings[activeListingId]; if (!d) return;
+
+      // Track who was leading before this bid (for outbid notification)
+      var prevLeader = null;
+      if(d.offers && d.offers.length) {
+        var prevTop = d.offers.slice().sort(function(a,b){
+          return (parseFloat(String(b.amount||'0').replace(/[^0-9.]/g,''))||0)
+               - (parseFloat(String(a.amount||'0').replace(/[^0-9.]/g,''))||0);
+        })[0];
+        if(prevTop && !prevTop.yours) prevLeader = prevTop.label || prevTop.dealerName;
+      }
+
+      // ── Sniper Protection: if within 2 minutes of expiry, extend by 60s ──
+      const msLeft = getListingMsLeft(d);
+      var sniperTriggered = false;
+      if (msLeft > 0 && msLeft <= SNIPER_WINDOW_MS) {
+        var currentExpiry = d._extendedExpiry || parseDate(d.expires);
+        d._extendedExpiry = currentExpiry + SNIPER_EXTEND_MS;
+        sniperTriggered = true;
+        // Persist extended expiry to localStorage
+        const vin2 = d.vin;
+        if (vin2) {
+          const snap = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+          if (snap[vin2]) { snap[vin2]._extendedExpiry = d._extendedExpiry; localStorage.setItem('dt_listings', JSON.stringify(snap)); }
+        }
+      }
+
+      // Get dealer name for labeling
+      const sess = JSON.parse(localStorage.getItem('dealerSession')||'{}');
+      const dealerLabel = sess.dealerName || 'Dealer';
+
+      const existing = d.offers.findIndex(o=>o.yours);
+      if (existing>=0) d.offers[existing].amount = formatMoney(val);
+      else d.offers.push({label: dealerLabel, dealerName: dealerLabel, amount: formatMoney(val), yours: true});
+
+      recalcListingSummary(activeListingId);
+      renderOffers(activeListingId);
+      updateListingCardUI(activeListingId);
+
+      // Notify the previous leader they've been outbid
+      if(prevLeader) notifyOutbid(d, prevLeader);
+
+      // ── Persist to localStorage so customer dashboard sees this offer ──
+      const vin = d.vin;
+      if (vin) {
+        const allListings = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+        if (!allListings[vin]) {
+          allListings[vin] = {
+            vin, title: d.title, trim: d.trim, make: d.make,
+            mileage: d.mileage, intent: d.intent, status: 'active',
+            listed: d.listed, expires: d.expires, offers: [], offerCount: 0, highest: null,
+          };
+        }
+        allListings[vin].offers = d.offers.map(o => ({
+          dealerName: o.yours ? dealerLabel : (o.dealerName || o.label || 'Dealer'),
+          amount: o.amount,
+          yours: false,  // strip 'yours' — recalculated on load per session
+        }));
+        allListings[vin].offerCount = d.offers.length;
+        allListings[vin].highest   = d.highest;
+        if (d._extendedExpiry) allListings[vin]._extendedExpiry = d._extendedExpiry;
+        localStorage.setItem('dt_listings', JSON.stringify(allListings));
+      }
+
+      if (sniperTriggered) {
+        showToast('Sniper protection triggered — offer period extended by 60 seconds', 'warning');
+      } else {
+        showToast('Offer submitted — customer has been notified', 'success');
+      }
+    }
+
+    // ── Billing ──
+    const dealerInvoices = [
+      {id:'INV-0024',period:'March 2026',base:299,status:'paid',date:'Mar 1, 2026'},
+      {id:'INV-0019',period:'February 2026',base:299,status:'paid',date:'Feb 1, 2026'},
+      {id:'INV-0014',period:'January 2026',base:299,status:'paid',date:'Jan 1, 2026'},
+      {id:'INV-0009',period:'December 2025',base:299,status:'paid',date:'Dec 1, 2025'},
+      {id:'INV-0004',period:'November 2025',base:299,status:'paid',date:'Nov 1, 2025'},
+    ];
+    function hst(n){return (n*0.13).toFixed(2);}
+    function total(n){return (n*1.13).toFixed(2);}
+
+    function showBilling() {
+      document.getElementById('view-list').style.display='none';
+      document.getElementById('view-detail').style.display='none';
+      document.getElementById('view-billing').style.display='block';
+      window.scrollTo(0,0); renderDealerInvoices();
+    }
+    function renderDealerInvoices() {
+      const tbody=document.getElementById('dealer-invoice-tbody');
+      const sess=JSON.parse(localStorage.getItem('dealerSession')||'{}');
+      tbody.innerHTML=dealerInvoices.map(inv=>{
+        const badge=inv.status==='paid'?`<span class="inv-paid">PAID</span>`:`<span class="inv-due">PAST DUE</span>`;
+        return `<tr>
+          <td style="font-family:monospace;font-size:0.78rem;color:var(--muted)">${inv.id}</td>
+          <td style="font-weight:600">${inv.period}</td>
+          <td style="font-family:monospace">$${inv.base}.00</td>
+          <td style="font-family:monospace">$${hst(inv.base)}</td>
+          <td style="font-family:monospace;font-weight:700">$${total(inv.base)}</td>
+          <td>${badge}</td>
+          <td><button class="btn-dl" onclick="downloadInvoice('${inv.id}','${inv.period}',${inv.base},'${inv.date}','${inv.status}')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function downloadInvoice(id,period,base,date,status) {
+      const name=document.getElementById('nav-dealer-name').textContent||'Your Dealership';
+      const hstAmt=(base*0.13).toFixed(2);
+      const html=`<!DOCTYPE html><html><head><title>Invoice ${id}</title><style>body{font-family:Arial,sans-serif;padding:40px;max-width:600px;margin:0 auto}h1{color:#2B9FD9}table{width:100%;border-collapse:collapse;margin-top:20px}td,th{padding:10px;border:1px solid #ddd}th{background:#f5f5f5}.total{font-weight:bold;font-size:1.1em}</style></head><body><h1>DealrTrade Invoice</h1><p><strong>${id}</strong> · ${period}</p><p>Dealer: ${name}</p><p>Date: ${date}</p><table><tr><th>Description</th><th>Amount</th></tr><tr><td>Platform Subscription — ${period}</td><td>$${base}.00</td></tr><tr><td>HST (13%)</td><td>$${hstAmt}</td></tr><tr class="total"><td><strong>Total</strong></td><td><strong>$${total(base)}</strong></td></tr></table><p style="margin-top:20px;font-size:0.85em;color:#666">HST Registration: 123456789 RT0001. All amounts in Canadian dollars.</p>
+<!-- SITE FOOTER -->
+<footer style="text-align:center;padding:20px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;margin-top:auto;">
+  <span>&#169; 2026 DealrTrade</span>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="mailto:contact@dealrtrade.ca" style="color:#5a647a;text-decoration:none;">contact@dealrtrade.ca</a>
+</footer>
+</body></html>`;
+      const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
+    }
+
+    function updatePaymentMethod() { showToast('Payment update will be available when connected to Stripe','warning'); }
+
+    function showToast(msg,type='success') {
+      let t=document.getElementById('toast-msg');
+      if (!t) { t=document.createElement('div'); t.id='toast-msg'; t.style.cssText='position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:9px;font-size:0.85rem;font-weight:600;z-index:9999;transition:opacity 0.3s;'; document.body.appendChild(t); }
+      const colors={success:'background:#34d399;color:#0a3728',error:'background:#f87171;color:white',warning:'background:#fbbf24;color:#f2f4f8',info:'background:#2B9FD9;color:white'};
+      t.style.cssText += ';' + (colors[type]||colors.success);
+      t.textContent=msg; t.style.opacity='1';
+      setTimeout(()=>{t.style.opacity='0';},3000);
+    }
+
+    // ── Q&A ──
+    function getQA(lid){return JSON.parse(localStorage.getItem('dt_qa_'+lid)||'[]');}
+    function saveQA(lid,msgs){localStorage.setItem('dt_qa_'+lid,JSON.stringify(msgs));}
+    function getListingVin(id) {
+      // Return VIN for a listing - used as the shared Q&A key between dealer and customer
+      const d = listings[id];
+      return (d && d.vin) ? d.vin : id;
+    }
+
+    function renderQADealer(id) {
+      const qaKey = getListingVin(id);
+      const msgs = getQA(qaKey);
+      const thread = document.getElementById('qa-thread-dealer'); if (!thread) return;
+      if (!msgs.length) {
+        thread.innerHTML = '<div class="qa-empty">No questions yet. Be the first to ask.</div>';
+        return;
+      }
+      thread.innerHTML = msgs.map(m => {
+        const isQ = m.type === 'question';
+        const isAnswered = !isQ;
+        const t = m.time ? new Date(m.time).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+        return `<div class="qa-msg ${isQ ? 'qa-msg-q' : 'qa-msg-a'}">
+          <div class="qa-msg-meta">
+            <span class="qa-type ${isQ ? 'q' : 'a'}">${isQ ? 'QUESTION' : 'SELLER ANSWER'}</span>
+            <span>${t}</span>
+          </div>
+          <div class="qa-msg-body">${escapeHtml(m.text)}</div>
+        </div>`;
+      }).join('');
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    function sendDealerQuestion() {
+      const input = document.getElementById('qa-input');
+      const text = (input.value || '').trim();
+      if (!text || !activeListingId) return;
+      const qaKey = getListingVin(activeListingId);
+      const msgs = getQA(qaKey);
+      msgs.push({ type: 'question', text, time: Date.now(), answered: false });
+      saveQA(qaKey, msgs);
+      input.value = '';
+      renderQADealer(activeListingId);
+      // Email simulation: notify the customer
+      simulateEmailToCustomer(activeListingId, text);
+      showToast('Question sent — seller notified by email', 'success');
+    }
+
+    function simulateEmailToCustomer(listingId, questionText) {
+      // Store notification so customer badge lights up immediately
+      const d = listings[listingId] || {};
+      const qaKey = getListingVin(listingId);
+      const notif = { type: 'new_question', listingTitle: d.title || listingId, question: questionText, time: Date.now(), read: false };
+      const key = 'dt_customer_notifs_' + qaKey;
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.push(notif);
+      localStorage.setItem(key, JSON.stringify(existing));
+      // In production: POST to /api/notify-customer
+      console.log('[DealrTrade] Email sent to seller of listing:', d.title, '— New question:', questionText.substring(0,60));
+    }
+
+    // ── Deal Outcome Prompt System ──
+    let _dopListingId = null;
+    const OUTCOME_PROMPT_DELAY_DAYS = 7;  // show prompt 7 days after expiry
+    const NOTYET_SNOOZE_DAYS        = 3;  // "Not Yet" snoozes for 3 days
+    const PROMPT_DEADLINE_DAYS      = 30; // max window to report
+
+    // Keys stored per listing: dt_deal_outcome_<vin>
+    function getOutcomeKey(id) { const d = listings[id]; return 'dt_deal_outcome_' + (d&&d.vin ? d.vin : id); }
+    function getSnoozedKey(id) { const d = listings[id]; return 'dt_deal_snooze_'  + (d&&d.vin ? d.vin : id); }
+
+    // Check all top-3 expired listings and surface prompts when due
+    function checkDealOutcomePrompts() {
+      const now = Date.now();
+      const pendingIds = Object.keys(listings).filter(id => {
+        const d = listings[id];
+        if (!d || !d.expiredAt) return false;               // not expired
+        const rank = myOfferRank(d); if (!rank || rank > 3) return false; // not top-3
+        const outcomeKey = getOutcomeKey(id);
+        if (localStorage.getItem(outcomeKey)) return false; // already reported
+        const ageMs = now - d.expiredAt;
+        if (ageMs < OUTCOME_PROMPT_DELAY_DAYS * DAY_MS) return false; // too soon
+        if (ageMs > PROMPT_DEADLINE_DAYS * DAY_MS) return false;      // expired window
+        // Check snooze
+        const snooze = JSON.parse(localStorage.getItem(getSnoozedKey(id)) || 'null');
+        if (snooze && now < snooze.until) return false;     // snoozed
+        return true;
+      });
+      if (pendingIds.length > 0) {
+        // Show the first pending prompt
+        openDealOutcomePrompt(pendingIds[0]);
+      }
+    }
+
+    function openDealOutcomePrompt(listingId) {
+      _dopListingId = listingId;
+      const d = listings[listingId]; if (!d) return;
+      const rank = myOfferRank(d);
+      const rankLabel = rank===1?'1st':rank===2?'2nd':'3rd';
+      const myAmt = myOfferAmount(d);
+      const now = Date.now();
+      const ageMs = d.expiredAt ? now - d.expiredAt : 0;
+      const daysLeft = Math.max(0, PROMPT_DEADLINE_DAYS - Math.floor(ageMs/DAY_MS));
+      const notYetAvailable = daysLeft > NOTYET_SNOOZE_DAYS + 1;
+
+      document.getElementById('dop-vehicle').textContent = d.title || d.vin || '—';
+      document.getElementById('dop-rank-line').textContent =
+        rankLabel + ' highest offer · Your offer: ' + myAmt +
+        (daysLeft > 0 ? ' · ' + daysLeft + ' days remaining to report' : '');
+
+      // Reset yes-fields
+      document.getElementById('dop-yes-fields').style.display = 'none';
+      const dopYesBtn = document.getElementById('dop-yes-btn');
+      dopYesBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg> Yes — Deal Completed with Customer';
+      dopYesBtn.style.background = 'var(--green)';
+
+      // Not Yet availability
+      const notYetBtn = document.getElementById('dop-notyet-btn');
+      const notYetNote = document.getElementById('dop-notyet-note');
+      notYetBtn.disabled = !notYetAvailable;
+      notYetBtn.style.opacity = notYetAvailable ? '1' : '0.4';
+      notYetNote.textContent = notYetAvailable
+        ? 'Snoozing will remind you again in ' + NOTYET_SNOOZE_DAYS + ' days. Reporting deadline: ' + daysLeft + ' days.'
+        : 'Not Yet is no longer available — please select an outcome below.';
+
+      const overlay = document.getElementById('deal-outcome-overlay');
+      overlay.style.display = 'flex';
+    }
+
+    function dealOutcomeSelectYes() {
+      const fields = document.getElementById('dop-yes-fields');
+      if (fields.style.display === 'none') {
+        // First click — expand detail fields
+        fields.style.display = 'block';
+        const btn = document.getElementById('dop-yes-btn');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;display:inline;vertical-align:middle;margin-right:6px;"><polyline points="20 6 9 17 4 12"/></svg> Confirm Deal Completed';
+        return;
+      }
+      // Second click — save
+      const val = (document.getElementById('dop-value').value||'').trim();
+      if (!val || isNaN(parseFloat(val))) {
+        showToast('Please enter the final deal value','error'); return;
+      }
+      const dealType = document.getElementById('dop-type').value;
+      saveDealOutcome(_dopListingId, 'yes', { dealType, value: '$' + parseFloat(val).toLocaleString() });
+    }
+
+    function dealOutcomeNo() {
+      saveDealOutcome(_dopListingId, 'no', {});
+    }
+
+    function dealOutcomeNotComplete() {
+      saveDealOutcome(_dopListingId, 'not-complete', {});
+    }
+
+    function dealOutcomeNotYet() {
+      const btn = document.getElementById('dop-notyet-btn');
+      if (btn.disabled) return;
+      const until = Date.now() + NOTYET_SNOOZE_DAYS * DAY_MS;
+      localStorage.setItem(getSnoozedKey(_dopListingId), JSON.stringify({ until }));
+      closeDealOutcomeOverlay();
+      showToast('Reminder set \u2014 we\'ll prompt you again in ' + NOTYET_SNOOZE_DAYS + ' days', 'success');
+    }
+
+    function saveDealOutcome(listingId, result, extra) {
+      const d = listings[listingId]; if (!d) return;
+      const now = new Date();
+      const outcome = {
+        result,               // 'yes' | 'no' | 'not-complete'
+        date: now.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
+        ts: now.getTime(),
+        ...extra,
+        listingId,
+        vin: d.vin,
+        vehicle: d.title || d.vin,
+        rank: myOfferRank(d),
+        myOffer: myOfferAmount(d),
+        dealerName: (JSON.parse(localStorage.getItem('dealerSession')||'{}')).dealerName || '',
+      };
+      // Store outcome against the listing
+      localStorage.setItem(getOutcomeKey(listingId), JSON.stringify(outcome));
+      d.dealOutcome = outcome;
+      // Also save to global dt_deal_outcomes for admin analytics
+      const allOutcomes = JSON.parse(localStorage.getItem('dt_deal_outcomes') || '[]');
+      const existingIdx = allOutcomes.findIndex(o => o.listingId === listingId);
+      if (existingIdx >= 0) allOutcomes[existingIdx] = outcome;
+      else allOutcomes.push(outcome);
+      localStorage.setItem('dt_deal_outcomes', JSON.stringify(allOutcomes));
+      // Persist listing update
+      const allListings = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+      if (allListings[listingId]) { allListings[listingId].dealOutcome = outcome; }
+      else if (d.vin && allListings[d.vin]) { allListings[d.vin].dealOutcome = outcome; }
+      localStorage.setItem('dt_listings', JSON.stringify(allListings));
+      closeDealOutcomeOverlay();
+      showDetail(listingId);
+      const msgs = { yes: '✓ Deal reported as complete — thank you!', no: 'Outcome recorded — no deal with this customer.', 'not-complete': 'Noted — deal in negotiation. You can update this later.' };
+      showToast(msgs[result] || 'Outcome saved', result==='yes' ? 'success' : 'success');
+      // Check if more prompts pending
+      setTimeout(checkDealOutcomePrompts, 800);
+    }
+
+    function closeDealOutcomeOverlay() {
+      document.getElementById('deal-outcome-overlay').style.display = 'none';
+    }
+
+    // Legacy stubs — keep so any old references don't break
+    function openMarkDeal() { openDealOutcomePrompt(activeListingId); }
+    function closeMarkDeal() { closeDealOutcomeOverlay(); }
+    function confirmMarkDeal() { dealOutcomeSelectYes(); }
+
+    // Load session
+    const sess=JSON.parse(localStorage.getItem('dealerSession')||'{}');
+    if (sess.dealerName) document.getElementById('nav-dealer-name').textContent=sess.dealerName;
+    if (sess.firstName) {
+      const nameEl=document.getElementById('nav-user-name');
+      if (nameEl) nameEl.textContent=sess.firstName+' '+(sess.lastName||'');
+    }
+    // Market Guide button: show only if globally ON and this dealer has individual access
+    (function applyMarketGuideVisibility(){
+      const globalOn=JSON.parse(localStorage.getItem('dt_market_visible')|| 'true');
+      const access=JSON.parse(localStorage.getItem('dt_market_dealer_access')||'{}');
+      const dealerName=(JSON.parse(localStorage.getItem('dealerSession')||'{}')).dealerName||'';
+      const dealerOn=!!access[dealerName];
+      const btn=document.getElementById('nav-market-btn');
+      if(btn) btn.style.display=(globalOn&&dealerOn)?'':'none';
+    })();
+
+    // ── Admin impersonation detection ──
+    // Uses a separate dedicated key 'dt_admin_viewing' set by admin-dashboard before navigation.
+    // Checked once on DOMContentLoaded — no else-branch so it can never accidentally hide itself.
+    function checkAdminView() {
+      const flag = localStorage.getItem('dt_admin_viewing');
+      if (!flag) return;
+      try {
+        const data = JSON.parse(flag);
+        const bar    = document.getElementById('admin-viewing-bar');
+        const nameEl = document.getElementById('admin-view-name');
+        if (bar)    { bar.style.display = 'flex'; }
+        if (nameEl) { nameEl.textContent = data.dealerName || 'dealer'; }
+        document.body.classList.add('admin-viewing');
+      } catch(e) {}
+    }
+    document.addEventListener('DOMContentLoaded', checkAdminView);
+    // Also call immediately — script runs after DOM is parsed so the bar element exists
+    checkAdminView();
+
+    function returnToAdmin() {
+      localStorage.removeItem('dt_admin_viewing');
+      window.location.href = 'admin-dashboard.html';
+    }
+
+// ── Q&A INBOX (dealer side) ──
+    function getUnansweredCount() {
+      // Count unanswered questions across all listings this dealer can see
+      let count = 0;
+      Object.entries(listings).forEach(([id, d]) => {
+        const qaKey = d.vin || id;
+        const msgs = JSON.parse(localStorage.getItem('dt_qa_' + qaKey) || '[]');
+        count += msgs.filter(m => m.type === 'question' && !m.answered).length;
+      });
+      return count;
+    }
+
+    function updateQABadge() {
+      // Count new seller answers we haven't read yet
+      let newAnswers = 0;
+      Object.entries(listings).forEach(([id, d]) => {
+        const qaKey = d.vin || id;
+        const msgs = JSON.parse(localStorage.getItem('dt_qa_' + qaKey) || '[]');
+        newAnswers += msgs.filter(m => m.type === 'answer' && m.seen === false).length;
+      });
+      // Also count any unread customer notif flags set by our sendDealerQuestion
+      const badge = document.getElementById('qa-notif-badge');
+      if (!badge) return;
+      badge.textContent = newAnswers > 0 ? (newAnswers > 9 ? '9+' : newAnswers) : '';
+      badge.classList.toggle('active', newAnswers > 0);
+    }
+
+    function showQAInbox() {
+      renderQAInbox();
+      document.getElementById('qa-inbox-overlay').style.display = 'block';
+    }
+
+    function closeQAInbox() {
+      document.getElementById('qa-inbox-overlay').style.display = 'none';
+      updateQABadge();
+    }
+
+    function renderQAInbox() {
+      const body = document.getElementById('qa-inbox-body');
+      const listingsWithQA = Object.entries(listings).filter(([id, d]) => {
+        const qaKey = d.vin || id;
+        const msgs = JSON.parse(localStorage.getItem('dt_qa_' + qaKey) || '[]');
+        return msgs.length > 0;
+      });
+
+      if (listingsWithQA.length === 0) {
+        body.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px 20px;font-size:0.85rem;">No questions asked yet.<br><small>Open a listing and use the Q&A section to ask the seller questions.</small></div>';
+        return;
+      }
+
+      body.innerHTML = listingsWithQA.map(([id, d]) => {
+        const qaKey = d.vin || id;
+        const msgs = JSON.parse(localStorage.getItem('dt_qa_' + qaKey) || '[]');
+        const newAnswers = msgs.filter(m => m.type === 'answer' && !m.seen).length;
+        const badge = newAnswers > 0
+          ? `<span style="background:#34d399;color:#0a3728;font-size:0.65rem;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:6px">${newAnswers} new answer${newAnswers>1?'s':''}</span>` : '';
+
+        const thread = msgs.map(m => {
+          const isQ = m.type === 'question';
+          const t = m.time ? new Date(m.time).toLocaleString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+          const bgStyle = isQ
+            ? 'background:rgba(43,159,217,0.08);border:1px solid rgba(43,159,217,0.2)'
+            : 'background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.18)';
+          const typeLabel = isQ ? '<span style="color:var(--teal);font-weight:700;font-size:0.68rem;letter-spacing:0.04em">YOUR QUESTION</span>' : '<span style="color:var(--green);font-weight:700;font-size:0.68rem;letter-spacing:0.04em">SELLER ANSWER</span>';
+          return `<div style="${bgStyle};border-radius:8px;padding:9px 12px;font-size:0.8rem;margin-bottom:6px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">${typeLabel}<span style="color:var(--muted);font-size:0.68rem">${t}</span></div>
+            <div style="color:var(--white);line-height:1.5">${escapeHtml(m.text)}</div>
+          </div>`;
+        }).join('');
+
+        // Mark answers as seen
+        let changed = false;
+        msgs.forEach(m => { if (m.type === 'answer' && !m.seen) { m.seen = true; changed = true; } });
+        if (changed) localStorage.setItem('dt_qa_' + qaKey, JSON.stringify(msgs));
+
+        return `<div style="background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:10px;padding:14px 16px;cursor:pointer;" onclick="closeQAInbox();showDetail('${id}')">
+          <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px">${d.title} ${badge}</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px">${d.trim || ''} · ${d.mileage || ''} · ${msgs.length} message${msgs.length!==1?'s':''}</div>
+          ${thread}
+          <div style="font-size:0.72rem;color:var(--cyan);margin-top:8px">Click to open listing & ask more questions →</div>
+        </div>`;
+      }).join('');
+    }
+
+    // Init badge + poll
+    updateQABadge();
+    setInterval(updateQABadge, 8000);
+
+    // Check 7-day dealer follow-ups on every page load
+    checkDealerFollowUps();
+
+    // Every 60s: check countdown milestones + close-of-period for ALL active listings
+    setInterval(function checkAllListingNotifs() {
+      Object.values(listings).forEach(function(d) {
+        if(d.expiredAt) return; // already expired
+        var ms = getListingMsLeft(d);
+        if(ms > 0) {
+          checkCountdownMilestones(d);
+        } else if(!d.expiredAt) {
+          d.expiredAt = Date.now();
+          sendCloseOfPeriodEmails(d);
+        }
+      });
+    }, 60000);
+
+    // ── Live countdown tick (every second) ──
+    setInterval(function liveCountdownTick() {
+      if (!activeListingId) return;
+      var d = listings[activeListingId];
+      if (!d || d.expiredAt) return;
+
+      var ms = getListingMsLeft(d);
+      var countdownEl = document.getElementById('d-countdown');
+
+      if (countdownEl) countdownEl.textContent = formatMsLeft(ms);
+
+      // Countdown milestone email notifications
+      checkCountdownMilestones(d);
+
+      // Auto-expire if time runs out
+      if (ms <= 0 && !d.expiredAt) {
+        d.expiredAt = Date.now();
+        d.countdown = 'Expired';
+        if (countdownEl) countdownEl.textContent = 'Expired';
+        showToast('Offer period has ended for this listing', 'info');
+        // Send close-of-period emails
+        sendCloseOfPeriodEmails(d);
+      }
+    }, 1000);
+
+    // Check for pending deal outcome prompts on every page load
+    // Delay slightly so listings data is fully populated first
+    setTimeout(checkDealOutcomePrompts, 1200);
+
+  </script>
+
+<!-- Q&A INBOX DRAWER -->
+  <div style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);" id="qa-inbox-overlay" onclick="if(event.target===this)closeQAInbox()">
+    <div style="position:fixed;top:0;right:0;width:100%;max-width:480px;height:100vh;background:var(--navy-card);border-left:1px solid var(--navy-border);display:flex;flex-direction:column;z-index:301;box-shadow:-8px 0 40px rgba(0,0,0,0.4);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--navy-border);flex-shrink:0;">
+        <h2 style="font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Listing Q&amp;A
+        </h2>
+        <button onclick="closeQAInbox()" style="width:32px;height:32px;border-radius:8px;border:none;background:var(--navy-mid);color:var(--muted);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+      <div id="qa-inbox-body" style="flex:1;overflow-y:auto;pa

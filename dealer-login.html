@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Dealer Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #f2f4f8;
+      --navy-mid: #e8ebf0;
+      --navy-card: #ffffff;
+      --navy-border: #ced5e2;
+      --blue: #2B9FD9;
+      --blue-light: #1a7db5;
+      --teal: #2B9FD9;
+      --white:       #1a1f2e;
+      --muted:       #5a647a;
+    }
+
+    body {
+      overflow-x: hidden;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; display: block; }
+      .left-panel { display: none; }
+      .right-panel { min-height: 100vh; padding: 40px 20px 60px; }
+      .card { max-width: 100%; }
+    }
+
+    /* Left decorative panel */
+    .left-panel {
+      background: var(--navy-mid);
+      border-right: 1px solid var(--navy-border);
+      display: flex; flex-direction: column;
+      justify-content: center; padding: 60px 52px;
+      position: relative; overflow: hidden;
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute; bottom: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .left-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.2rem;
+      color: var(--white); margin-bottom: 52px;
+    }
+    .left-logo-icon {
+      width: 36px; height: 36px; background: var(--blue);
+      border-radius: 9px; display: grid; place-items: center;
+    }
+    .left-logo-icon svg { width: 19px; height: 19px; fill: white; }
+
+    .left-panel h2 {
+      font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 800;
+      line-height: 1.25; margin-bottom: 16px; color: var(--white);
+    }
+    .left-panel h2 span {
+      background: linear-gradient(135deg, var(--blue-light), var(--teal));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .left-panel p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 40px; }
+
+    .perks { display: flex; flex-direction: column; gap: 14px; }
+    .perk { display: flex; align-items: flex-start; gap: 12px; }
+    .perk-icon {
+      width: 32px; height: 32px; background: rgba(59,130,246,0.12);
+      border-radius: 8px; display: grid; place-items: center; flex-shrink: 0; margin-top: 2px;
+    }
+    .perk-icon svg { width: 15px; height: 15px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+    .perk-text h4 { font-size: 0.88rem; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+    .perk-text p  { font-size: 0.8rem; color: var(--muted); }
+
+    /* Right login panel */
+    .right-panel {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 40px 32px;
+    }
+
+    .card {
+      width: 100%; max-width: 400px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header { margin-bottom: 32px; }
+    .dealer-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25);
+      color: var(--blue-light); font-size: 0.75rem; font-weight: 500;
+      padding: 4px 12px; border-radius: 100px; margin-bottom: 16px;
+    }
+    .dealer-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .card-header h1 { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+    .card-header p  { color: var(--muted); font-size: 0.88rem; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 0.8rem; color: var(--muted);
+      margin-bottom: 6px; font-weight: 500;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap > svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 2;
+      pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%; padding: 11px 14px 11px 38px;
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 9px; color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .input-wrap input::placeholder { color: var(--muted); }
+    .input-wrap input:focus { border-color: var(--blue); }
+
+    .form-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+    .remember { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--muted); cursor: pointer; }
+    .remember input { accent-color: var(--blue); }
+    .forgot { font-size: 0.8rem; color: var(--blue-light); text-decoration: none; }
+    .forgot:hover { text-decoration: underline; }
+    .pw-toggle { position:absolute; right:0; top:0; bottom:0; background:none; border:none; cursor:pointer; padding:0 12px; color:var(--muted); display:flex; align-items:center; }
+    .pw-toggle:hover { color:var(--white); }
+    .pw-toggle svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; position:static; transform:none; }
+    .input-wrap:has(.pw-toggle) input { padding-right: 40px; }
+
+    .btn-primary {
+      width: 100%; padding: 12px;
+      background: var(--blue); border: none; border-radius: 9px;
+      color: white; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s; margin-bottom: 24px;
+    }
+    .btn-primary:hover { background: #2563eb; box-shadow: 0 6px 20px rgba(59,130,246,0.35); }
+
+    .divider { height: 1px; background: var(--navy-border); margin-bottom: 20px; }
+
+    .apply-box {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 10px; padding: 16px 18px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .apply-box svg { width: 22px; height: 22px; stroke: var(--blue-light); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+    .apply-box-text p { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+    .apply-box-text a { color: var(--blue-light); text-decoration: none; font-weight: 500; font-size: 0.8rem; }
+    .apply-box-text a:hover { text-decoration: underline; }
+
+    .customer-link {
+      text-align: center; margin-top: 28px; font-size: 0.8rem; color: var(--muted);
+    }
+    .customer-link a { color: var(--blue-light); text-decoration: none; font-weight: 500; }
+    .customer-link a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .login-wrap { padding: 70px 12px 24px; }
+      .login-card { padding: 26px 18px; border-radius: 14px; }
+      nav { padding: 10px 16px; }
+      .right-panel { padding: 40px 20px 60px; }
+      .card { max-width: 100%; }
+      .apply-box { flex-direction: column; gap: 10px; }
+      .customer-link { margin-top: 20px; }
+    }
+    @media (max-width: 480px) {
+      .login-card-title { font-size: 1.2rem; }
+      .btn-primary { padding: 12px; font-size: 0.9rem; }
+      .apply-box { padding: 12px; }
+      .right-panel { padding: 32px 16px 48px; }
+      .card-header h1 { font-size: 1.3rem; }
+      .input-wrap input { font-size: 0.88rem; }
+    }
+    @media (max-width: 360px) {
+      .right-panel { padding: 28px 12px 40px; }
+      .card-header h1 { font-size: 1.2rem; }
+      .btn-primary { font-size: 0.86rem; }
+    }
+
+  
+    /* ── Tablet (iPad portrait 768-1024px) ── */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      body { grid-template-columns: 1fr 1fr; }
+      .left-panel { padding: 40px 32px; }
+      .left-panel h2 { font-size: 1.4rem; }
+      .right-panel { padding: 40px 32px; }
+      .card { max-width: 360px; }
+    }
+    /* ── Landscape mobile (iPhone sideways ~667-926px wide, ~375px tall) ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body { display: block; }
+      .left-panel { display: none; }
+      .right-panel { min-height: 100vh; padding: 24px 20px 32px; display: flex; align-items: center; justify-content: center; }
+      .card { max-width: 420px; width: 100%; }
+      .card-header { margin-bottom: 16px; }
+      .card-header h1 { font-size: 1.1rem; }
+      .form-group { margin-bottom: 10px; }
+      .input-wrap input { padding: 9px 14px 9px 36px; }
+      .btn-primary { padding: 10px; margin-bottom: 14px; }
+      .apply-box { padding: 10px 14px; }
+      .divider { margin-bottom: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-logo">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+    </div>
+
+    <h2>The smarter way to<br/><span>acquire trade-ins</span></h2>
+    <p>Access pre-qualified vehicle listings from motivated sellers. Submit competitive offers and grow your inventory — without the legwork.</p>
+
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="perk-text">
+          <h4>Verified Sellers</h4>
+          <p>All customers are verified with full vehicle history and photos.</p>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="perk-text">
+          <h4>Blind Bidding</h4>
+          <p>Your identity stays private during the 5 business day window.</p>
+        </div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="perk-text">
+          <h4>Competitive Offers</h4>
+          <p>See the highest current offer and improve your bid anytime.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="card">
+      <div class="card-header">
+        <div class="dealer-badge">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Dealer Access
+        </div>
+        <h1>Sign in to your dealership</h1>
+        <p>Access your listings, offers, and inventory pipeline</p>
+      </div>
+
+      <div class="form-group">
+        <label>Work Email</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" placeholder="you@dealership.com" id="dealer-email" />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:12px">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" placeholder="••••••••" id="dealer-password" style="padding-right:40px" />
+          <button type="button" class="pw-toggle" onclick="togglePw('dealer-password',this)" tabindex="-1" aria-label="Show password">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <label class="remember">
+          <input type="checkbox" /> Remember me
+        </label>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+
+      <button class="btn-primary" onclick="handleDealerSignIn()">Sign In</button>
+
+      <div class="divider"></div>
+
+      <div class="apply-box">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div class="apply-box-text">
+          <p>Don't have a dealer account? Access is by approval only.</p>
+          <a href="dealer-setup.html">Apply to become a DealrTrade dealer →</a>
+        </div>
+      </div>
+
+      <div class="customer-link">
+        Looking to sell or trade in your vehicle? <a href="customer-login.html">Customer login →</a>
+      </div>
+      <div style="text-align:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--navy-border);">
+        <a href="seed.html" target="_blank" style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;text-decoration:none;opacity:0.6;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">⚡ Load test data (dev only)</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Default dealer users
+    const DEFAULT_DEALER_USERS = [
+      { id:'du-001', email:'ryan@eliteautohaus.ca',   password:'dealer123', firstName:'Ryan',    lastName:'Kovacs',  role:'Dealer Admin',            dealerId:'elite',     dealerName:'Elite Autohaus',        status:'active' },
+      { id:'du-002', email:'sandra@eliteautohaus.ca', password:'dealer123', firstName:'Sandra',  lastName:'Park',    role:'Sales Manager',           dealerId:'elite',     dealerName:'Elite Autohaus',        status:'active' },
+      { id:'du-003', email:'mike@eliteautohaus.ca',   password:'dealer123', firstName:'Mike',    lastName:'Torres',  role:'Dealer Principal / Owner', dealerId:'elite',     dealerName:'Elite Autohaus',        status:'active' },
+      { id:'du-004', email:'sandra@maplehonda.ca',    password:'dealer123', firstName:'Sandra',  lastName:'Lee',     role:'Dealer Principal / Owner', dealerId:'maple',     dealerName:'Maple Honda',           status:'active' },
+      { id:'du-005', email:'dave@hamiltonford.ca',    password:'dealer123', firstName:'Dave',    lastName:'Nguyen',  role:'Dealer Principal / Owner', dealerId:'hamilton',  dealerName:'Hamilton Ford',         status:'active' },
+      { id:'du-006', email:'chris@hamiltonford.ca',   password:'dealer123', firstName:'Chris',   lastName:'Brown',   role:'Dealer Admin',            dealerId:'hamilton',  dealerName:'Hamilton Ford',         status:'active' },
+      { id:'du-007', email:'tom@lakeshoreag.ca',      password:'dealer123', firstName:'Tom',     lastName:'Ferraro', role:'Dealer Principal / Owner', dealerId:'lakeshore', dealerName:'Lakeshore Auto Group',  status:'active' },
+    ];
+
+    const DEFAULT_STAFF_ACCOUNTS = [
+      { id:'ceo-000',   email:'Konrad@Admin.com',       password:'Konrad',     name:'Konrad',         role:'ceo'      },
+      { id:'ceo-001',   email:'owner@dealrtrade.com',  password:'ceo123',     name:'Morgan Hale',    role:'ceo'      },
+      { id:'admin-001', email:'alex@dealrtrade.com',   password:'admin123',   name:'Alex Dupont',    role:'admin'    },
+      { id:'sup-001',   email:'jordan@dealrtrade.com', password:'support123', name:'Jordan Park',    role:'support'  },
+      { id:'ro-001',    email:'casey@dealrtrade.com',  password:'read123',    name:'Casey Williams', role:'readonly' },
+    ];
+
+    function getDealerUsers()   { return JSON.parse(localStorage.getItem('dt_dealer_users')    || 'null') || DEFAULT_DEALER_USERS;   }
+    function getStaffAccounts() { return JSON.parse(localStorage.getItem('dt_staff_accounts')  || 'null') || DEFAULT_STAFF_ACCOUNTS; }
+
+    document.querySelector('.forgot').addEventListener('click', e => e.preventDefault());
+
+    function showError(msg) {
+      let errEl = document.getElementById('login-error');
+      if (!errEl) {
+        errEl = document.createElement('div');
+        errEl.id = 'login-error';
+        errEl.style.cssText = 'font-size:0.8rem;color:#f87171;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);padding:8px 12px;border-radius:8px;margin-bottom:14px;';
+        document.querySelector('.btn-primary').before(errEl);
+      }
+      errEl.textContent = msg;
+      errEl.style.display = 'block';
+    }
+
+    function handleDealerSignIn() {
+      const email = document.getElementById('dealer-email').value.trim().toLowerCase();
+      const pass  = document.getElementById('dealer-password').value;
+
+      const errEl = document.getElementById('login-error');
+      if (errEl) errEl.style.display = 'none';
+
+      if (!email || !pass) { showError('Please enter your email and password.'); return; }
+
+      // ── Check dealer users first ──
+      const dealers = getDealerUsers();
+      const dealerMatch = dealers.find(u => u.email.toLowerCase() === email && u.password === pass);
+
+      if (dealerMatch) {
+        // ── Check individual user status ──
+        if (dealerMatch.status === 'suspended' || dealerMatch.status === 'inactive') {
+          showError('Your user account has been suspended. Please contact your Dealer Admin or DealrTrade support at support@dealrtrade.ca.');
+          return;
+        }
+        if (dealerMatch.status !== 'active') {
+          showError('Your account is inactive. Please contact your Dealer Admin to restore access.');
+          return;
+        }
+        // ── Check dealership-level suspension ──
+        // All users belonging to a suspended dealership are blocked
+        const allDealerUsersForCheck = getDealerUsers();
+        const dealerPrincipal = allDealerUsersForCheck.find(u =>
+          u.dealerName === dealerMatch.dealerName &&
+          (u.role === 'Dealer Principal / Owner' || u.role === 'Dealer Admin')
+        );
+        const dealershipSuspended = dealerPrincipal && dealerPrincipal.status === 'suspended';
+        // Also check if ANY user record for this dealerName has a suspended flag at dealership level
+        const anyUserForDealer = allDealerUsersForCheck.filter(u => u.dealerName === dealerMatch.dealerName);
+        const dealershipLevelSuspended = anyUserForDealer.length > 0 &&
+          anyUserForDealer.every(u => u.status === 'suspended');
+        if (dealershipSuspended || dealerMatch.dealerStatus === 'suspended') {
+          showError('Your dealership account has been suspended by DealrTrade. Please contact support@dealrtrade.ca or call 1-800-555-0100 for assistance.');
+          return;
+        }
+        // Set dealer session
+        localStorage.setItem('dealerSession', JSON.stringify({
+          id:         dealerMatch.id,
+          firstName:  dealerMatch.firstName,
+          lastName:   dealerMatch.lastName,
+          email:      dealerMatch.email,
+          phone:      dealerMatch.phone || '',
+          mobile:     dealerMatch.mobile || '',
+          role:       dealerMatch.role,
+          dealerId:   dealerMatch.dealerId,
+          dealerName: dealerMatch.dealerName,
+        }));
+        const allDealerProfiles = JSON.parse(localStorage.getItem('dt_dealer_profiles') || '{}');
+        const seedBrandProfile = allDealerProfiles[dealerMatch.dealerId] || {};
+        const existingProfile = JSON.parse(localStorage.getItem('dealerProfile') || '{}');
+        localStorage.setItem('dealerProfile', JSON.stringify({
+          ...existingProfile,
+          ...seedBrandProfile,
+          name:    dealerMatch.dealerName,
+          contact: dealerMatch.firstName + ' ' + dealerMatch.lastName,
+          email:   dealerMatch.email,
+        }));
+        // ── Check mustChangePw flag (admin set temp password) ──
+        if (dealerMatch.mustChangePw) {
+          showDealerMustChangePw(dealerMatch);
+          return;
+        }
+        window.location.href = 'dealer-portal.html';
+        return;
+      }
+
+      // ── Not a dealer — check staff accounts ──
+      const staff = getStaffAccounts();
+      const staffMatch = staff.find(s => s.email.toLowerCase() === email && s.password === pass);
+
+      if (staffMatch) {
+        localStorage.setItem('adminSession', JSON.stringify({
+          id:    staffMatch.id,
+          name:  staffMatch.name,
+          role:  staffMatch.role,
+          email: staffMatch.email,
+        }));
+        window.location.href = 'admin-dashboard.html';
+        return;
+      }
+
+      // ── No match anywhere ──
+      showError('Invalid email or password.');
+      document.getElementById('dealer-password').value = '';
+    }
+
+    document.getElementById('dealer-password').addEventListener('keydown', e => { if (e.key === 'Enter') handleDealerSignIn(); });
+    document.getElementById('dealer-email').addEventListener('keydown',    e => { if (e.key === 'Enter') handleDealerSignIn(); });
+
+    let _dealerMustChangePwUser = null;
+    function showDealerMustChangePw(user) {
+      _dealerMustChangePwUser = user;
+      const overlay = document.getElementById('dealer-must-change-pw');
+      if (overlay) { overlay.style.display = 'flex'; }
+    }
+    function submitDealerNewPw() {
+      const pw1 = document.getElementById('d-new-pw-1').value.trim();
+      const pw2 = document.getElementById('d-new-pw-2').value.trim();
+      const err = document.getElementById('d-new-pw-error');
+      if (pw1.length < 8) { err.textContent = 'Password must be at least 8 characters.'; err.style.display='block'; return; }
+      if (pw1 !== pw2)    { err.textContent = 'Passwords do not match.'; err.style.display='block'; return; }
+      err.style.display = 'none';
+      // Update password in dt_dealer_users
+      const users = getDealerUsers();
+      const u = users.find(x => x.id === _dealerMustChangePwUser.id);
+      if (u) { u.password = pw1; u.mustChangePw = false; localStorage.setItem('dt_dealer_users', JSON.stringify(users)); }
+      // Set session and redirect
+      localStorage.setItem('dealerSession', JSON.stringify({
+        id: _dealerMustChangePwUser.id,
+        firstName: _dealerMustChangePwUser.firstName,
+        lastName: _dealerMustChangePwUser.lastName,
+        email: _dealerMustChangePwUser.email,
+        phone: _dealerMustChangePwUser.phone || '',
+        mobile: _dealerMustChangePwUser.mobile || '',
+        role: _dealerMustChangePwUser.role,
+        dealerId: _dealerMustChangePwUser.dealerId,
+        dealerName: _dealerMustChangePwUser.dealerName,
+      }));
+      window.location.href = 'dealer-portal.html';
+    }
+
+    function togglePw(id, btn) {
+      const inp = document.getElementById(id);
+      const showing = inp.type === 'text';
+      inp.type = showing ? 'password' : 'text';
+      const svg = btn.querySelector('svg');
+      svg.innerHTML = showing
+        ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+        : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    }
+  </script>
+
+<!-- SITE FOOTER -->
+<footer style="text-align:center;padding:20px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;margin-top:auto;">
+  <span>&#169; 2026 DealrTrade</span>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="/cdn-cgi/l/email-protection#b4d7dbdac0d5d7c0f4d0d1d5d8c6c0c6d5d0d19ad7d5" style="color:#5a647a;text-decoration:none;"><span class="__cf_email__" data-cfemail="e98a86879d888a9da98d8c88859b9d9b888d8cc78a88">[email&#160;protected]</span></a>
+</footer>
+<!-- Must Change Password Overlay -->
+<div id="dealer-must-change-pw" style="display:none;position:fixed;inset:0;background:rgba(10,15,26,0.85);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--navy-card);border:1px solid var(--navy-border);border-radius:14px;padding:32px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div style="font-size:1.5rem;margin-bottom:8px;">&#128272;</div>
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:6px;">Set a New Password</h3>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:20px;line-height:1.55;">An administrator has set a temporary password for your account. You must create a new password before accessing the portal.</p>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:5px;">New Password</label>
+      <div style="position:relative;">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="d-new-pw-1" placeholder="At least 8 characters" style="width:100%;background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:9px;color:var(--white);font-family:Inter,sans-serif;font-size:0.88rem;padding:10px 40px 10px 36px;outline:none;" />
+        <button type="button" onclick="togglePw('d-new-pw-1',this)" tabindex="-1" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:0.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:5px;">Confirm New Password</label>
+      <div style="position:relative;">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="d-new-pw-2" placeholder="Repeat new password" style="width:100%;background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:9px;color:var(--white);font-family:Inter,sans-serif;font-size:0.88rem;padding:10px 40px 10px 36px;outline:none;" />
+        <button type="button" onclick="togglePw('d-new-pw-2',this)" tabindex="-1" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);display:flex;align-items:center;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div id="d-new-pw-error" style="display:none;font-size:0.78rem;color:#f87171;margin-bottom:10px;"></div>
+    <button onclick="submitDealerNewPw()" style="width:100%;padding:12px;background:var(--blue);border:none;border-radius:9px;color:white;font-family:Inter,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;">Set New Password</button>
+  </div>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function submitDealerNewPw() {
+  const pw1 = document.getElementById('d-new-pw-1').value;
+  const pw2 = document.getElementById('d-new-pw-2').value;
+  const err = document.getElementById('d-new-pw-error');
+  if (pw1.length < 8) { err.textContent='Password must be at least 8 characters.'; err.style.display=''; return; }
+  if (pw1 !== pw2)    { err.textContent='Passwords do not match.'; err.style.display=''; return; }
+  err.style.display = 'none';
+  const sess = JSON.parse(localStorage.getItem('dealerSession')||'{}');
+  const users = JSON.parse(localStorage.getItem('dt_dealer_users')||'[]');
+  const idx2 = users.findIndex(u => u.email === sess.email);
+  if (idx2 > -1) { users[idx2].password=pw1; users[idx2].mustChangePassword=false; localStorage.setItem('dt_dealer_users',JSON.stringify(users)); }
+  document.getElementById('must-change-overlay').style.display = 'none';
+  window.location.href = 'dealer-portal.html';
+}
+</script>
+<footer style="text-align:center;padding:22px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;">
+  © 2026 DealrTrade <span style="color:#ced5e2">·</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">·</span>
+  <a href="terms.html#s23" target="

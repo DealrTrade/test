@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Account Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:        #f2f4f8;
+      --navy-mid:    #e8ebf0;
+      --navy-card:   #ffffff;
+      --navy-border: #ced5e2;
+      --blue:        #2B9FD9;
+      --blue-light:  #1a7db5;
+      --white:       #1a1f2e;
+      --muted:       #5a647a;
+      --green:       #34d399;
+      --red:         #f87171;
+      --amber:       #fbbf24;
+    }
+
+    html { overflow-x: hidden; }
+    body {
+      background: var(--navy); color: var(--white);
+      font-family: 'Inter', sans-serif; min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px; background: var(--navy-mid);
+      border-bottom: 1px solid var(--navy-border);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 1.1rem; color: var(--white); text-decoration: none; }
+    .logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: grid; place-items: center; }
+    .logo-icon svg { width: 17px; height: 17px; fill: white; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .btn-back {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--muted); font-size: 0.85rem; text-decoration: none; transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--white); }
+    .btn-back svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-signout {
+      padding: 9px 16px; background: transparent;
+      border: 1px solid var(--navy-border); border-radius: 8px;
+      color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.85rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-signout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 680px; margin: 0 auto; padding: 32px 24px 80px; }
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+    .page-header p { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── SECTION ── */
+    .settings-section {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 14px; margin-bottom: 16px; overflow: hidden;
+    }
+    .section-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--navy-border);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(43,159,217,0.1); border: 1px solid rgba(43,159,217,0.2);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .section-icon svg { width: 15px; height: 15px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+    .section-icon.red { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.2); }
+    .section-icon.red svg { stroke: var(--red); }
+    .section-icon.amber { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.2); }
+    .section-icon.amber svg { stroke: var(--amber); }
+    .section-icon.green { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.2); }
+    .section-icon.green svg { stroke: var(--green); }
+    .section-title { font-size: 0.88rem; font-weight: 700; }
+    .section-subtitle { font-size: 0.75rem; color: var(--muted); margin-top: 1px; }
+    .section-body { padding: 20px; }
+
+    /* ── FIELD ROW ── */
+    .field-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 12px 0;
+      border-bottom: 1px solid var(--navy-border);
+    }
+    .field-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .field-row:first-child { padding-top: 0; }
+    .field-left { flex: 1; min-width: 0; }
+    .field-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; margin-bottom: 3px; }
+    .field-value { font-size: 0.9rem; color: var(--white); font-weight: 500; }
+    .field-locked {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; color: var(--muted); position: relative;
+    }
+    .field-locked svg { width: 11px; height: 11px; stroke: var(--muted); fill: none; stroke-width: 2; }
+    .support-trigger {
+      color: var(--blue-light); font-size: 0.72rem; cursor: pointer;
+      background: none; border: none; font-family: 'Inter', sans-serif;
+      padding: 0; text-decoration: underline;
+    }
+    .support-trigger:hover { color: var(--white); }
+    .support-dropdown {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0;
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 10px; overflow: hidden; z-index: 50; min-width: 220px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      animation: fadeUp 0.15s ease both;
+    }
+    .support-dropdown.open { display: block; }
+    .support-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px; text-decoration: none; color: var(--white);
+      font-size: 0.82rem; transition: background 0.15s;
+    }
+    .support-option:hover { background: var(--navy-mid); }
+    .support-option-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: rgba(43,159,217,0.1); border: 1px solid rgba(43,159,217,0.2);
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .support-option-icon svg { width: 13px; height: 13px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+    .support-option-text { line-height: 1.3; }
+    .support-option-label { font-weight: 600; font-size: 0.8rem; }
+    .support-option-value { font-size: 0.72rem; color: var(--muted); }
+
+    /* ── INLINE EDIT (phone) ── */
+    .field-edit-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .field-input {
+      padding: 8px 12px; background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 8px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color 0.2s; width: 170px; display: none;
+    }
+    .field-input:focus { border-color: var(--blue); }
+    .field-input.visible { display: block; }
+    .btn-edit {
+      padding: 7px 13px; background: rgba(43,159,217,0.1);
+      border: 1px solid rgba(43,159,217,0.25); border-radius: 8px;
+      color: var(--blue-light); font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-edit:hover { background: rgba(43,159,217,0.2); }
+    .btn-save {
+      padding: 7px 13px; background: var(--blue); border: none; border-radius: 8px;
+      color: white; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: none; white-space: nowrap;
+    }
+    .btn-save:hover { background: #2589bc; }
+    .btn-save.visible { display: block; }
+    .btn-cancel-edit {
+      padding: 7px 11px; background: transparent;
+      border: 1px solid var(--navy-border); border-radius: 8px;
+      color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.78rem;
+      cursor: pointer; transition: all 0.2s; display: none;
+    }
+    .btn-cancel-edit:hover { border-color: var(--muted); color: var(--white); }
+    .btn-cancel-edit.visible { display: block; }
+
+    /* verification notice */
+    .verify-notice {
+      display: none; margin-top: 8px;
+      background: rgba(43,159,217,0.07); border: 1px solid rgba(43,159,217,0.2);
+      border-radius: 8px; padding: 10px 13px;
+      font-size: 0.76rem; color: var(--muted); line-height: 1.5;
+    }
+    .verify-notice strong { color: var(--blue-light); }
+    .verify-notice.show { display: block; }
+
+    /* ── PASSWORD FIELDS ── */
+    .password-grid { display: flex; flex-direction: column; gap: 12px; }
+    .pw-field label { display: block; font-size: 0.78rem; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+    .pw-wrap { position: relative; }
+    .pw-wrap svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; stroke: var(--muted); fill: none; stroke-width: 2; pointer-events: none;
+    }
+    .pw-input {
+      width: 100%; padding: 10px 38px; background: var(--navy-mid);
+      border: 1px solid var(--navy-border); border-radius: 9px;
+      color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .pw-input:focus { border-color: var(--blue); }
+    .pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      padding: 0; display: grid; place-items: center;
+    }
+    .pw-toggle svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .pw-toggle:hover { color: var(--white); }
+    .pw-strength { height: 3px; border-radius: 2px; margin-top: 6px; background: var(--navy-border); overflow: hidden; }
+    .pw-strength-bar { height: 100%; width: 0; border-radius: 2px; transition: width 0.3s, background 0.3s; }
+    .pw-hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; }
+    .btn-update-pw {
+      width: 100%; padding: 11px; background: var(--blue); border: none; border-radius: 9px;
+      color: white; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.88rem;
+      cursor: pointer; transition: all 0.2s; margin-top: 4px;
+    }
+    .btn-update-pw:hover { background: #2589bc; }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--navy-border); gap: 16px;
+    }
+    .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .toggle-row:first-child { padding-top: 0; }
+    .toggle-info { flex: 1; }
+    .toggle-label { font-size: 0.88rem; font-weight: 500; margin-bottom: 2px; }
+    .toggle-desc { font-size: 0.75rem; color: var(--muted); }
+    .toggle {
+      position: relative; width: 40px; height: 22px; flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: var(--navy-border);
+      border-radius: 100px; cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; border-radius: 50%; background: white;
+      left: 3px; top: 3px; transition: transform 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--blue); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* ── DANGER ZONE ── */
+    .danger-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--navy-border);
+    }
+    .danger-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .danger-row:first-child { padding-top: 0; }
+    .danger-info h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 3px; }
+    .danger-info p { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+    .btn-danger {
+      padding: 8px 14px; background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.3); border-radius: 8px;
+      color: var(--red); font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-danger:hover { background: rgba(248,113,113,0.16); }
+    .btn-export {
+      padding: 8px 14px; background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.25); border-radius: 8px;
+      color: var(--green); font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-export:hover { background: rgba(52,211,153,0.15); }
+    .btn-export svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+      z-index: 200; place-items: center; padding: 24px;
+    }
+    .modal-overlay.open { display: grid; }
+    .modal-card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 18px; padding: 32px 28px; width: 100%; max-width: 400px;
+      animation: fadeUp 0.25s ease both;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    .modal-icon {
+      width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 16px;
+    }
+    .modal-icon.red { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+    .modal-icon.red svg { width: 22px; height: 22px; stroke: var(--red); fill: none; stroke-width: 2; }
+    .modal-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .modal-card p { font-size: 0.84rem; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .modal-confirm-input {
+      width: 100%; padding: 10px 14px; background: var(--navy-mid);
+      border: 1px solid var(--navy-border); border-radius: 9px;
+      color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      outline: none; margin-bottom: 16px; transition: border-color 0.2s;
+    }
+    .modal-confirm-input:focus { border-color: var(--red); }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-modal-cancel {
+      flex: 1; padding: 11px; background: transparent;
+      border: 1px solid var(--navy-border); border-radius: 9px;
+      color: var(--muted); font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-modal-cancel:hover { border-color: var(--muted); color: var(--white); }
+    .btn-modal-confirm {
+      flex: 1; padding: 11px; background: var(--red); border: none; border-radius: 9px;
+      color: white; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.88rem;
+      cursor: pointer; opacity: 0.4; pointer-events: none; transition: all 0.2s;
+    }
+    .btn-modal-confirm.ready { opacity: 1; pointer-events: auto; }
+    .btn-modal-confirm.ready:hover { background: #ef4444; }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 10px; padding: 12px 18px;
+      font-size: 0.82rem; color: var(--white); font-weight: 500;
+      display: flex; align-items: center; gap: 9px;
+      opacity: 0; transition: all 0.3s; z-index: 300; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast svg { width: 15px; height: 15px; stroke: var(--green); fill: none; stroke-width: 2.5; flex-shrink: 0; }
+
+    @media (max-width: 768px) {
+      nav { padding: 10px 14px; }
+      .settings-wrap { flex-direction: column; }
+      .settings-nav { width: 100%; flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 8px; flex-wrap: nowrap; gap: 4px; -webkit-overflow-scrolling: touch; }
+      .settings-nav button { white-space: nowrap; flex-shrink: 0; padding: 7px 12px; font-size: 0.78rem; }
+      .settings-main { padding: 16px; }
+      .field-row { flex-direction: column; gap: 12px; }
+      .field-row > * { width: 100% !important; }
+    }
+    @media (max-width: 480px) {
+      .settings-main { padding: 12px; }
+      .settings-nav button { padding: 8px 11px; font-size: 0.76rem; min-height: 38px; }
+    }
+    @media (max-width: 360px) {
+      .settings-nav button { padding: 7px 9px; font-size: 0.72rem; }
+      .settings-main { padding: 10px; }
+    }
+
+  
+    /* ── Tablet (iPad portrait 768-1024px) ── */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .settings-wrap { flex-direction: row; }
+      .settings-nav { width: 180px; flex-direction: column; border-right: 1px solid var(--border); border-bottom: none; overflow-x: visible; overflow-y: auto; }
+      .settings-nav button { white-space: normal; }
+      .settings-main { padding: 24px; }
+    }
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      nav { padding: 8px 16px; height: 44px; }
+      .settings-nav { padding: 6px; }
+      .settings-nav button { padding: 6px 10px; font-size: 0.74rem; min-height: 34px; }
+      .settings-main { padding: 12px 16px; }
+      .card-section { padding: 14px; margin-bottom: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- DELETE ACCOUNT MODAL -->
+  <div class="modal-overlay" id="delete-modal" onclick="handleOverlayClick(event,'delete-modal')">
+    <div class="modal-card">
+      <div class="modal-icon red">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </div>
+      <h3>Delete your account?</h3>
+      <p>This will permanently delete your account, all listings, and associated data. This cannot be undone. Type <strong style="color:var(--white)">DELETE</strong> to confirm.</p>
+      <input class="modal-confirm-input" id="delete-confirm-input" type="text" placeholder="Type DELETE to confirm" oninput="checkDeleteConfirm()" />
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" onclick="closeModal('delete-modal')">Cancel</button>
+        <button class="btn-modal-confirm" id="btn-delete-confirm" onclick="handleDeleteAccount()">Delete Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toast-msg">Saved</span>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="customer-dashboard.html" class="logo">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+      <span style="display:none;align-items:center;gap:8px;font-weight:800;">
+        <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3m-4 12H21a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2H10a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2zm7-5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg></div>
+        DealrTrade
+      </span>
+    </a>
+    <div class="nav-right">
+      <a href="customer-dashboard.html" class="btn-back">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        My Listings
+      </a>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="page-wrap">
+    <div class="page-header">
+      <h1>Account Settings</h1>
+      <p>Manage your profile, security, and notification preferences</p>
+    </div>
+
+    <!-- ── ACCOUNT INFO ── -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <div class="section-title">Account Information</div>
+          <div class="section-subtitle">Name and email can only be changed by contacting support</div>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <!-- Full Name (locked) -->
+        <div class="field-row">
+          <div class="field-left">
+            <div class="field-label">Full Name</div>
+            <div class="field-value" id="display-name">—</div>
+            <div class="field-locked">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Locked ·
+              <button class="support-trigger" onclick="toggleSupport('support-name', event)">Contact support to change</button>
+              <div class="support-dropdown" id="support-name">
+                <a class="support-option" href="/cdn-cgi/l/email-protection#25565055554a575165414044495751574441400b464a48">
+                  <div class="support-option-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                  <div class="support-option-text">
+                    <div class="support-option-label">Email Support</div>
+                    <div class="support-option-value"><span class="__cf_email__" data-cfemail="22515752524d5056624647434e5056504346470c414d4f">[email&#160;protected]</span></div>
+                  </div>
+                </a>
+                <a class="support-option" href="tel:+19055550100">
+                  <div class="support-option-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                  <div class="support-option-text">
+                    <div class="support-option-label">Call Support</div>
+                    <div class="support-option-value">(905) 555-0100</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+        <div class="field-row" style="flex-wrap:wrap;gap:10px;">
+          <div class="field-left">
+            <div class="field-label">Email Address</div>
+            <div class="field-value" id="display-email">—</div>
+          </div>
+          <div class="field-edit-wrap">
+            <input class="field-input" id="email-input" type="email" placeholder="new@example.com" />
+            <button class="btn-cancel-edit" id="btn-cancel-email" onclick="cancelEmailEdit()">Cancel</button>
+            <button class="btn-save" id="btn-send-code" onclick="sendVerificationCode()">Send Code</button>
+            <button class="btn-edit" id="btn-edit-email" onclick="startEmailEdit()">Edit</button>
+          </div>
+          <!-- Step 2: enter code -->
+          <div id="email-code-wrap" style="display:none;width:100%;display:none;">
+            <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;line-height:1.5;">
+              A 6-digit verification code was sent to <strong id="email-code-target" style="color:var(--white)"></strong>. Enter it below to confirm the change.
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input id="email-code-input" type="text" maxlength="6" placeholder="000000"
+                style="width:130px;padding:9px 14px;background:var(--navy-mid);border:1px solid var(--navy-border);border-radius:8px;color:var(--white);font-family:'Inter',sans-serif;font-size:1rem;letter-spacing:0.18em;outline:none;text-align:center;transition:border-color 0.2s;"
+                oninput="checkCodeInput()" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--navy-border)'" />
+              <button id="btn-verify-code" onclick="verifyCode()"
+                style="padding:9px 16px;background:var(--blue);border:none;border-radius:8px;color:white;font-family:'Inter',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;opacity:0.4;pointer-events:none;transition:all 0.2s;">
+                Confirm
+              </button>
+              <button onclick="cancelEmailEdit()"
+                style="padding:9px 13px;background:transparent;border:1px solid var(--navy-border);border-radius:8px;color:var(--muted);font-family:'Inter',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s;"
+                onmouseover="this.style.borderColor='var(--muted)'" onmouseout="this.style.borderColor='var(--navy-border)'">
+                Cancel
+              </button>
+            </div>
+            <div style="margin-top:8px;font-size:0.72rem;color:var(--muted);">
+              Didn't receive it? <button onclick="sendVerificationCode(true)" style="background:none;border:none;color:var(--blue-light);font-family:'Inter',sans-serif;font-size:0.72rem;cursor:pointer;text-decoration:underline;padding:0;">Resend code</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone (editable) -->
+        <div class="field-row" style="flex-wrap:wrap;gap:10px;">
+          <div class="field-left">
+            <div class="field-label">Phone Number</div>
+            <div class="field-value" id="display-phone">—</div>
+          </div>
+          <div class="field-edit-wrap">
+            <input class="field-input" id="phone-input" type="tel" placeholder="(416) 555-0100" />
+            <button class="btn-cancel-edit" id="btn-cancel-phone" onclick="cancelPhoneEdit()">Cancel</button>
+            <button class="btn-save" id="btn-save-phone" onclick="savePhone()">Save</button>
+            <button class="btn-edit" id="btn-edit-phone" onclick="startPhoneEdit()">Edit</button>
+          </div>
+          <div class="verify-notice" id="phone-verify-notice" style="width:100%">
+            <strong>Verification email sent.</strong> Check your inbox and click the link to confirm your new phone number. Your number won't update until verified.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SECURITY ── -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <div class="section-title">Password</div>
+          <div class="section-subtitle">Choose a strong password you don't use elsewhere</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="password-grid">
+          <div class="pw-field">
+            <label>Current Password</label>
+            <div class="pw-wrap">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="pw-input" type="password" id="pw-current" placeholder="••••••••" />
+              <button class="pw-toggle" onclick="togglePw('pw-current',this)" tabindex="-1">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="pw-field">
+            <label>New Password</label>
+            <div class="pw-wrap">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="pw-input" type="password" id="pw-new" placeholder="••••••••" oninput="checkStrength(this.value)" />
+              <button class="pw-toggle" onclick="togglePw('pw-new',this)" tabindex="-1">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="pw-strength"><div class="pw-strength-bar" id="pw-strength-bar"></div></div>
+            <div class="pw-hint" id="pw-hint">Use 8+ characters with a mix of letters, numbers, and symbols</div>
+          </div>
+          <div class="pw-field">
+            <label>Confirm New Password</label>
+            <div class="pw-wrap">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input class="pw-input" type="password" id="pw-confirm" placeholder="••••••••" />
+              <button class="pw-toggle" onclick="togglePw('pw-confirm',this)" tabindex="-1">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <button class="btn-update-pw" onclick="updatePassword()">Update Password</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NOTIFICATIONS ── -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon amber">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div>
+          <div class="section-title">Email Notifications</div>
+          <div class="section-subtitle">All notifications are sent to your registered email</div>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">New offer received</div>
+            <div class="toggle-desc">Get notified each time a dealer submits an offer on your listing</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="notif-offer" checked onchange="saveNotifs()" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Offer period closing soon</div>
+            <div class="toggle-desc">Reminder 24 hours before your offer period expires</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="notif-closing" checked onchange="saveNotifs()" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-label">Results ready</div>
+            <div class="toggle-desc">Email with top 3 dealer offers when your period closes</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="notif-results" checked onchange="saveNotifs()" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── DATA & ACCOUNT ── -->
+    <div class="settings-section">
+      <div class="section-header">
+        <div class="section-icon red">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div>
+          <div class="section-title">Data & Account</div>
+          <div class="section-subtitle">Export your data or permanently delete your account</div>
+        </div>
+      </div>
+      <div class="section-body">
+
+        <div class="danger-row">
+          <div class="danger-info">
+            <h4>Export My Data</h4>
+            <p>Download a copy of your account information, listings, and offer history as a JSON file. Required under PIPEDA.</p>
+          </div>
+          <button class="btn-export" onclick="exportData()">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+        </div>
+
+        <div class="danger-row">
+          <div class="danger-info">
+            <h4>Delete Account</h4>
+            <p>Permanently delete your account and all associated data. Active listings will be removed immediately. This cannot be undone.</p>
+          </div>
+          <button class="btn-danger" onclick="openModal('delete-modal')">Delete Account</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end page-wrap -->
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ── Session guard ──
+    (function() {
+      const profile = localStorage.getItem('customerProfile');
+      if (!profile || profile === '{}' || !JSON.parse(profile).id) {
+        window.location.href = 'customer-login.html';
+      }
+    })();
+
+        // ── Load profile ──
+    function loadProfile() {
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      // Demo fallback so fields are never blank in prototype
+      document.getElementById('display-name').textContent  = profile.name  || 'James Whitfield';
+      document.getElementById('display-email').textContent = profile.email || 'j.whitfield@gmail.com';
+      document.getElementById('display-phone').textContent = profile.phone || 'Not set';
+    }
+
+    // ── Support dropdown ──
+    function toggleSupport(id, e) {
+      e.stopPropagation();
+      const dropdown = document.getElementById(id);
+      const isOpen = dropdown.classList.contains('open');
+      // Close all open dropdowns first
+      document.querySelectorAll('.support-dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!isOpen) dropdown.classList.add('open');
+    }
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.support-dropdown.open').forEach(d => d.classList.remove('open'));
+    });
+
+    // ── Load notification prefs ──
+    function loadNotifs() {
+      const prefs = JSON.parse(localStorage.getItem('customerNotifs') || '{}');
+      if (prefs.offer    !== undefined) document.getElementById('notif-offer').checked    = prefs.offer;
+      if (prefs.closing  !== undefined) document.getElementById('notif-closing').checked  = prefs.closing;
+      if (prefs.results  !== undefined) document.getElementById('notif-results').checked  = prefs.results;
+    }
+
+    function saveNotifs() {
+      localStorage.setItem('customerNotifs', JSON.stringify({
+        offer:   document.getElementById('notif-offer').checked,
+        closing: document.getElementById('notif-closing').checked,
+        results: document.getElementById('notif-results').checked,
+      }));
+      showToast('Notification preferences saved');
+    }
+
+    // ── Email edit & verification ──
+    let pendingEmail = null;
+    let generatedCode = null;
+
+    function startEmailEdit() {
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      document.getElementById('email-input').value = profile.email || '';
+      document.getElementById('email-input').classList.add('visible');
+      document.getElementById('btn-send-code').classList.add('visible');
+      document.getElementById('btn-cancel-email').classList.add('visible');
+      document.getElementById('btn-edit-email').style.display = 'none';
+      document.getElementById('email-code-wrap').style.display = 'none';
+      document.getElementById('email-input').focus();
+    }
+
+    function cancelEmailEdit() {
+      document.getElementById('email-input').classList.remove('visible');
+      document.getElementById('btn-send-code').classList.remove('visible');
+      document.getElementById('btn-cancel-email').classList.remove('visible');
+      document.getElementById('btn-edit-email').style.display = '';
+      document.getElementById('email-code-wrap').style.display = 'none';
+      document.getElementById('email-code-input').value = '';
+      pendingEmail = null;
+      generatedCode = null;
+    }
+
+    function sendVerificationCode(resend = false) {
+      const newEmail = document.getElementById('email-input').value.trim();
+      if (!newEmail || !newEmail.includes('@')) { alert('Please enter a valid email address.'); return; }
+
+      // Generate a random 6-digit code (in production Supabase sends this via email)
+      generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+      pendingEmail = newEmail;
+
+      // Hide input row, show code entry
+      document.getElementById('email-input').classList.remove('visible');
+      document.getElementById('btn-send-code').classList.remove('visible');
+      document.getElementById('btn-cancel-email').classList.remove('visible');
+      document.getElementById('btn-edit-email').style.display = 'none';
+      document.getElementById('email-code-wrap').style.display = 'block';
+      document.getElementById('email-code-target').textContent = newEmail;
+      document.getElementById('email-code-input').value = '';
+      document.getElementById('btn-verify-code').style.opacity = '0.4';
+      document.getElementById('btn-verify-code').style.pointerEvents = 'none';
+      document.getElementById('email-code-input').focus();
+
+      // In prototype: show the code in a toast so you can test it
+      showToast(`Demo code: ${generatedCode}` + (resend ? ' (resent)' : ''));
+    }
+
+    function checkCodeInput() {
+      const val = document.getElementById('email-code-input').value.trim();
+      const btn = document.getElementById('btn-verify-code');
+      const ready = val.length === 6;
+      btn.style.opacity = ready ? '1' : '0.4';
+      btn.style.pointerEvents = ready ? 'auto' : 'none';
+    }
+
+    function verifyCode() {
+      const entered = document.getElementById('email-code-input').value.trim();
+      if (entered !== generatedCode) {
+        document.getElementById('email-code-input').style.borderColor = 'var(--red)';
+        showToast('Incorrect code — please try again');
+        setTimeout(() => { document.getElementById('email-code-input').style.borderColor = 'var(--navy-border)'; }, 2000);
+        return;
+      }
+      // Code correct — update email
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      profile.email = pendingEmail;
+      localStorage.setItem('customerProfile', JSON.stringify(profile));
+      document.getElementById('display-email').textContent = pendingEmail;
+      cancelEmailEdit();
+      showToast('Email address updated successfully');
+    }
+
+    // ── Phone edit ──
+    function startPhoneEdit() {
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      document.getElementById('phone-input').value = profile.phone || '';
+      document.getElementById('phone-input').classList.add('visible');
+      document.getElementById('btn-save-phone').classList.add('visible');
+      document.getElementById('btn-cancel-phone').classList.add('visible');
+      document.getElementById('btn-edit-phone').style.display = 'none';
+      document.getElementById('phone-verify-notice').classList.remove('show');
+      document.getElementById('phone-input').focus();
+    }
+
+    function cancelPhoneEdit() {
+      document.getElementById('phone-input').classList.remove('visible');
+      document.getElementById('btn-save-phone').classList.remove('visible');
+      document.getElementById('btn-cancel-phone').classList.remove('visible');
+      document.getElementById('btn-edit-phone').style.display = '';
+      document.getElementById('phone-verify-notice').classList.remove('show');
+    }
+
+    function savePhone() {
+      const newPhone = document.getElementById('phone-input').value.trim();
+      if (!newPhone) { alert('Please enter a phone number.'); return; }
+
+      // In production: Supabase sends a verification email before updating.
+      // For prototype, we simulate the pending state.
+      document.getElementById('phone-verify-notice').classList.add('show');
+      document.getElementById('phone-input').classList.remove('visible');
+      document.getElementById('btn-save-phone').classList.remove('visible');
+      document.getElementById('btn-cancel-phone').classList.remove('visible');
+      document.getElementById('btn-edit-phone').style.display = '';
+
+      // Simulate: update localStorage after "verification" (in production this happens after email click)
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      profile.phone = newPhone;
+      localStorage.setItem('customerProfile', JSON.stringify(profile));
+      document.getElementById('display-phone').textContent = newPhone;
+
+      showToast('Verification email sent — check your inbox');
+    }
+
+    // ── Password ──
+    function togglePw(id, btn) {
+      const input = document.getElementById(id);
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      btn.innerHTML = isText
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+    }
+
+    function checkStrength(pw) {
+      const bar  = document.getElementById('pw-strength-bar');
+      const hint = document.getElementById('pw-hint');
+      let score = 0;
+      if (pw.length >= 8)            score++;
+      if (/[A-Z]/.test(pw))          score++;
+      if (/[0-9]/.test(pw))          score++;
+      if (/[^A-Za-z0-9]/.test(pw))   score++;
+      const levels = [
+        { w: '0%',   color: 'transparent', msg: 'Use 8+ characters with a mix of letters, numbers, and symbols' },
+        { w: '25%',  color: '#f87171',     msg: 'Weak — try adding numbers or symbols' },
+        { w: '50%',  color: '--amber',     msg: 'Fair — add uppercase letters or symbols' },
+        { w: '75%',  color: '#fbbf24',     msg: 'Good — nearly there' },
+        { w: '100%', color: '#34d399',     msg: 'Strong password ✓' },
+      ];
+      const l = levels[score];
+      bar.style.width = l.w;
+      bar.style.background = l.color;
+      hint.textContent = l.msg;
+      hint.style.color = score === 4 ? 'var(--green)' : 'var(--muted)';
+    }
+
+    function updatePassword() {
+      const curr    = document.getElementById('pw-current').value;
+      const newPw   = document.getElementById('pw-new').value;
+      const confirm = document.getElementById('pw-confirm').value;
+      if (!curr || !newPw || !confirm) { alert('Please fill in all password fields.'); return; }
+      if (newPw !== confirm) { alert('New passwords do not match.'); return; }
+      if (newPw.length < 8) { alert('Password must be at least 8 characters.'); return; }
+      // In production: Supabase Auth updateUser({ password: newPw })
+      document.getElementById('pw-current').value = '';
+      document.getElementById('pw-new').value = '';
+      document.getElementById('pw-confirm').value = '';
+      document.getElementById('pw-strength-bar').style.width = '0';
+      showToast('Password updated successfully');
+    }
+
+    // ── Export data ──
+    function exportData() {
+      const profile  = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      const notifs   = JSON.parse(localStorage.getItem('customerNotifs')  || '{}');
+      const exported = {
+        exportedAt: new Date().toISOString(),
+        account: profile,
+        notificationPreferences: notifs,
+        note: 'In production, this export would include all listings and offer history from the database.'
+      };
+      const blob = new Blob([JSON.stringify(exported, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = 'dealrtrade-data-export.json'; a.click();
+      URL.revokeObjectURL(url);
+      showToast('Data export downloaded');
+    }
+
+    // ── Delete account ──
+    function checkDeleteConfirm() {
+      const val = document.getElementById('delete-confirm-input').value;
+      document.getElementById('btn-delete-confirm').classList.toggle('ready', val === 'DELETE');
+    }
+
+    function handleDeleteAccount() {
+      localStorage.removeItem('customerProfile');
+      localStorage.removeItem('customerNotifs');
+      window.location.href = 'customer-login.html';
+    }
+
+    // ── Modal helpers ──
+    function openModal(id)  { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      if (id === 'delete-modal') document.getElementById('delete-confirm-input').value = '';
+      document.getElementById('btn-delete-confirm').classList.remove('ready');
+    }
+    function handleOverlayClick(e, id) {
+      if (e.target === document.getElementById(id)) closeModal(id);
+    }
+
+    // ── Toast ──
+    let toastTimer;
+    function showToast(msg) {
+      const t = 

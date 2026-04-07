@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Customer Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #f2f4f8;
+      --navy-mid: #e8ebf0;
+      --navy-card: #ffffff;
+      --navy-border: #ced5e2;
+      --blue: #2B9FD9;
+      --blue-light: #1a7db5;
+      --teal: #2B9FD9;
+      --white:       #1a1f2e;
+      --muted:       #5a647a;
+    }
+
+    body {
+      overflow-x: hidden;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 90px 24px 40px;
+      position: relative;
+    }
+
+    /* Background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(43,159,217,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Nav bar */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(242,244,248,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(43,159,217,0.18);
+      z-index: 10;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.1rem;
+      color: var(--white); text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; background: var(--blue);
+      border-radius: 8px; display: grid; place-items: center;
+    }
+    .logo-icon svg { width: 17px; height: 17px; fill: white; }
+    .nav-link {
+      font-size: 0.85rem; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link span { color: var(--blue-light); font-weight: 500; }
+
+    /* Card */
+    .card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: 18px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-logo {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 28px; gap: 12px;
+    }
+    .card-logo-icon {
+      width: 56px; height: 56px; background: var(--blue);
+      border-radius: 14px; display: grid; place-items: center;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+    }
+    .card-logo-icon svg { width: 28px; height: 28px; fill: white; }
+    .card-logo h1 {
+      font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700;
+      color: var(--white);
+    }
+    .card-logo p { font-size: 0.88rem; color: var(--muted); }
+
+    /* Google btn */
+    .btn-google {
+      width: 100%; padding: 11px 16px;
+      background: var(--navy-mid);
+      border: 1px solid var(--navy-border);
+      border-radius: 9px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 500;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+    }
+    .btn-google:hover { border-color: var(--blue); background: rgba(59,130,246,0.06); }
+    .btn-google svg { width: 18px; height: 18px; }
+
+    /* Divider */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+      color: var(--muted); font-size: 0.78rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--navy-border);
+    }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 0.8rem; color: var(--muted);
+      margin-bottom: 6px; font-weight: 500;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap > svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 2;
+      pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%; padding: 10px 14px 10px 38px;
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 9px; color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .input-wrap input::placeholder { color: var(--muted); }
+    .input-wrap input:focus { border-color: var(--blue); }
+
+    .pw-toggle { position:absolute; right:0; top:0; bottom:0; background:none; border:none; cursor:pointer; padding:0 12px; color:var(--muted); display:flex; align-items:center; }
+    .pw-toggle:hover { color:var(--white); }
+    .pw-toggle svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; position:static; transform:none; }
+    .input-wrap:has(.pw-toggle) input { padding-right: 40px; }
+    .must-change-box { display:none; }
+    .must-change-box h3 { font-size:1rem; font-weight:700; margin-bottom:6px; }
+    .must-change-box p { font-size:0.8rem; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+    .forgot {
+      display: block; text-align: right; font-size: 0.78rem;
+      color: var(--blue-light); text-decoration: none; margin-top: -8px; margin-bottom: 20px;
+    }
+    .forgot:hover { text-decoration: underline; }
+
+    .btn-primary {
+      width: 100%; padding: 12px;
+      background: var(--blue); border: none; border-radius: 9px;
+      color: white; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s; margin-bottom: 20px;
+    }
+    .btn-primary:hover { background: #2563eb; box-shadow: 0 6px 20px rgba(59,130,246,0.35); }
+
+    .signup-row {
+      text-align: center; font-size: 0.82rem; color: var(--muted);
+    }
+    .signup-row a { color: var(--blue-light); text-decoration: none; font-weight: 500; }
+    .signup-row a:hover { text-decoration: underline; }
+
+    /* Dealer link */
+    .dealer-link {
+      text-align: center; margin-top: 24px;
+      font-size: 0.8rem; color: var(--muted);
+      padding-top: 20px; border-top: 1px solid var(--navy-border);
+    }
+    .dealer-link a { color: var(--blue-light); text-decoration: none; font-weight: 500; }
+    .dealer-link a:hover { text-decoration: underline; }
+
+    /* Sign up form toggle */
+    #signup-form { display: none; }
+    .mode-toggle { cursor: pointer; }
+
+    @media (max-width: 600px) {
+      body { padding: 80px 16px 40px; }
+      nav { padding: 10px 16px; }
+      .card { padding: 24px 18px; border-radius: 14px; max-width: 100%; }
+      .card-logo h1 { font-size: 1.2rem; }
+      .btn-primary, .btn-google { padding: 11px 14px; font-size: 0.88rem; }
+      .input-wrap input { font-size: 0.88rem; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 72px 12px 32px; }
+      .card { padding: 22px 16px; }
+    }
+    @media (max-width: 360px) {
+      body { padding: 68px 10px 28px; }
+      .card { padding: 18px 14px; border-radius: 12px; }
+      .btn-primary, .btn-google { font-size: 0.84rem; }
+    }
+
+  
+    /* ── Tablet (iPad mini portrait 768px, iPad Air 820px) ── */
+    @media (max-width: 1024px) and (min-width: 601px) {
+      body { padding: 90px 32px 48px; }
+      .card { max-width: 480px; padding: 36px 32px; }
+    }
+    /* ── Landscape mobile (iPhone sideways) ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body { padding: 60px 24px 24px; justify-content: flex-start; }
+      nav { height: 44px; }
+      .card { padding: 20px 24px; }
+      .card-logo { display: none; }
+      .card-header h1 { font-size: 1.1rem; margin-bottom: 4px; }
+      .input-wrap input { padding: 9px 14px 9px 36px; }
+      .btn-primary, .btn-google { padding: 10px 14px; }
+      .divider-row { margin: 10px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+    </a>
+    <a href="dealer-login.html" class="nav-link">Are you a dealer? <span>Dealer Access →</span></a>
+  </nav>
+
+  <!-- Login Card -->
+  <div class="card">
+    <div class="card-logo">
+      <h1 id="card-title">Welcome back</h1>
+      <p id="card-subtitle">Sign in to your DealrTrade account</p>
+    </div>
+
+    <!-- Google -->
+    <button class="btn-google" onclick="handleGoogle()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <div class="divider">OR</div>
+
+    <!-- Sign In Form -->
+    <div id="signin-form">
+      <div class="form-group">
+        <label>Email</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" placeholder="you@example.com" id="signin-email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" placeholder="••••••••" id="signin-password" style="padding-right:40px" />
+          <button type="button" class="pw-toggle" onclick="togglePw('signin-password',this)" tabindex="-1" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <a href="#" class="forgot">Forgot password?</a>
+      <div id="auth-error" style="display:none;color:#f87171;font-size:0.82rem;font-weight:600;margin-bottom:10px;text-align:center;padding:8px 12px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);border-radius:7px;"></div>
+      <button class="btn-primary" onclick="handleSignIn()">Sign In</button>
+      <div class="signup-row">
+        Need an account? <a href="#" onclick="toggleMode()">Sign up</a>
+      </div>
+    </div>
+
+    <!-- Must Change Password Box -->
+    <div id="must-change-pw-box" class="must-change-box">
+      <h3>🔐 Set a New Password</h3>
+      <p>An administrator has set a temporary password for your account. You must create a new password before continuing.</p>
+      <div class="form-group">
+        <label>New Password</label>
+        <div class="input-wrap" style="position:relative">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="new-pw-1" placeholder="At least 8 characters" style="padding-right:40px" />
+          <button type="button" class="pw-toggle" onclick="togglePw('new-pw-1',this)" tabindex="-1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <div class="input-wrap" style="position:relative">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="new-pw-2" placeholder="Repeat new password" style="padding-right:40px" />
+          <button type="button" class="pw-toggle" onclick="togglePw('new-pw-2',this)" tabindex="-1"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <div id="new-pw-error" style="display:none;font-size:0.78rem;color:#f87171;margin-bottom:10px;"></div>
+      <button class="btn-primary" onclick="submitNewPw()">Set New Password &amp; Continue</button>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="signup-form">
+      <div class="form-group">
+        <label>Full Name</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" placeholder="Jane Smith" id="signup-name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input type="email" placeholder="you@example.com" id="signup-email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <input type="tel" placeholder="(416) 555-0100" id="signup-phone" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" placeholder="••••••••" id="signup-password" style="padding-right:40px" />
+          <button type="button" class="pw-toggle" onclick="togglePw('signup-password',this)" tabindex="-1" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <div class="input-wrap">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" placeholder="••••••••" id="signup-confirm" style="padding-right:40px" />
+          <button type="button" class="pw-toggle" onclick="togglePw('signup-confirm',this)" tabindex="-1" aria-label="Show password"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <button class="btn-primary" style="margin-top:4px" onclick="handleSignUp()">Create Account</button>
+      <div class="signup-row">
+        Already have an account? <a href="#" onclick="toggleMode()">Sign in</a>
+      </div>
+    </div>
+
+    <div class="dealer-link">
+      Are you a franchise dealer? <a href="dealer-login.html">Dealer Access →</a>
+    </div>
+  </div>
+
+  <script>
+    let isSignUp = false;
+
+    function toggleMode() {
+      isSignUp = !isSignUp;
+      document.getElementById('signin-form').style.display = isSignUp ? 'none' : 'block';
+      document.getElementById('signup-form').style.display = isSignUp ? 'block' : 'none';
+      document.getElementById('card-title').textContent = isSignUp ? 'Create an account' : 'Welcome back';
+      document.getElementById('card-subtitle').textContent = isSignUp ? 'Join DealrTrade and get the best offer' : 'Sign in to your DealrTrade account';
+    }
+
+    function handleGoogle() {
+      // Google OAuth placeholder - in production connect to real OAuth flow
+      showError('Google sign-in is not yet enabled. Please use email and password.');
+    }
+
+    // ── Default test customer accounts (seeded on first visit) ──
+    const DEFAULT_CUSTOMERS = [
+      { id:'c-001', name:'James Whitfield',  email:'j.whitfield@gmail.com',    phone:'(416) 555-0192', password:'demo1234', createdAt: Date.now() },
+      { id:'c-002', name:'Priya Nair',       email:'priya.nair@outlook.com',   phone:'(647) 555-0374', password:'test1234', createdAt: Date.now() },
+      { id:'c-003', name:'Marcus Bellamy',   email:'marcus.bellamy@rogers.com',phone:'(905) 555-0817', password:'test1234', createdAt: Date.now() },
+      { id:'c-004', name:'Sarah Kowalski',   email:'s.kowalski@gmail.com',     phone:'(905) 555-0231', password:'test1234', createdAt: Date.now() },
+      { id:'c-005', name:'David Lee',        email:'d.lee@hotmail.com',        phone:'(416) 555-0509', password:'test1234', createdAt: Date.now() },
+    ];
+
+    // ── Customer account store ──
+    function getCustomerAccounts() {
+      const stored = JSON.parse(localStorage.getItem('dt_customer_accounts') || '[]');
+      if (stored.length === 0) {
+        // First visit — seed default test accounts
+        localStorage.setItem('dt_customer_accounts', JSON.stringify(DEFAULT_CUSTOMERS));
+        return DEFAULT_CUSTOMERS;
+      }
+      return stored;
+    }
+    function saveCustomerAccounts(accounts) {
+      localStorage.setItem('dt_customer_accounts', JSON.stringify(accounts));
+    }
+
+    function showError(msg) {
+      let el = document.getElementById('auth-error');
+      if (!el) {
+        // Fallback: create and insert before the active button
+        el = document.createElement('div');
+        el.id = 'auth-error';
+        el.style.cssText = 'color:#f87171;font-size:0.82rem;font-weight:600;margin-bottom:10px;text-align:center;padding:8px 12px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);border-radius:7px;';
+        const activeMode = document.getElementById('signin-email')?.closest('div') || document.body;
+        const btn = document.querySelector('.btn-primary');
+        if (btn && btn.parentNode) btn.parentNode.insertBefore(el, btn);
+        else document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+    function clearError() {
+      const el = document.getElementById('auth-error');
+      if (el) el.style.display = 'none';
+    }
+
+    function handleSignIn() {
+      clearError();
+      const email    = (document.getElementById('signin-email').value || '').trim().toLowerCase();
+      const password = (document.getElementById('signin-password').value || '').trim();
+      if (!email || !password) { showError('Please fill in all fields.'); return; }
+
+      const accounts = getCustomerAccounts();
+      const match = accounts.find(a => a.email.toLowerCase() === email && a.password.trim() === password);
+
+      if (!match) {
+        showError('Incorrect email or password. Need an account? Switch to Sign Up.');
+        return;
+      }
+
+      // ── Check account status ──
+      if (match.status === 'blocked') {
+        showError('Your account has been suspended. Please contact DealrTrade customer support at support@dealrtrade.ca or call 1-800-555-0100 for assistance.');
+        document.getElementById('signin-password').value = '';
+        return;
+      }
+      if (match.status === 'inactive') {
+        showError('Your account is inactive. Please contact DealrTrade support at support@dealrtrade.ca to restore access.');
+        document.getElementById('signin-password').value = '';
+        return;
+      }
+
+      // ── Check mustChangePw flag (set by admin temp password) ──
+      if (match.mustChangePw) {
+        showMustChangePw(match);
+        return;
+      }
+
+      localStorage.setItem('customerProfile', JSON.stringify({
+        id:    match.id,
+        name:  match.name,
+        email: match.email,
+        phone: match.phone,
+      }));
+      window.location.href = 'customer-dashboard.html';
+    }
+
+    function handleSignUp() {
+      clearError();
+      const name  = (document.getElementById('signup-name').value || '').trim();
+      const email = (document.getElementById('signup-email').value || '').trim().toLowerCase();
+      const phone = (document.getElementById('signup-phone').value || '').trim();
+      const pass  = (document.getElementById('signup-password').value || '').trim();
+      const conf  = (document.getElementById('signup-confirm').value || '').trim();
+
+      if (!name || !email || !phone || !pass || !conf) {
+        showError('Please fill in all fields.'); return;
+      }
+      // Phone must be exactly 10 digits
+      const digitsOnly = phone.replace(/\D/g, '');
+      if (digitsOnly.length !== 10) {
+        showError('Phone number must be 10 digits (e.g. 4165550100).'); return;
+      }
+      if (pass.length < 6) {
+        showError('Password must be at least 6 characters.'); return;
+      }
+      if (pass !== conf) {
+        showError('Passwords do not match.'); return;
+      }
+
+      const accounts = getCustomerAccounts();
+      if (accounts.find(a => a.email.toLowerCase() === email)) {
+        showError('An account with this email already exists. Please sign in instead.'); return;
+      }
+
+      const newAccount = {
+        id:       'c-' + Date.now(),
+        name,
+        email,
+        phone,
+        password: pass,
+        createdAt: Date.now(),
+      };
+      accounts.push(newAccount);
+      saveCustomerAccounts(accounts);
+
+      // Save session
+      localStorage.setItem('customerProfile', JSON.stringify({
+        id:    newAccount.id,
+        name:  newAccount.name,
+        email: newAccount.email,
+        phone: newAccount.phone,
+      }));
+      window.location.href = 'customer-dashboard.html';
+    }
+  
+    // ── Must-change-password flow (triggered by admin temp password) ──
+    let _mustChangePwAccount = null;
+    function showMustChangePw(account) {
+      _mustChangePwAccount = account;
+      document.getElementById('signin-form').style.display = 'none';
+      document.getElementById('must-change-pw-box').style.display = 'block';
+    }
+    function submitNewPw() {
+      const pw1 = document.getElementById('new-pw-1').value.trim();
+      const pw2 = document.getElementById('new-pw-2').value.trim();
+      const err = document.getElementById('new-pw-error');
+      if (pw1.length < 8) { err.textContent = 'Password must be at least 8 characters.'; err.style.display='block'; return; }
+      if (pw1 !== pw2)    { err.textContent = 'Passwords do not match.'; err.style.display='block'; return; }
+      err.style.display = 'none';
+      // Update password in accounts
+      const accounts = getCustomerAccounts();
+      const acc = accounts.find(a => a.id === _mustChangePwAccount.id);
+      if (acc) { acc.password = pw1; acc.mustChangePw = false; saveCustomerAccounts(accounts); }
+      // Set session and go
+      localStorage.setItem('customerProfile', JSON.stringify({
+        id: _mustChangePwAccount.id, name: _mustChangePwAccount.name,
+        email: _mustChangePwAccount.email, phone: _mustChangePwAccount.phone || '',
+      }));
+      window.location.href = 'customer-dashboard.html';
+    }
+
+    function togglePw(id, btn) {
+      const inp = document.getElementById(id);
+      const showing = inp.type === 'text';
+      inp.type = showing ? 'password' : 'text';
+      const svg = btn.querySelector('svg');
+      svg.innerHTML = showing
+        ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+        : '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    }
+</script>
+
+<!-- SITE FOOTER -->
+<footer style="text-align:center;padding:20px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;margin-top:auto;">
+  <span>&#169; 2026 DealrTrade</span>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="/cdn-cgi/l/email-protection#85e6eaebf1e4e6f1c5e1e0e4e9f7f1f7e4e1e0abe6e4" style="color:#5a647a;text-decoration:none;"><span class="__cf_email__" data-cfemail="10737f7e64717364507475717c626462717475

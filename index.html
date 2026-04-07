@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Get the Best Offer Without Leaving Your House!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #f2f4f8;
+      --navy-mid: #e8ebf0;
+      --navy-card: #ffffff;
+      --navy-border: #ced5e2;
+      --blue: #2B9FD9;
+      --blue-light: #1a7db5;
+      --teal: #2B9FD9;
+      --white:     #1a1f2e;
+      --muted:     #5a647a;
+      --radius:    14px;
+    }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(242,244,248,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(43,159,217,0.15);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--blue);
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+    }
+
+    .logo-icon svg { width: 20px; height: 20px; fill: white; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+    }
+    .btn-primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(59,130,246,0.35); }
+
+    .btn-large {
+      padding: 14px 36px;
+      font-size: 1.05rem;
+      border-radius: 10px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--navy-border);
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 110px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(43,159,217,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      color: var(--blue-light);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      color: var(--white);
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--blue-light), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── FEATURE CARDS ── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: 60px auto 0;
+      padding: 0 24px;
+    }
+
+    @media (max-width: 768px) {
+      .features { grid-template-columns: 1fr; }
+      nav { padding: 16px 20px; }
+    }
+
+    .feature-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-3px); }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: rgba(59,130,246,0.12);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+    }
+    .feature-icon svg { width: 22px; height: 22px; stroke: var(--blue-light); fill: none; stroke-width: 1.8; }
+
+    .feature-card h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+    .feature-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      max-width: 700px;
+      margin: 90px auto 0;
+      padding: 0 24px 90px;
+      text-align: center;
+    }
+
+    .how h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 48px;
+      color: var(--white);
+    }
+
+    .steps { display: flex; flex-direction: column; gap: 0; text-align: left; }
+
+    .step {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 36px;
+    }
+
+    .step:last-child { padding-bottom: 0; }
+
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px; top: 44px;
+      width: 2px;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(59,130,246,0.3), transparent);
+    }
+
+    .step-num {
+      width: 40px; height: 40px;
+      min-width: 40px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-content h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 4px;
+      padding-top: 8px;
+    }
+    .step-content p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 24px;
+      border-top: 1px solid var(--navy-border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge  { animation: fadeUp 0.5s ease both; }
+    .hero h1     { animation: fadeUp 0.5s 0.1s ease both; }
+    .hero p      { animation: fadeUp 0.5s 0.2s ease both; }
+    .hero-actions{ animation: fadeUp 0.5s 0.3s ease both; }
+    .feature-card:nth-child(1) { animation: fadeUp 0.5s 0.4s ease both; }
+    .feature-card:nth-child(2) { animation: fadeUp 0.5s 0.5s ease both; }
+    .feature-card:nth-child(3) { animation: fadeUp 0.5s 0.6s ease both; }
+
+    @media (max-width: 768px) {
+      nav { padding: 12px 16px; }
+      nav .btn { padding: 8px 14px; font-size: 0.82rem; }
+      .hero { padding: 80px 16px 48px; }
+      .hero h1 { font-size: clamp(1.8rem, 8vw, 2.8rem); }
+      .hero p { font-size: 0.95rem; }
+      .hero-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+      .hero-actions .btn { text-align: center; justify-content: center; }
+      .features { grid-template-columns: 1fr; padding: 0 16px; gap: 14px; margin-top: 40px; }
+      .how { padding: 0 16px 60px; margin-top: 56px; }
+      .how h2 { font-size: 1.5rem; }
+      footer { padding: 20px 16px; font-size: 0.8rem; flex-direction: column; gap: 6px; }
+    }
+    @media (max-width: 480px) {
+      nav { padding: 10px 14px; }
+      nav .btn { padding: 7px 12px; font-size: 0.8rem; }
+      .hero { padding: 72px 14px 40px; }
+      .hero-badge { font-size: 0.76rem; padding: 5px 12px; }
+      .hero h1 { font-size: clamp(1.6rem, 9vw, 2.2rem); }
+      .hero p { font-size: 0.88rem; }
+      .btn-large { padding: 13px 24px; font-size: 0.95rem; }
+      .feature-card { padding: 22px 18px; }
+      .step-num { width: 36px; height: 36px; min-width: 36px; font-size: 0.85rem; }
+    }
+    @media (max-width: 360px) {
+      nav { padding: 10px 12px; }
+      .hero { padding: 68px 12px 36px; }
+      .hero h1 { font-size: 1.55rem; }
+      .features { padding: 0 12px; }
+      .how { padding: 0 12px 48px; }
+    }
+
+  
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .hero { padding: 60px 16px 32px; }
+      .hero h1 { font-size: 1.6rem; }
+      .hero p { font-size: 0.88rem; margin-bottom: 20px; }
+      .hero-actions { flex-direction: row; }
+      .btn-large { padding: 11px 24px; font-size: 0.9rem; }
+      .features { margin-top: 28px; grid-template-columns: repeat(3, 1fr); padding: 0 16px; }
+      .feature-card { padding: 18px 16px; }
+      .how { padding: 0 16px 40px; margin-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+    </a>
+    <a href="customer-login.html" class="btn btn-primary">Get Started</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Trusted by franchise dealerships across Canada
+    </div>
+    <h1>Get the Best Offer<br/><span>Without Leaving Your House!</span></h1>
+    <p>Connect your vehicle with new car franchise dealers. Receive competitive cash/trade-in offers in 5 business days. No driving dealership to dealership. Let the dealerships compete for your trade!</p>
+    <div class="hero-actions">
+      <a href="customer-login.html" class="btn btn-primary btn-large">Get Started</a>
+      <a href="#how" class="btn btn-ghost btn-large">How it works</a>
+    </div>
+  </section>
+
+  <!-- FEATURE CARDS -->
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3>5 Business Day Window</h3>
+      <p>Your vehicle is showcased to dealers for 5 business days, giving you time to receive competitive offers.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <h3>Competitive Bidding</h3>
+      <p>Dealers see current offers and can improve their bids, ensuring you get the best possible price.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Confidential Process</h3>
+      <p>Dealer identities remain private during bidding. Only top 3 offers are revealed to you at the end.</p>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>List Your Vehicle</h3>
+          <p>Enter your vehicle details, upload photos and documents. Choose whether you're selling or trading in.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Dealers Submit Offers</h3>
+          <p>Qualified dealers receive notifications and submit cash offers. They can improve their bids as they see competitive offers roll in.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Receive Top 3 Offers</h3>
+          <p>After 5 business days, you get a report with the top 3 offers including dealer contact information. Choose your preferred dealership or brand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <!-- SITE FOOTER -->
+  <footer style="text-align:center;padding:22px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;">
+    © 2026 DealrTrade <span style="color:#ced5e2">·</span> <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a> <span style="color:#ced5e2">·</span> <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a> <span style="color:#ced5e2">&#183;</span>
+  <a href="/cdn-cgi/l/email-protection" class="__cf_e

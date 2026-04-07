@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DealrTrade — Dealer Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#f7f5f0;
+      --ink:#1a1612;
+      --ink-mid:#4a4540;
+      --ink-light:#8a8480;
+      --card:#ffffff;
+      --border:#e2ddd8;
+      --border-mid:#ccc8c2;
+      --blue:#2B9FD9;
+      --blue-light:#1a7db5;
+      --blue-dim:rgba(43,159,217,0.08);
+      --blue-border:rgba(43,159,217,0.22);
+      --green:#1a8c5a;
+      --green-dim:rgba(26,140,90,0.08);
+      --amber:#b07d10;
+      --amber-dim:rgba(176,125,16,0.08);
+      --red:#c0392b;
+      --red-dim:rgba(192,57,43,0.08);
+      --radius:12px;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:'DM Sans',sans-serif;
+      font-size:15px;
+      line-height:1.6;
+      min-height:100vh;
+    }
+
+    /* ── HEADER ── */
+    .reg-header{
+      background:var(--ink);
+      color:#f7f5f0;
+      padding:24px 40px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+    .reg-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .reg-logo img{height:40px;width:auto;object-fit:contain;}
+    .header-badge{
+      font-family:'Fraunces',serif;
+      font-size:0.78rem;
+      font-style:italic;
+      color:rgba(247,245,240,0.55);
+      letter-spacing:0.03em;
+    }
+
+    /* ── HERO BAND ── */
+    .reg-hero{
+      background:linear-gradient(135deg,#1a1612 0%,#2a2420 60%,#1e2a35 100%);
+      color:#f7f5f0;
+      padding:56px 40px 48px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .reg-hero::before{
+      content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+      width:600px;height:400px;
+      background:radial-gradient(ellipse,rgba(43,159,217,0.18) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .reg-hero h1{
+      font-family:'Fraunces',serif;
+      font-size:clamp(2rem,5vw,3rem);
+      font-weight:700;
+      line-height:1.15;
+      margin-bottom:14px;
+      position:relative;
+    }
+    .reg-hero h1 em{color:var(--blue);font-style:normal;}
+    .reg-hero p{
+      font-size:1rem;
+      color:rgba(247,245,240,0.65);
+      max-width:560px;
+      margin:0 auto 28px;
+      position:relative;
+    }
+    .hero-steps{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:0;
+      flex-wrap:wrap;
+      max-width:640px;
+      margin:0 auto;
+      position:relative;
+    }
+    .hero-step{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.78rem;
+      color:rgba(247,245,240,0.5);
+      padding:6px 14px;
+    }
+    .hero-step.active{color:#f7f5f0;font-weight:600;}
+    .hero-step-num{
+      width:22px;height:22px;border-radius:50%;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.15);
+      display:grid;place-items:center;
+      font-size:0.68rem;font-weight:700;
+      flex-shrink:0;transition:all 0.3s;
+    }
+    .hero-step.active .hero-step-num{background:var(--blue);border-color:var(--blue);}
+    .hero-step.done .hero-step-num{background:var(--green);border-color:var(--green);color:white;}
+    .hero-step-sep{width:32px;height:1px;background:rgba(255,255,255,0.12);}
+
+    /* ── PRICING BAND ── */
+    .pricing-band{
+      background:var(--card);
+      border-bottom:1px solid var(--border);
+      padding:32px 40px;
+    }
+    .pricing-inner{max-width:900px;margin:0 auto;}
+    .pricing-heading{
+      font-family:'Fraunces',serif;
+      font-size:1.4rem;
+      font-weight:600;
+      margin-bottom:6px;
+    }
+    .pricing-sub{font-size:0.85rem;color:var(--ink-mid);margin-bottom:24px;}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .price-card{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:22px 20px;
+      position:relative;
+      transition:border-color 0.2s;
+    }
+    .price-card.featured{
+      border-color:var(--blue);
+      background:linear-gradient(135deg,rgba(43,159,217,0.04),rgba(43,159,217,0.01));
+    }
+    .price-card-badge{
+      position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+      background:var(--blue);color:white;
+      font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+      padding:3px 12px;border-radius:100px;white-space:nowrap;
+    }
+    .price-card-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:6px;}
+    .price-card-amount{
+      font-family:'Fraunces',serif;
+      font-size:2.2rem;
+      font-weight:700;
+      line-height:1;
+      margin-bottom:4px;
+    }
+    .price-card-amount span{font-size:0.9rem;font-weight:400;font-family:'DM Sans',sans-serif;color:var(--ink-mid);}
+    .price-card-note{font-size:0.76rem;color:var(--ink-mid);margin-bottom:14px;line-height:1.5;}
+    .price-card-features{list-style:none;display:flex;flex-direction:column;gap:7px;}
+    .price-card-features li{font-size:0.8rem;display:flex;align-items:flex-start;gap:7px;color:var(--ink-mid);}
+    .price-card-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px;}
+    .price-disclaimer{
+      margin-top:18px;
+      padding:12px 16px;
+      background:var(--amber-dim);
+      border:1px solid rgba(176,125,16,0.2);
+      border-radius:8px;
+      font-size:0.78rem;
+      color:var(--amber);
+      line-height:1.6;
+    }
+
+    /* ── FORM BODY ── */
+    .reg-body{max-width:900px;margin:0 auto;padding:40px 40px 80px;}
+
+    /* Step progress (sticky) */
+    .step-progress{
+      display:flex;gap:0;
+      margin-bottom:32px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      overflow:hidden;
+    }
+    .step-tab{
+      flex:1;padding:14px 8px;text-align:center;
+      font-size:0.75rem;font-weight:600;color:var(--ink-light);
+      border-right:1px solid var(--border);
+      cursor:pointer;transition:all 0.2s;
+      position:relative;
+    }
+    .step-tab:last-child{border-right:none;}
+    .step-tab.active{color:var(--blue);background:var(--blue-dim);}
+    .step-tab.done{color:var(--green);background:var(--green-dim);}
+    .step-tab-num{
+      display:block;
+      width:20px;height:20px;border-radius:50%;
+      background:rgba(0,0,0,0.06);
+      margin:0 auto 4px;
+      font-size:0.65rem;font-weight:700;
+      line-height:20px;
+    }
+    .step-tab.active .step-tab-num{background:var(--blue);color:white;}
+    .step-tab.done .step-tab-num{background:var(--green);color:white;}
+
+    /* Section card */
+    .form-section{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      margin-bottom:20px;
+      overflow:hidden;
+      display:none;
+    }
+    .form-section.active{display:block;animation:fadeUp 0.25s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .section-head{
+      padding:20px 24px;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:14px;
+    }
+    .section-head-icon{
+      width:38px;height:38px;border-radius:9px;
+      background:var(--blue-dim);border:1px solid var(--blue-border);
+      display:grid;place-items:center;flex-shrink:0;
+    }
+    .section-head-icon svg{width:18px;height:18px;stroke:var(--blue-light);fill:none;stroke-width:2;}
+    .section-head h2{font-size:0.95rem;font-weight:700;margin-bottom:2px;}
+    .section-head p{font-size:0.76rem;color:var(--ink-light);}
+    .section-body{padding:24px;}
+
+    /* Fields */
+    .field-grid{display:grid;gap:14px;}
+    .field-grid-2{grid-template-columns:1fr 1fr;}
+    .field-grid-3{grid-template-columns:1fr 1fr 1fr;}
+    .field{display:flex;flex-direction:column;gap:5px;}
+    .field.span-2{grid-column:1/-1;}
+    .field label{
+      font-size:0.72rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:0.06em;
+      color:var(--ink-light);
+    }
+    .field label .req{color:var(--red);margin-left:2px;}
+    .field-input{
+      width:100%;
+      background:var(--bg);
+      border:1px solid var(--border-mid);
+      border-radius:8px;
+      color:var(--ink);
+      font-family:'DM Sans',sans-serif;
+      font-size:0.88rem;
+      padding:10px 13px;
+      outline:none;
+      transition:border-color 0.18s,box-shadow 0.18s;
+    }
+    .field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(43,159,217,0.1);}
+    .field-input::placeholder{color:var(--ink-light);}
+    .field-input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,0.08);}
+    select.field-input{
+      appearance:none;cursor:pointer;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8480' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;
+    }
+    select.field-input option{background:#fff;color:var(--ink);}
+    .field-hint{font-size:0.71rem;color:var(--ink-light);line-height:1.5;}
+
+    /* Brand chips */
+    .brand-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+    .brand-chip{
+      padding:5px 11px;border-radius:6px;font-size:0.76rem;font-weight:600;
+      background:var(--bg);border:1px solid var(--border-mid);
+      color:var(--ink-mid);cursor:pointer;transition:all 0.15s;user-select:none;
+    }
+    .brand-chip.sel-sells{background:rgba(43,159,217,0.1);border-color:var(--blue);color:var(--blue-light);}
+    .brand-chip.sel-buys{background:rgba(26,140,90,0.1);border-color:var(--green);color:var(--green);}
+    .brand-actions{display:flex;gap:10px;margin-bottom:10px;}
+    .brand-link{font-size:0.76rem;color:var(--blue-light);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;font-family:'DM Sans',sans-serif;}
+
+    /* Info box */
+    .info-box{
+      background:var(--blue-dim);border:1px solid var(--blue-border);
+      border-radius:9px;padding:12px 15px;
+      font-size:0.79rem;color:var(--ink-mid);line-height:1.6;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .info-box svg{width:15px;height:15px;stroke:var(--blue-light);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px;}
+
+    /* Warning box */
+    .warn-box{
+      background:var(--amber-dim);border:1px solid rgba(176,125,16,0.25);
+      border-radius:9px;padding:12px 15px;
+      font-size:0.79rem;color:var(--ink-mid);line-height:1.6;
+      display:flex;gap:10px;align-items:flex-start;
+    }
+    .warn-box svg{width:15px;height:15px;stroke:var(--amber);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px;}
+
+    /* Legal consent blocks */
+    .consent-block{
+      border:1px solid var(--border-mid);border-radius:10px;
+      padding:16px 18px;margin-bottom:12px;
+      display:flex;align-items:flex-start;gap:12px;
+      transition:border-color 0.2s;
+    }
+    .consent-block:has(input:checked){border-color:var(--blue);background:var(--blue-dim);}
+    .consent-block input[type="checkbox"]{
+      width:16px;height:16px;flex-shrink:0;margin-top:3px;
+      accent-color:var(--blue);cursor:pointer;
+    }
+    .consent-block label{font-size:0.79rem;color:var(--ink-mid);line-height:1.65;cursor:pointer;}
+    .consent-block label strong{color:var(--ink);}
+    .consent-block label a{color:var(--blue-light);text-decoration:underline;}
+
+    /* Legal text block */
+    .legal-text{
+      background:var(--bg);border:1px solid var(--border);
+      border-radius:9px;padding:16px 18px;
+      font-size:0.76rem;color:var(--ink-mid);line-height:1.75;
+      max-height:220px;overflow-y:auto;
+      margin-bottom:14px;
+    }
+    .legal-text h4{font-size:0.78rem;font-weight:700;color:var(--ink);margin-top:12px;margin-bottom:4px;}
+    .legal-text h4:first-child{margin-top:0;}
+
+    /* Credit card notice */
+    .cc-notice{
+      background:linear-gradient(135deg,rgba(26,140,90,0.06),rgba(26,140,90,0.02));
+      border:1px solid rgba(26,140,90,0.25);
+      border-radius:10px;padding:18px 20px;margin-bottom:16px;
+    }
+    .cc-notice-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .cc-notice-head svg{width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:2;flex-shrink:0;}
+    .cc-notice-head strong{font-size:0.88rem;font-weight:700;color:var(--green);}
+    .cc-notice p{font-size:0.79rem;color:var(--ink-mid);line-height:1.65;}
+
+    /* Nav buttons */
+    .form-nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 24px;
+      border-top:1px solid var(--border);
+      background:var(--bg);
+    }
+    .btn{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:10px 22px;border-radius:8px;
+      font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.88rem;
+      cursor:pointer;border:none;transition:all 0.18s;text-decoration:none;
+    }
+    .btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+    .btn-primary{background:var(--blue);color:white;}
+    .btn-primary:hover{background:var(--blue-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(43,159,217,0.3);}
+    .btn-ghost{background:transparent;color:var(--ink-mid);border:1px solid var(--border-mid);}
+    .btn-ghost:hover{color:var(--ink);border-color:var(--ink-mid);}
+    .btn-success{background:var(--green);color:white;}
+    .btn-success:hover{background:#157a4e;transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,140,90,0.3);}
+    .btn:disabled{opacity:0.5;pointer-events:none;}
+
+    /* Error banner */
+    .error-banner{
+      display:none;
+      background:var(--red-dim);border:1px solid rgba(192,57,43,0.25);
+      border-radius:8px;padding:10px 14px;
+      font-size:0.8rem;color:var(--red);
+      margin:0 24px 16px;
+      align-items:center;gap:8px;
+    }
+    .error-banner svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;}
+
+    /* Success screen */
+    .success-screen{
+      display:none;text-align:center;padding:60px 40px;
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    }
+    .success-screen.show{display:block;animation:fadeUp 0.4s ease;}
+    .success-icon{
+      width:72px;height:72px;border-radius:50%;
+      background:var(--green-dim);border:2px solid rgba(26,140,90,0.3);
+      display:grid;place-items:center;margin:0 auto 20px;
+    }
+    .success-icon svg{width:32px;height:32px;stroke:var(--green);fill:none;stroke-width:2.5;}
+    .success-screen h2{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:700;margin-bottom:10px;}
+    .success-screen p{font-size:0.88rem;color:var(--ink-mid);max-width:460px;margin:0 auto 6px;line-height:1.65;}
+    .success-ref{
+      display:inline-block;margin:16px 0;
+      padding:8px 18px;background:var(--bg);border:1px solid var(--border);
+      border-radius:8px;font-size:0.82rem;font-family:monospace;color:var(--blue-light);
+      letter-spacing:0.05em;
+    }
+    .success-next{
+      margin-top:24px;display:flex;flex-direction:column;gap:10px;align-items:center;
+    }
+    .success-next p{font-size:0.8rem;color:var(--ink-light);}
+
+    /* Footer */
+    .reg-footer{
+      text-align:center;padding:24px;
+      border-top:1px solid var(--border);
+      font-size:0.76rem;color:var(--ink-light);
+    }
+
+    /* Responsive */
+    @media(max-width:768px){
+      .reg-header{padding:16px 20px;}
+      .reg-hero{padding:40px 20px 32px;}
+      .pricing-band{padding:24px 20px;}
+      .pricing-grid{grid-template-columns:1fr;}
+      .reg-body{padding:24px 20px 60px;}
+      .field-grid-2,.field-grid-3{grid-template-columns:1fr;}
+      .field.span-2{grid-column:auto;}
+      .hero-steps{gap:0;justify-content:flex-start;overflow-x:auto;padding-bottom:4px;}
+      .step-progress{flex-wrap:wrap;}
+      .step-tab{min-width:80px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="reg-header">
+  <a href="index.html" class="reg-logo">
+    <img src="logo.png" alt="DealrTrade"/>
+  </a>
+  <span class="header-badge">Dealer Registration — Canada</span>
+</header>
+
+<!-- HERO -->
+<div class="reg-hero">
+  <h1>Join DealrTrade as a<br/><em>Franchise Dealership</em></h1>
+  <p>Complete the form below to register your dealership. Your application will be reviewed by our team within 1–2 business days.</p>
+  <div class="hero-steps">
+    <div class="hero-step active" id="hs-1">
+      <span class="hero-step-num">1</span>Dealership Info
+    </div>
+    <div class="hero-step-sep"></div>
+    <div class="hero-step" id="hs-2">
+      <span class="hero-step-num">2</span>Contact &amp; Compliance
+    </div>
+    <div class="hero-step-sep"></div>
+    <div class="hero-step" id="hs-3">
+      <span class="hero-step-num">3</span>Brands &amp; Inventory
+    </div>
+    <div class="hero-step-sep"></div>
+    <div class="hero-step" id="hs-4">
+      <span class="hero-step-num">4</span>Pricing &amp; Billing
+    </div>
+    <div class="hero-step-sep"></div>
+    <div class="hero-step" id="hs-5">
+      <span class="hero-step-num">5</span>Review &amp; Sign
+    </div>
+  </div>
+</div>
+
+<!-- PRICING BAND -->
+<div class="pricing-band">
+  <div class="pricing-inner">
+    <div class="pricing-heading">Simple, Transparent Pricing</div>
+    <div class="pricing-sub">One plan. No hidden fees. Cancel anytime after your free period ends.</div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-card-label">Free Period</div>
+        <div class="price-card-amount">$0 <span>/ mo</span></div>
+        <div class="price-card-note">Your first 30 days free — no credit card charged until the trial ends.</div>
+        <ul class="price-card-features">
+          <li>Full platform access</li>
+          <li>Unlimited offer submissions</li>
+          <li>Real-time listing notifications</li>
+          <li>Market Guide access</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="price-card-badge">Standard Plan</div>
+        <div class="price-card-label">After Free Period</div>
+        <div class="price-card-amount">$299 <span>/ mo + HST</span></div>
+        <div class="price-card-note">Billed monthly. Rate subject to change with 30 days written notice.</div>
+        <ul class="price-card-features">
+          <li>Everything in Free Period</li>
+          <li>Priority listing placement</li>
+          <li>Deal outcome analytics</li>
+          <li>Dedicated account support</li>
+          <li>Export &amp; reporting tools</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-card-label">Enterprise / Groups</div>
+        <div class="price-card-amount">Custom</div>
+        <div class="price-card-note">Multi-rooftop dealer groups. Contact us for volume pricing.</div>
+        <ul class="price-card-features">
+          <li>All Standard features</li>
+          <li>Multi-location dashboard</li>
+          <li>Dedicated account manager</li>
+          <li>Custom reporting</li>
+          <li>Negotiated rates</li>
+        </ul>
+      </div>
+    </div>
+    <div class="price-disclaimer">
+      ⚠ <strong>Important:</strong> Subscription rates are subject to change. DealrTrade will provide a minimum of <strong>30 days written notice</strong> via email before any price increase takes effect. Continued use of the platform after the notice period constitutes acceptance of the new rate. You may cancel at any time before a rate change takes effect.
+    </div>
+  </div>
+</div>
+
+<!-- FORM BODY -->
+<div class="reg-body">
+
+  <!-- Step progress tabs -->
+  <div class="step-progress">
+    <div class="step-tab active" onclick="goToStep(1)">
+      <span class="step-tab-num">1</span>Dealership
+    </div>
+    <div class="step-tab" onclick="goToStep(2)">
+      <span class="step-tab-num">2</span>Contact
+    </div>
+    <div class="step-tab" onclick="goToStep(3)">
+      <span class="step-tab-num">3</span>Brands
+    </div>
+    <div class="step-tab" onclick="goToStep(4)">
+      <span class="step-tab-num">4</span>Billing
+    </div>
+    <div class="step-tab" onclick="goToStep(5)">
+      <span class="step-tab-num">5</span>Review &amp; Sign
+    </div>
+  </div>
+
+  <!-- ══ STEP 1: DEALERSHIP INFO ══ -->
+  <div class="form-section active" id="step-1">
+    <div class="section-head">
+      <div class="section-head-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <h2>Dealership Information</h2>
+        <p>Legal and operational details for your dealership</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field-grid field-grid-2">
+        <div class="field">
+          <label>Dealership Name <span class="req">*</span></label>
+          <input class="field-input" id="r-name" type="text" placeholder="e.g., Premier BMW"/>
+        </div>
+        <div class="field">
+          <label>Legal Operating Name <span class="req">*</span></label>
+          <input class="field-input" id="r-legal" type="text" placeholder="e.g., Premier Auto Group Inc."/>
+          <span class="field-hint">As registered with CRA / provincial regulator</span>
+        </div>
+        <div class="field span-2">
+          <label>Street Address <span class="req">*</span></label>
+          <input class="field-input" id="r-address" type="text" placeholder="123 Main Street"/>
+        </div>
+        <div class="field">
+          <label>City <span class="req">*</span></label>
+          <input class="field-input" id="r-city" type="text" placeholder="Hamilton"/>
+        </div>
+        <div class="field">
+          <label>Province <span class="req">*</span></label>
+          <select class="field-input" id="r-province">
+            <option value="">— Select province —</option>
+            <option>Ontario</option><option>British Columbia</option><option>Alberta</option>
+            <option>Quebec</option><option>Manitoba</option><option>Saskatchewan</option>
+            <option>Nova Scotia</option><option>New Brunswick</option><option>Newfoundland and Labrador</option>
+            <option>Prince Edward Island</option><option>Northwest Territories</option>
+            <option>Nunavut</option><option>Yukon</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Postal Code <span class="req">*</span></label>
+          <input class="field-input" id="r-postal" type="text" placeholder="L8N 1Z7" maxlength="7"/>
+        </div>
+        <div class="field">
+          <label>Dealer Group / Parent Company</label>
+          <input class="field-input" id="r-group" type="text" placeholder="e.g., AutoCanada (leave blank if independent)"/>
+        </div>
+        <div class="field">
+          <label>Number of Rooftops</label>
+          <select class="field-input" id="r-rooftops">
+            <option value="1">1 (this application)</option>
+            <option value="2-5">2–5</option>
+            <option value="6-10">6–10</option>
+            <option value="10+">10+</option>
+          </select>
+          <span class="field-hint">Multi-location groups may qualify for enterprise pricing</span>
+        </div>
+        <div class="field span-2">
+          <label>Dealership Website</label>
+          <input class="field-input" id="r-website" type="url" placeholder="https://www.yourdealer.ca"/>
+        </div>
+      </div>
+    </div>
+    <div class="error-banner" id="err-1">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please complete all required fields.
+    </div>
+    <div class="form-nav">
+      <span style="font-size:0.8rem;color:var(--ink-light);">Step 1 of 5</span>
+      <button class="btn btn-primary" onclick="nextStep(1)">
+        Next — Contact Details
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2: CONTACT & COMPLIANCE ══ -->
+  <div class="form-section" id="step-2">
+    <div class="section-head">
+      <div class="section-head-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <h2>Contact &amp; Regulatory Compliance</h2>
+        <p>Primary contact person, dealer principal, and regulatory credentials</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field-grid field-grid-2" style="margin-bottom:18px;">
+        <div class="field">
+          <label>Contact First Name <span class="req">*</span></label>
+          <input class="field-input" id="r-first" type="text" placeholder="Jane"/>
+        </div>
+        <div class="field">
+          <label>Contact Last Name <span class="req">*</span></label>
+          <input class="field-input" id="r-last" type="text" placeholder="Smith"/>
+        </div>
+        <div class="field">
+          <label>Title / Role <span class="req">*</span></label>
+          <select class="field-input" id="r-role">
+            <option value="">— Select —</option>
+            <option>Dealer Principal / Owner</option>
+            <option>General Manager</option>
+            <option>Sales Manager</option>
+            <option>Finance Manager</option>
+            <option>Office Manager</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Work Email <span class="req">*</span></label>
+          <input class="field-input" id="r-email" type="email" placeholder="jane@yourdealer.ca"/>
+        </div>
+        <div class="field">
+          <label>Direct Phone <span class="req">*</span></label>
+          <input class="field-input" id="r-phone" type="tel" placeholder="(905) 555-0100"/>
+        </div>
+        <div class="field">
+          <label>Mobile / Cell</label>
+          <input class="field-input" id="r-mobile" type="tel" placeholder="(905) 555-0101"/>
+        </div>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin-bottom:18px;"></div>
+
+      <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:14px;">Regulatory &amp; Tax Information</div>
+      <div class="field-grid field-grid-2">
+        <div class="field">
+          <label>Dealer Principal (Legal Name) <span class="req">*</span></label>
+          <input class="field-input" id="r-principal" type="text" placeholder="Full legal name of owner/principal"/>
+          <span class="field-hint">As it appears on your dealer registration</span>
+        </div>
+        <div class="field">
+          <label>Provincial Dealer Registration # <span class="req">*</span></label>
+          <input class="field-input" id="r-omvic" type="text" placeholder="e.g., OMVIC 1234567"/>
+          <span class="field-hint">OMVIC (ON), VSA (BC), AMVIC (AB), SAAQ (QC), etc.</span>
+        </div>
+        <div class="field">
+          <label>HST / GST Registration # <span class="req">*</span></label>
+          <input class="field-input" id="r-hst" type="text" placeholder="e.g., 123456789 RT0001"/>
+        </div>
+        <div class="field">
+          <label>Years in Operation</label>
+          <select class="field-input" id="r-years">
+            <option value="">— Select —</option>
+            <option>Less than 1 year</option>
+            <option>1–3 years</option>
+            <option>4–10 years</option>
+            <option>11–25 years</option>
+            <option>25+ years</option>
+          </select>
+        </div>
+      </div>
+      <div class="info-box" style="margin-top:14px;">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        DealrTrade verifies all dealer registrations against the relevant provincial motor vehicle dealer regulator before approval. Applications with invalid or unverifiable registration numbers will be declined.
+      </div>
+    </div>
+    <div class="error-banner" id="err-2">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please complete all required fields.
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="prevStep(2)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="nextStep(2)">
+        Next — Brands &amp; Inventory
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3: BRANDS & INVENTORY ══ -->
+  <div class="form-section" id="step-3">
+    <div class="section-head">
+      <div class="section-head-icon">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div>
+        <h2>Brands &amp; Inventory</h2>
+        <p>Tell us which brands you franchise and which vehicles you'll buy from customers</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div style="margin-bottom:22px;">
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--blue-light);margin-bottom:6px;">Franchise Brands (Brands You Sell) <span class="req">*</span></div>
+        <div style="font-size:0.79rem;color:var(--ink-light);margin-bottom:10px;">Select all brands for which your dealership holds an active franchise agreement. Customers searching to trade into these brands will be matched to you.</div>
+        <div class="brand-actions">
+          <button class="brand-link" onclick="selectAllBrands('sells')">Select all</button>
+          <button class="brand-link" onclick="clearBrands('sells')">Clear</button>
+          <span style="font-size:0.75rem;color:var(--blue-light);font-weight:600;margin-left:auto;" id="sells-count">0 selected</span>
+        </div>
+        <div class="brand-chips" id="sells-grid"></div>
+        <p id="sells-error" style="display:none;font-size:0.74rem;color:var(--red);margin-top:6px;">Select at least one franchise brand.</p>
+      </div>
+
+      <div style="height:1px;background:var(--border);margin-bottom:22px;"></div>
+
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:6px;">Brands You Will Purchase (Trade-in / Buy Outright) <span class="req">*</span></div>
+        <div style="font-size:0.79rem;color:var(--ink-light);margin-bottom:10px;">Select all makes your dealership is willing to accept as trade-ins or purchase outright from customers. You are not limited to your franchise brands here.</div>
+        <div class="brand-actions">
+          <button class="brand-link" onclick="selectAllBrands('buys')">Select all</button>
+          <button class="brand-link" onclick="clearBrands('buys')">Clear</button>
+          <span style="font-size:0.75rem;color:var(--green);font-weight:600;margin-left:auto;" id="buys-count">0 selected</span>
+        </div>
+        <div class="brand-chips" id="buys-grid"></div>
+        <p id="buys-error" style="display:none;font-size:0.74rem;color:var(--red);margin-top:6px;">Select at least one brand you will purchase.</p>
+      </div>
+
+      <div class="field-grid" style="margin-top:20px;">
+        <div class="field">
+          <label>Average Monthly Trade-In Volume</label>
+          <select class="field-input" id="r-volume">
+            <option value="">— Estimated volume —</option>
+            <option>Under 5 vehicles / month</option>
+            <option>5–15 vehicles / month</option>
+            <option>16–30 vehicles / month</option>
+            <option>31–50 vehicles / month</option>
+            <option>50+ vehicles / month</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="error-banner" id="err-3">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please select at least one franchise brand and one brand you will purchase.
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="prevStep(3)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="nextStep(3)">
+        Next — Pricing &amp; Billing
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 4: PRICING & BILLING ══ -->
+  <div class="form-section" id="step-4">
+    <div class="section-head">
+      <div class="section-head-icon">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div>
+        <h2>Pricing &amp; Billing Authorization</h2>
+        <p>Subscription terms, free trial disclosure, and payment acknowledgement</p>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="cc-notice">
+        <div class="cc-notice-head">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <strong>No Charge During Your Free Period</strong>
+        </div>
+        <p>Your credit card <strong>will not be charged</strong> during the initial 30-day free trial. Your card is collected now to ensure seamless continuation of service when your free period ends. You will receive an email notification <strong>7 days before</strong> your first charge is processed.</p>
+      </div>
+
+      <div class="field-grid field-grid-2" style="margin-bottom:20px;">
+        <div class="field">
+          <label>Cardholder Name <span class="req">*</span></label>
+          <input class="field-input" id="r-cc-name" type="text" placeholder="As it appears on the card"/>
+        </div>
+        <div class="field">
+          <label>Billing Email <span class="req">*</span></label>
+          <input class="field-input" id="r-cc-email" type="email" placeholder="billing@yourdealer.ca"/>
+          <span class="field-hint">Invoices and billing notices will be sent here</span>
+        </div>
+        <div class="field span-2">
+          <label>Billing Address <span class="req">*</span></label>
+          <input class="field-input" id="r-cc-address" type="text" placeholder="Same as dealership address, or enter separately"/>
+        </div>
+      </div>
+
+      <div class="warn-box" style="margin-bottom:20px;">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span><strong>Important — actual card details are not collected in this form.</strong> Upon approval, our billing team will contact you securely to complete payment setup via our PCI-compliant payment processor. This form collects authorization and acknowledgement only.</span>
+      </div>
+
+      <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:14px;">Subscription &amp; Billing Acknowledgements</div>
+
+      <div class="consent-block">
+        <input type="checkbox" id="ack-trial" />
+        <label for="ack-trial">
+          I understand that DealrTrade provides an <strong>initial free period of 30 days</strong> from the date my account is activated. No charges will be applied during this period. My credit card will be charged <strong>$299 + applicable HST per month</strong> beginning on the first billing date after the free period expires. I will receive at least 7 days advance notice before my first charge.
+        </label>
+      </div>
+
+      <div class="consent-block">
+        <input type="checkbox" id="ack-subscription" />
+        <label for="ack-subscription">
+          I understand that DealrTrade operates a <strong>month-to-month subscription model</strong>. My subscription will automatically renew each month unless cancelled in writing prior to my next billing date. I may cancel at any time by contacting <a href="/cdn-cgi/l/email-protection#fc8f898c8c938e88bc98999d908e888e9d9899d29f9d"><span class="__cf_email__" data-cfemail="8bf8fefbfbe4f9ffcbefeeeae7f9fff9eaefeea5e8ea">[email&#160;protected]</span></a> with no cancellation fee.
+        </label>
+      </div>
+
+      <div class="consent-block">
+        <input type="checkbox" id="ack-price-change" />
+        <label for="ack-price-change">
+          I understand that <strong>subscription rates are subject to change</strong> at DealrTrade's discretion. DealrTrade will provide a minimum of <strong>30 days written notice via email</strong> before any rate increase takes effect. My continued use of the platform after the notice period constitutes acceptance of the revised rate. I may cancel prior to a rate change taking effect if I do not wish to continue at the new rate.
+        </label>
+      </div>
+
+      <div class="consent-block">
+        <input type="checkbox" id="ack-cc-auth" />
+        <label for="ack-cc-auth">
+          I authorize DealrTrade Inc. to charge the credit card I provide upon completing account setup for recurring monthly subscription fees in accordance with these terms. I confirm that I am an authorized signatory on the account and have the authority to enter into this subscription agreement on behalf of <strong id="ack-dealer-name-display">the dealership</strong>.
+        </label>
+      </div>
+
+    </div>
+    <div class="error-banner" id="err-4">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please complete all billing fields and acknowledge all subscription terms.
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="prevStep(4)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <button class="btn btn-primary" onclick="nextStep(4)">
+        Next — Review &amp; Sign
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 5: REVIEW & SIGN ══ -->
+  <div class="form-section" id="step-5">
+    <div class="section-head">
+      <div class="section-head-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div>
+        <h2>Review, Legal Terms &amp; Submission</h2>
+        <p>Please read carefully and provide your digital signature</p>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- Summary -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:20px;" id="review-summary">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:14px;">Application Summary</div>
+        <div id="summary-content" style="display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;font-size:0.82rem;">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Legal terms -->
+      <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:8px;">Dealer Platform Agreement — Summary of Key Terms</div>
+      <div class="legal-text" id="legal-scroll-box">
+        <h4>1. Platform Access &amp; Eligibility</h4>
+        DealrTrade is a private B2B marketplace accessible only to licensed franchise automobile dealerships holding a valid provincial motor vehicle dealer registration. By submitting this application, you warrant that your dealership is currently licensed and in good standing with the applicable provincial regulator. DealrTrade reserves the right to verify registration at any time and to suspend or terminate access if registration lapses or is revoked.
+
+        <h4>2. Free Trial Period</h4>
+        New accounts receive an initial free trial period of 30 (thirty) days from the date of account activation. During this period, no subscription fees are charged. DealrTrade reserves the right to modify the duration or terms of the free trial at its sole discretion for future applicants. This free period is offered once per dealership and is not transferable.
+
+        <h4>3. Subscription &amp; Automatic Renewal</h4>
+        Upon expiry of the free trial, your account will automatically convert to a paid monthly subscription at the then-current rate (presently $299/month + applicable HST). Your designated payment method will be charged on the same date each month. Subscriptions renew automatically unless cancelled in writing. Cancellation must be received by DealrTrade at least 24 hours before your next billing date to avoid being charged for the following month. No partial-month refunds are provided.
+
+        <h4>4. Pricing &amp; Rate Changes</h4>
+        DealrTrade's subscription rates are subject to change. We will provide a minimum of 30 (thirty) days written notice by email to the billing email address on file before any rate increase takes effect. Continued use of the platform following the effective date of a rate change constitutes your acceptance of the revised pricing. Failure to receive notice due to an invalid or outdated billing email address does not exempt the dealer from the new rate. It is the dealer's responsibility to maintain a current and valid billing email address.
+
+        <h4>5. Payment &amp; Taxes</h4>
+        All fees are quoted in Canadian dollars (CAD). Applicable federal and provincial taxes (HST/GST/QST) will be added to each invoice based on your dealership's registered province. You agree to provide a valid credit card for recurring billing. In the event of a failed payment, DealrTrade will make two (2) retry attempts within 7 days. If payment remains outstanding after retry, your account may be suspended until payment is received. Outstanding balances accrue interest at 1.5% per month (18% per annum).
+
+        <h4>6. Use of Platform &amp; Data</h4>
+        Dealers agree to use DealrTrade solely for legitimate trade-in and vehicle purchase offers. Submission of fraudulent, misleading, or bad-faith offers is prohibited and may result in immediate account termination without refund. Dealer offer data (amounts, response rates, deal outcomes) is used by DealrTrade in aggregate and anonymized form for analytics, market reporting, and platform improvement. Individual dealer identity is not disclosed to customers during the offer period.
+
+        <h4>7. Deal Outcome Reporting</h4>
+        Dealers who appear in the top-three offers for any listing are required to report the deal outcome (completed, not completed, or in negotiation) within 30 days of the offer period closing. Failure to submit outcome reports may affect your dealer performance score, your ranking priority in future listings, or your continued access to the platform.
+
+        <h4>8. Confidentiality</h4>
+        Dealers agree to maintain the confidentiality of customer personal information received through the platform. Customer contact details shared upon offer period close may only be used for the purpose of completing the vehicle transaction and not for any other marketing or solicitation purpose without the customer's explicit consent. Misuse of customer data is grounds for immediate termination and may expose the dealer to liability under applicable privacy legislation including PIPEDA and provincial equivalents.
+
+        <h4>9. Termination</h4>
+        Either party may terminate this agreement with 30 days written notice. DealrTrade reserves the right to immediately suspend or terminate access without notice in cases of: (a) breach of these terms; (b) fraudulent activity; (c) lapse of dealer registration; (d) non-payment; or (e) conduct that DealrTrade determines, in its sole discretion, to be harmful to the platform, its customers, or other dealers. No refund of subscription fees already paid will be provided upon termination for cause.
+
+        <h4>10. Limitation of Liability</h4>
+        DealrTrade provides its platform on an "as is" and "as available" basis. DealrTrade does not guarantee the number, quality, or value of offers received by any customer. DealrTrade is not a party to any transaction between dealers and customers and accepts no liability for the outcome of any vehicle purchase, trade-in, or negotiation facilitated through the platform. In no event shall DealrTrade's total liability to a dealer exceed the amount paid by that dealer in the 3 months preceding the claim.
+
+        <h4>11. Governing Law</h4>
+        This agreement is governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein. Any disputes shall be resolved in the courts of Ontario, Canada.
+
+        <h4>12. Entire Agreement</h4>
+        This application, together with DealrTrade's full Terms &amp; Conditions and Privacy Policy (available at dealrtrade.ca/terms), constitutes the entire agreement between the dealer and DealrTrade Inc. with respect to platform access. DealrTrade reserves the right to update these terms and will provide notice in accordance with Section 4 above.
+      </div>
+
+      <!-- Final consents -->
+      <div class="consent-block">
+        <input type="checkbox" id="tos-final"/>
+        <label for="tos-final">
+          I confirm that I have read, understood, and agree to the <strong>Dealer Platform Agreement</strong> summarized above and DealrTrade's full <a href="terms.html" target="_blank">Terms &amp; Conditions</a> and <a href="terms.html#s23" target="_blank">Privacy Policy</a>.
+        </label>
+      </div>
+
+      <div class="consent-block">
+        <input type="checkbox" id="authority-confirm"/>
+        <label for="authority-confirm">
+          I confirm that I have the <strong>authority to bind the dealership</strong> to this agreement and that all information provided in this application is accurate and complete. I understand that providing false or misleading information is grounds for immediate rejection or termination of my account.
+        </label>
+      </div>
+
+      <div class="consent-block">
+        <input type="checkbox" id="privacy-consent"/>
+        <label for="privacy-consent">
+          I consent to DealrTrade collecting, using, and storing my dealership's information for the purposes described in the <a href="terms.html#s23" target="_blank">Privacy Policy</a>, including verification of dealer registration with provincial regulatory bodies and processing of subscription payments.
+        </label>
+      </div>
+
+      <!-- Digital signature -->
+      <div style="margin-top:20px;padding:18px 20px;background:var(--bg);border:1px solid var(--border-mid);border-radius:10px;">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-light);margin-bottom:12px;">Digital Signature</div>
+        <div class="field-grid field-grid-2">
+          <div class="field">
+            <label>Full Legal Name <span class="req">*</span></label>
+            <input class="field-input" id="r-sig-name" type="text" placeholder="Type your full legal name"/>
+            <span class="field-hint">Typing your name constitutes a legally binding digital signature</span>
+          </div>
+          <div class="field">
+            <label>Title / Capacity <span class="req">*</span></label>
+            <input class="field-input" id="r-sig-title" type="text" placeholder="e.g., Dealer Principal, General Manager"/>
+          </div>
+          <div class="field span-2">
+            <label>Date</label>
+            <input class="field-input" id="r-sig-date" type="text" readonly style="opacity:0.65;cursor:default;"/>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:10px 13px;background:rgba(43,159,217,0.06);border:1px solid var(--blue-border);border-radius:7px;font-size:0.74rem;color:var(--ink-light);line-height:1.6;">
+          By entering your name above and clicking <strong style="color:var(--ink);">Submit Application</strong>, you agree that this constitutes your legal electronic signature and that you have authority to sign on behalf of the dealership named in this application. This is equivalent to a handwritten signature pursuant to applicable Canadian electronic commerce legislation.
+        </div>
+      </div>
+
+    </div>
+    <div class="error-banner" id="err-5">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please acknowledge all terms and provide your digital signature before submitting.
+    </div>
+    <div class="form-nav">
+      <button class="btn btn-ghost" onclick="prevStep(5)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <button class="btn btn-success" onclick="submitApplication()">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Submit Application
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ SUCCESS SCREEN ══ -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Application Submitted!</h2>
+    <p>Thank you for applying to join DealrTrade. Your application is under review and you'll hear from us within <strong>1–2 business days</strong>.</p>
+    <p style="margin-top:6px;">A confirmation has been logged with reference number:</p>
+    <div class="success-ref" id="app-ref-num">DT-REG-———</div>
+    <p style="font-size:0.8rem;color:var(--ink-light);margin-top:4px;">Save this reference number for your records.</p>
+    <div class="success-next">
+      <p>What happens next:</p>
+      <div style="text-align:left;max-width:400px;font-size:0.82rem;color:var(--ink-mid);display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;"><span style="color:var(--blue);font-weight:700;flex-shrink:0;">1.</span><span>Our team verifies your dealer registration and OMVIC/provincial credentials.</span></div>
+        <div style="display:flex;gap:10px;"><span style="color:var(--blue);font-weight:700;flex-shrink:0;">2.</span><span>You receive an approval email with login credentials and a link to set up your account.</span></div>
+        <div style="display:flex;gap:10px;"><span style="color:var(--blue);font-weight:700;flex-shrink:0;">3.</span><span>Your 30-day free trial begins on account activation. No charge until the trial ends.</span></div>
+        <div style="display:flex;gap:10px;"><span style="color:var(--blue);font-weight:700;flex-shrink:0;">4.</span><span>Our billing team will contact you securely to complete payment setup before your first charge.</span></div>
+      </div>
+      <a href="index.html" class="btn btn-ghost" style="margin-top:10px;">← Return to DealrTrade</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="reg-footer">
+  © 2026 DealrTrade Inc. &nbsp;·&nbsp;
+  <a href="terms.html" target="_blank" style="color:var(--ink-light);text-decoration:none;">Terms &amp; Conditions</a> &nbsp;·&nbsp;
+  <a href="terms.html#s23" target="_blank" style="color:var(--ink-light);text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="/cdn-cgi/l/email-protection#ccbfb9bcbca3beb88ca8a9ada0beb8beada8a9e2afad" style="color:var(--ink-light);text-decoration:none;"><span class="__cf_email__" data-cfemail="fa898f8a8a95888eba9e9f9b96888e889b9e9fd4999b">[email&#160;protected]</span></a> &nbsp;·&nbsp;
+  1-800-555-0100
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const BRANDS = ['Acura','Alfa Romeo','Aston Martin','Audi','Bentley','BMW','Buick','Cadillac',
+    'Chevrolet','Chrysler','Dodge','Ferrari','Ford','Genesis','GMC','Honda','Hyundai','Infiniti',
+    'Jaguar','Jeep','Kia','Lamborghini','Land Rover','Lexus','Lincoln','Maserati','Mazda',
+    'Mercedes-Benz','MINI','Mitsubishi','Nissan','Porsche','RAM','Rolls-Royce','Subaru',
+    'Tesla','Toyota','Volkswagen','Volvo'];
+
+  const sellsSelected = new Set();
+  const buysSelected  = new Set();
+  let currentStep = 1;
+
+  // ── Init ──
+  (function init() {
+    // Populate brand chips
+    renderBrands('sells-grid', sellsSelected, 'sells');
+    renderBrands('buys-grid',  buysSelected,  'buys');
+    // Set today's date on signature field
+    const today = new Date().toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('r-sig-date').value = today;
+    // Update ack dealer name dynamically
+    document.getElementById('r-name').addEventListener('input', function() {
+      const el = document.getElementById('ack-dealer-name-display');
+      if (el) el.textContent = this.value.trim() || 'the dealership';
+    });
+  })();
+
+  function renderBrands(containerId, selectedSet, type) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = BRANDS.map(b =>
+      `<button type="button" class="brand-chip${selectedSet.has(b) ? ' sel-'+type : ''}"
+        onclick="toggleBrand('${b}','${type}')">${b}</button>`
+    ).join('');
+    updateBrandCount(type);
+  }
+
+  function toggleBrand(brand, type) {
+    const set = type === 'sells' ? sellsSelected : buysSelected;
+    set.has(brand) ? set.delete(brand) : set.add(brand);
+    renderBrands(type+'-grid', set, type);
+  }
+
+  function selectAllBrands(type) {
+    const set = type === 'sells' ? sellsSelected : buysSelected;
+    BRANDS.forEach(b => set.add(b));
+    renderBrands(type+'-grid', set, type);
+  }
+
+  function clearBrands(type) {
+    const set = type === 'sells' ? sellsSelected : buysSelected;
+    set.clear();
+    renderBrands(type+'-grid', set, type);
+  }
+
+  function updateBrandCount(type) {
+    const set = type === 'sells' ? sellsSelected : buysSelected;
+    const el = document.getElementById(type+'-count');
+    if (el) el.textContent = set.size + ' selected';
+  }
+
+  // ── Step navigation ──
+  function goToStep(n) {
+    // Only allow going back to completed steps
+    if (n >= currentStep) return;
+    showStep(n);
+  }
+
+  function nextStep(from) {
+    if (!validateStep(from)) return;
+    markStepDone(from);
+    showStep(from + 1);
+    if (from + 1 === 5) populateSummary();
+  }
+
+  function prevStep(from) {
+    showStep(from - 1);
+  }
+
+  function showStep(n) {
+    currentStep = n;
+    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('step-' + n);
+    if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    // Update tabs
+    document.querySelectorAll('.step-tab').forEach((t, i) => {
+      t.classList.remove('active','done');
+      if (i + 1 === n) t.classList.add('active');
+      else if (i + 1 < n) t.classList.add('done');
+    });
+    // Update hero steps
+    document.querySelectorAll('.hero-step').forEach((s, i) => {
+      s.classList.remove('active','done');
+      if (i + 1 === n) s.classList.add('active');
+      else if (i + 1 < n) s.classList.add('done');
+    });
+  }
+
+  function markStepDone(n) {
+    const tabs = document.querySelectorAll('.step-tab');
+    if (tabs[n-1]) { tabs[n-1].classList.remove('active'); tabs[n-1].classList.add('done'); }
+    const hsteps = document.querySelectorAll('.hero-step');
+    if (hsteps[n-1]) { hsteps[n-1].classList.remove('active'); hsteps[n-1].classList.add('done'); }
+  }
+
+  function g(id) { return (document.getElementById(id)?.value||'').trim(); }
+  function gEl(id) { return document.getElementById(id); }
+
+  function showErr(id, show) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = show ? 'flex' : 'none';
+  }
+
+  function validateStep(n) {
+    let ok = true;
+    if (n === 1) {
+      const req = ['r-name','r-legal','r-address','r-city','r-province','r-postal'];
+      req.forEach(id => {
+        const el = gEl(id); if (!el) return;
+        const empty = !el.value.trim();
+        el.classList.toggle('error', empty);
+        if (empty) ok = false;
+      });
+      showErr('err-1', !ok);
+    } else if (n === 2) {
+      const req = ['r-first','r-last','r-role','r-email','r-phone','r-principal','r-omvic','r-hst'];
+      req.forEach(id => {
+        const el = gEl(id); if (!el) return;
+        const empty = !el.value.trim();
+        el.classList.toggle('error', empty);
+        if (empty) ok = false;
+      });
+      showErr('err-2', !ok);
+    } else if (n === 3) {
+      const noSells = sellsSelected.size === 0;
+      const noBuys  = buysSelected.size  === 0;
+      gEl('sells-error').style.display = noSells ? 'block' : 'none';
+      gEl('buys-error').style.display  = noBuys  ? 'block' : 'none';
+      if (noSells || noBuys) ok = false;
+      showErr('err-3', !ok);
+    } else if (n === 4) {
+      const fields = ['r-cc-name','r-cc-email','r-cc-address'];
+      fields.forEach(id => {
+        const el = gEl(id); if (!el) return;
+        const empty = !el.value.trim();
+        el.classList.toggle('error', empty);
+        if (empty) ok = false;
+      });
+      const checks = ['ack-trial','ack-subscription','ack-price-change','ack-cc-auth'];
+      checks.forEach(id => { if (!gEl(id)?.checked) ok = false; });
+      showErr('err-4', !ok);
+    } else if (n === 5) {
+      const acks = ['tos-final','authority-confirm','privacy-consent'];
+      acks.forEach(id => { if (!gEl(id)?.checked) ok = false; });
+      const sigName = g('r-sig-name');
+      const sigTitle = g('r-sig-title');
+      gEl('r-sig-name').classList.toggle('error', !sigName);
+      gEl('r-sig-title').classList.toggle('error', !sigTitle);
+      if (!sigName || !sigTitle) ok = false;
+      showErr('err-5', !ok);
+    }
+    return ok;
+  }
+
+  function populateSummary() {
+    const rows = [
+      ['Dealership',    g('r-name')],
+      ['Legal Name',    g('r-legal')],
+      ['Address',       [g('r-address'), g('r-city'), g('r-province'), g('r-postal')].filter(Boolean).join(', ')],
+      ['Contact',       [g('r-first'), g('r-last')].filter(Boolean).join(' ')],
+      ['Role',          g('r-role')],
+      ['Email',         g('r-email')],
+      ['Phone',         g('r-phone')],
+      ['Reg. Number',   g('r-omvic')],
+      ['HST Number',    g('r-hst')],
+      ['Franchise',     [...sellsSelected].join(', ') || '—'],
+      ['Will Purchase', [...buysSelected].join(', ')  || '—'],
+      ['Billing Email', g('r-cc-email')],
+    ];
+    gEl('summary-content').innerHTML = rows.map(([k,v]) =>
+      `<div><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-light);margin-bottom:2px;">${k}</div>
+       <div style="font-size:0.81rem;color:var(--ink);word-break:break-word;">${v||'—'}</div></div>`
+    ).join('');
+  }
+
+  function submitApplication() {
+    if (!validateStep(5)) return;
+    const refNum = 'DT-REG-' + Date.now().toString(36).toUpperCase().slice(-6);
+    const app = {
+      id:         'app-' + Date.now(),
+      refNum,
+      dealerName: g('r-name'),
+      legalName:  g('r-legal'),
+      address:    g('r-address'),
+      city:       g('r-city'),
+      province:   g('r-province'),
+      postal:     g('r-postal'),
+      group:      g('r-group'),
+      contact:    g('r-first') + ' ' + g('r-last'),
+      role:       g('r-role'),
+      email:      g('r-email'),
+      phone:      g('r-phone'),
+      mobile:     g('r-mobile'),
+      principal:  g('r-principal'),
+      omvic:      g('r-omvic'),
+      hst:        g('r-hst'),
+      website:    g('r-website'),
+      sells:      [...sellsSelected],
+      buys:       [...buysSelected],
+      billingName:    g('r-cc-name'),
+      billingEmail:   g('r-cc-email'),
+      billingAddress: g('r-cc-address'),
+      sigName:    g('r-sig-name'),
+      sigTitle:   g('r-sig-title'),
+      sigDate:    g('r-sig-date'),
+      submittedAt: Date.now(),
+      status:     'pending',
+      source:     'registration-form',
+    };
+    // Push to dt_applications (same store as dealer-setup.html)
+    const existing = JSON.parse(localStorage.getItem('dt_applications') || '[]');
+    existing.push(app);
+    localStorage.setItem('dt_applications', JSON.stringify(existing));
+    // Show success
+    document.getElementById('reg-form-wrap').style.display = 'none';
+    document.getElementById('reg-success').style.display = 'block';
+    window.scrollTo(0, 0);
+}
+</script>
+
+<div id="reg-success" style="display:none;text-align:center;padding:60px 24px;max-width:520px;margin:0 auto;">
+  <div style="width:64px;height:64px;background:rgba(26,140,90,0.12);border:1px solid rgba(52,211,153,0.3);border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a8c5a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:12px;">Application Submitted!</h2>
+  <p style="color:#5a647a;font-size:0.92rem;line-height:1.6;margin-bottom:28px;">Thank you for applying 

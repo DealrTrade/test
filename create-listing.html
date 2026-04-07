@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealrTrade – Create New Listing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #f2f4f8;
+      --navy-mid: #e8ebf0;
+      --navy-card: #ffffff;
+      --navy-border: #ced5e2;
+      --blue: #2B9FD9;
+      --blue-light: #1a7db5;
+      --teal: #2B9FD9;
+      --green:       #1a8c5a;
+      --white:       #1a1f2e;
+      --muted:       #5a647a;
+      --red:         #c0392b;
+    }
+
+    html { overflow-x: hidden; }
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--navy-border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--white);
+      text-decoration: none;
+    }
+    .logo-icon { width: 32px; height: 32px; background: var(--blue); border-radius: 8px; display: grid; place-items: center; }
+    .logo-icon svg { width: 17px; height: 17px; fill: white; }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--muted); font-size: 0.85rem; text-decoration: none; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--white); }
+    .nav-back svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* PAGE HEADER */
+    .page-header { padding: 32px 32px 8px; max-width: 780px; margin: 0 auto; }
+    .page-header h1 { font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .page-header p  { color: var(--muted); font-size: 0.9rem; }
+
+    /* PROGRESS */
+    /* FORM WRAPPER */
+    .form-wrap { max-width: 780px; margin: 24px auto 100px; padding: 0 32px; }
+
+    /* SECTION CARD */
+    .section-card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 14px; padding: 26px 28px; margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1rem;
+      margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+      padding-bottom: 14px; border-bottom: 1px solid var(--navy-border);
+    }
+    .section-title svg { width: 17px; height: 17px; stroke: var(--blue-light); fill: none; stroke-width: 2; }
+
+    /* GRID */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .col-span-2 { grid-column: span 2; }
+
+    @media (max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .col-span-2 { grid-column: span 1; }
+    }
+
+    /* FORM FIELDS */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 0.78rem; color: var(--muted); font-weight: 500;
+    }
+    .field label .req { color: var(--red); margin-left: 2px; }
+
+    .input, .select, .textarea {
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 8px; color: var(--white);
+      font-family: 'Inter', sans-serif; font-size: 0.88rem;
+      outline: none; transition: border-color 0.2s;
+      width: 100%;
+    }
+    .input   { padding: 10px 13px; }
+    .select  { padding: 10px 13px; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b9bbf' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    .textarea { padding: 10px 13px; resize: vertical; min-height: 90px; line-height: 1.5; }
+
+    .input::placeholder, .textarea::placeholder { color: var(--muted); }
+    .input:focus, .select:focus, .textarea:focus { border-color: var(--blue); }
+    .select option { background: var(--navy-mid); color: var(--white); }
+
+    /* KM row */
+    .km-row { display: flex; align-items: center; gap: 12px; }
+    .km-row .input { flex: 1; }
+    .checkbox-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--muted); cursor: pointer; white-space: nowrap;
+    }
+    .checkbox-label input[type="checkbox"] { accent-color: var(--blue); width: 15px; height: 15px; cursor: pointer; }
+
+    /* Standalone checkbox */
+    .check-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      background: var(--navy-mid); border: 1px solid var(--navy-border);
+      border-radius: 8px; cursor: pointer;
+      font-size: 0.85rem; color: var(--muted);
+      transition: border-color 0.2s;
+    }
+    .check-row:hover { border-color: var(--blue); color: var(--white); }
+    .check-row input[type="checkbox"] { accent-color: var(--blue); width: 15px; height: 15px; }
+
+    /* Intent cards */
+    .intent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .intent-card {
+      border: 2px solid var(--navy-border); border-radius: 10px;
+      padding: 16px 18px; cursor: pointer; transition: all 0.2s;
+      background: var(--navy-mid);
+    }
+    .intent-card:hover { border-color: var(--blue); }
+    .intent-card.selected { border-color: var(--blue); background: rgba(59,130,246,0.08); }
+    .intent-card h4 { font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 700; margin-bottom: 4px; }
+    .intent-card p  { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    .intent-card.selected h4 { color: var(--blue-light); }
+
+    /* Trade-in brand selector — shown only when intent = trade */
+    #trade-brands { display: none; margin-top: 16px; }
+    #trade-brands label { font-size: 0.78rem; color: var(--muted); font-weight: 500; margin-bottom: 8px; display: block; }
+    .brand-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .brand-chip {
+      padding: 6px 14px; border-radius: 100px; font-size: 0.8rem; cursor: pointer;
+      border: 1px solid var(--navy-border); background: var(--navy-mid);
+      color: var(--muted); transition: all 0.18s; user-select: none;
+    }
+    .brand-chip:hover { border-color: var(--blue); color: var(--white); }
+    .brand-chip.selected { border-color: var(--blue); background: rgba(59,130,246,0.12); color: var(--blue-light); }
+
+    /* Upload zones */
+    .upload-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+    /* Photo guide modal */
+    .photo-guide-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+      z-index: 300; place-items: center; padding: 20px;
+    }
+    .photo-guide-overlay.open { display: grid; }
+    .photo-guide-card {
+      background: var(--navy-card); border: 1px solid var(--navy-border);
+      border-radius: 18px; padding: 28px 24px; width: 100%; max-width: 360px;
+      animation: fadeUp 0.25s ease both;
+    }
+    .photo-guide-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;
+    }
+    .photo-guide-header h3 { font-size: 1rem; font-weight: 700; }
+    .photo-guide-close {
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--navy-border);
+      background: var(--navy-mid); color: var(--muted); font-size: 1.1rem;
+      display: grid; place-items: center; cursor: pointer; flex-shrink: 0;
+    }
+    .photo-guide-close:hover { color: var(--white); border-color: var(--blue); }
+    .photo-guide-list { display: flex; flex-direction: column; gap: 10px; }
+    .photo-guide-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: var(--navy-mid); border-radius: 10px; padding: 11px 13px;
+    }
+    .photo-guide-num {
+      width: 22px; height: 22px; border-radius: 50%; background: var(--blue);
+      font-size: 0.65rem; font-weight: 700; color: white;
+      display: grid; place-items: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .photo-guide-item p { font-size: 0.82rem; color: var(--white); line-height: 1.4; }
+    .photo-guide-item span { font-size: 0.74rem; color: var(--muted); display: block; margin-top: 2px; }
+    .photo-guide-tip {
+      margin-top: 14px; padding: 10px 13px;
+      background: rgba(43,159,217,0.07); border: 1px solid rgba(43,159,217,0.2);
+      border-radius: 9px; font-size: 0.76rem; color: var(--muted); line-height: 1.5;
+    }
+    .photo-guide-tip strong { color: var(--blue-light); }
+    .info-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(43,159,217,0.15); border: 1px solid rgba(43,159,217,0.3);
+      color: var(--blue-light); font-size: 0.6rem; font-weight: 700;
+      cursor: pointer; margin-left: 6px; vertical-align: middle; flex-shrink: 0;
+      transition: all 0.15s; line-height: 1;
+    }
+    .info-btn:hover { background: rgba(43,159,217,0.3); }
+    .upload-zone {
+      border: 2px dashed var(--navy-border); border-radius: 10px;
+      padding: 24px 16px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .upload-zone:hover { border-color: var(--blue); background: rgba(59,130,246,0.04); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-zone svg { width: 68px; height: 54px; margin-bottom: 8px; fill: none; stroke: var(--blue); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .upload-zone h4 { font-size: 0.82rem; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+    .upload-zone p  { font-size: 0.72rem; color: var(--muted); }
+    .upload-zone-wide { grid-column: span 2; }
+
+    .upload-previews { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .preview-thumb {
+      width: 64px; height: 48px; border-radius: 6px; object-fit: cover;
+      border: 1px solid var(--navy-border);
+    }
+    .file-count {
+      font-size: 0.72rem; color: var(--green); margin-top: 6px; display: none;
+    }
+    .upload-preview-list { display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+    .upload-preview-item {
+      display:flex; align-items:center; gap:8px;
+      background:rgba(43,159,217,0.06); border:1px solid rgba(43,159,217,0.18);
+      border-radius:7px; padding:6px 8px; font-size:0.76rem;
+    }
+    .upload-preview-thumb {
+      width:44px; height:34px; object-fit:cover; border-radius:4px;
+      border:1px solid var(--navy-border); flex-shrink:0;
+    }
+    .upload-preview-thumb.doc-icon {
+      display:flex; align-items:center; justify-content:center;
+      background:var(--navy-mid); font-size:1.1rem;
+    }
+    .upload-preview-name { flex:1; color:var(--white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .upload-preview-size { color:var(--muted); font-size:0.7rem; flex-shrink:0; }
+    .upload-preview-remove {
+      background:none; border:none; cursor:pointer; color:var(--muted);
+      font-size:1rem; padding:2px 5px; border-radius:4px; flex-shrink:0; line-height:1;
+      transition:color 0.15s, background 0.15s;
+    }
+    .upload-preview-remove:hover { color:var(--red); background:rgba(248,113,113,0.1); }
+
+    /* Note box */
+    .note-box {
+      background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 8px; padding: 12px 16px;
+      font-size: 0.8rem; color: var(--muted); line-height: 1.5;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .note-box svg { width: 16px; height: 16px; stroke: var(--blue-light); fill: none; stroke-width: 2; flex-shrink: 0; margin-top: 1px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 22px; border-radius: 8px;
+      font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.88rem;
+      cursor: pointer; border: none; transition: all 0.18s;
+    }
+    .btn-ghost   { background: transparent; color: var(--muted); border: 1px solid var(--navy-border); }
+    .btn-ghost:hover { color: var(--white); border-color: var(--blue); }
+    .btn-primary { background: var(--blue); color: white; font-family: 'Inter', sans-serif; font-weight: 700; }
+    .btn-primary:hover { background: #2563eb; box-shadow: 0 4px 16px rgba(59,130,246,0.35); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .section-card:nth-child(1) { animation: fadeUp 0.3s ease both; }
+    .section-card:nth-child(2) { animation: fadeUp 0.3s 0.07s ease both; }
+    .section-card:nth-child(3) { animation: fadeUp 0.3s 0.14s ease both; }
+    .section-card:nth-child(4) { animation: fadeUp 0.3s 0.21s ease both; }
+    .section-card:nth-child(5) { animation: fadeUp 0.3s 0.28s ease both; }
+
+    @media (max-width: 768px) {
+      nav { padding: 10px 14px; gap: 8px; }
+      .form-shell { padding: 70px 0 0; }
+      .progress-steps { display: none; }
+      .form-page { padding: 0 14px 80px; }
+      .form-section { padding: 16px 14px; gap: 14px; margin-bottom: 16px; }
+      .form-section-title { font-size: 0.92rem; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr !important; gap: 12px; }
+      .col-span-2, .col-span-3 { grid-column: 1 !important; }
+      .field label { font-size: 0.78rem; }
+      .input, .select, .textarea { padding: 9px 12px; font-size: 0.88rem; }
+      .intent-row { flex-direction: column; gap: 10px; }
+      .intent-card { padding: 14px; }
+      .brand-grid { gap: 6px; }
+      .brand-chip { font-size: 0.74rem; padding: 5px 9px; }
+      .photo-upload-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .photo-upload-box { min-height: 90px; }
+      .step-actions { flex-direction: column; gap: 10px; padding: 14px; }
+      .btn-prev, .btn-next, .btn-submit-final { width: 100%; justify-content: center; padding: 13px; }
+      .km-row { flex-direction: column; gap: 8px; }
+      .km-row .input { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .photo-upload-grid { grid-template-columns: repeat(2, 1fr); }
+      .intent-card h4 { font-size: 0.88rem; }
+      .intent-card p { font-size: 0.76rem; }
+    }
+
+  
+    /* ── Tablet (iPad portrait 769-1024px) ── */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .form-page { padding: 0 28px 80px; }
+      .form-section { padding: 20px; }
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+      .photo-upload-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    /* ── Landscape mobile ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .form-shell { padding: 56px 0 0; }
+      nav { height: 44px; }
+      .progress-steps { display: none; }
+      .form-page { padding: 0 16px 60px; }
+      .form-section { padding: 12px 14px; gap: 10px; margin-bottom: 10px; }
+      .grid-2 { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .input, .select { padding: 8px 11px; font-size: 0.84rem; }
+      .step-actions { padding: 10px 14px; flex-direction: row; }
+      .btn-prev, .btn-next, .btn-submit-final { padding: 10px 20px; width: auto; }
+    }
+    @media (max-width: 360px) {
+      .form-page { padding: 0 10px 80px; }
+      .form-section { padding: 12px 10px; }
+      .input, .select, .textarea { font-size: 0.84rem; padding: 8px 10px; }
+      .brand-chip { font-size: 0.7rem; padding: 4px 8px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Phone prompt modal (shown when profile is missing a phone number) -->
+  <div id="phone-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:200;place-items:center;padding:24px;">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:36px;width:100%;max-width:380px;animation:fadeUp 0.3s ease both;">
+      <div style="width:48px;height:48px;background:rgba(43,159,217,0.12);border:1px solid rgba(43,159,217,0.25);border-radius:12px;display:grid;place-items:center;margin-bottom:16px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a7db5" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:6px;color:#1a1f2e;">One last thing</h2>
+      <p style="font-size:0.85rem;color:#5a647a;margin-bottom:22px;line-height:1.5;">We need your phone number so dealers can contact you directly when the offer period closes.</p>
+      <label style="font-size:0.78rem;color:#5a647a;font-weight:500;display:block;margin-bottom:6px;">Phone Number</label>
+      <div style="position:relative;">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:#5a647a;fill:none;stroke-width:2;pointer-events:none" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <input id="modal-phone" type="tel" placeholder="(416) 555-0100" style="width:100%;padding:10px 14px 10px 38px;background:#e8ebf0;border:1px solid #ced5e2;border-radius:9px;color:#1a1f2e;font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#2B9FD9'" onblur="this.style.borderColor='#ced5e2'" />
+      </div>
+      <p id="modal-phone-error" style="display:none;color:#f87171;font-size:0.75rem;margin-top:6px;">Please enter your phone number to continue.</p>
+      <button onclick="submitModalPhone()" style="width:100%;margin-top:18px;padding:12px;background:#2B9FD9;border:none;border-radius:9px;color:white;font-family:'Inter',sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;">Continue to Listing</button>
+    </div>
+  </div>
+
+  <!-- Photo guide modal -->
+  <div class="photo-guide-overlay" id="photo-guide-overlay" onclick="closePhotoGuide(event)">
+    <div class="photo-guide-card" id="photo-guide-card">
+      <div class="photo-guide-header">
+        <h3 id="photo-guide-title">Photo Guide</h3>
+        <div class="photo-guide-close" onclick="closePhotoGuide(null)">✕</div>
+      </div>
+      <div class="photo-guide-list" id="photo-guide-list"></div>
+      <div class="photo-guide-tip" id="photo-guide-tip"></div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="customer-login.html" class="logo">
+      <img src="logo.png" alt="DealrTrade" style="height:40px;width:auto;object-fit:contain;" />
+    </a>
+    <a href="customer-dashboard.html" class="nav-back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Dashboard
+    </a>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>Create New Listing</h1>
+    <p>Fill in your vehicle details to get the best offers from franchise dealers</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <!-- FORM -->
+  <div class="form-wrap">
+
+    <!-- ── SECTION 1: VEHICLE INFORMATION ── -->
+    <div class="section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 42 Q8 38 12 38 L68 38 Q72 38 72 42 L72 46 Q72 48 70 48 L10 48 Q8 48 8 46 Z" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2" stroke-linejoin="round"/><path d="M18 38 L24 24 Q26 20 30 20 L52 20 Q56 20 58 24 L64 38" fill="none" stroke="#2B9FD9" stroke-width="2" stroke-linejoin="round"/><path d="M26 38 L30 24 L52 24 L56 38" fill="white" stroke="#2B9FD9" stroke-width="1.2" stroke-linejoin="round" opacity="0.8"/><line x1="41" y1="24" x2="41" y2="38" stroke="#2B9FD9" stroke-width="1"/><circle cx="22" cy="48" r="8" fill="white" stroke="#2B9FD9" stroke-width="2.5"/><circle cx="22" cy="48" r="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="22" cy="48" r="1.5" fill="#2B9FD9"/><circle cx="58" cy="48" r="8" fill="white" stroke="#2B9FD9" stroke-width="2.5"/><circle cx="58" cy="48" r="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="58" cy="48" r="1.5" fill="#2B9FD9"/><line x1="30" y1="48" x2="50" y2="48" stroke="#ced5e2" stroke-width="1"/><rect x="8" y="40" width="6" height="4" rx="1" fill="#fbbf24" stroke="#2B9FD9" stroke-width="1"/><line x1="40" y1="38" x2="40" y2="48" stroke="#2B9FD9" stroke-width="1" stroke-dasharray="2 2"/></svg>
+        Vehicle Information
+      </div>
+
+      <div class="grid-2" style="gap:16px">
+        <div class="field">
+          <label>Year <span class="req">*</span></label>
+          <select class="select" id="year">
+            <option value="">Select year</option>
+            <script>for(let y=new Date().getFullYear()+1;y>=1990;y--) document.write(`<option value="${y}">${y}</option>`)</script>
+          </select>
+        </div>
+        <div class="field">
+          <label>Make <span class="req">*</span></label>
+          <select class="select" id="make" onchange="updateModels()">
+            <option value="">Select make</option>
+            <option>Acura</option>
+            <option>Alfa Romeo</option>
+            <option>Aston Martin</option>
+            <option>Audi</option>
+            <option>Bentley</option>
+            <option>BMW</option>
+            <option>Buick</option>
+            <option>Cadillac</option>
+            <option>Chevrolet</option>
+            <option>Chrysler</option>
+            <option>Dodge</option>
+            <option>Ferrari</option>
+            <option>Fiat</option>
+            <option>Ford</option>
+            <option>Genesis</option>
+            <option>GMC</option>
+            <option>Honda</option>
+            <option>Hyundai</option>
+            <option>Infiniti</option>
+            <option>Jaguar</option>
+            <option>Jeep</option>
+            <option>Kia</option>
+            <option>Lamborghini</option>
+            <option>Land Rover</option>
+            <option>Lexus</option>
+            <option>Lincoln</option>
+            <option>Maserati</option>
+            <option>Mazda</option>
+            <option>Mercedes-Benz</option>
+            <option>MINI</option>
+            <option>Mitsubishi</option>
+            <option>Nissan</option>
+            <option>Porsche</option>
+            <option>RAM</option>
+            <option>Rolls-Royce</option>
+            <option>Subaru</option>
+            <option>Tesla</option>
+            <option>Toyota</option>
+            <option>Volkswagen</option>
+            <option>Volvo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Model <span class="req">*</span></label>
+          <select class="select" id="model" onchange="onModelSelect()">
+            <option value="">Select model</option>
+          </select>
+          <input class="input" type="text" id="model-other" placeholder="Enter model name…" style="display:none;margin-top:8px;" />
+        </div>
+        <div class="field">
+          <label>Trim <span class="req">*</span></label>
+          <input class="input" type="text" id="trim" placeholder="e.g. XLE, Sport, Premium" />
+        </div>
+        <div class="field col-span-2">
+          <label>VIN <span class="req">*</span></label>
+          <input class="input" type="text" id="vin" placeholder="Enter your 17-character VIN" maxlength="17" oninput="validateVIN(this)" style="text-transform:uppercase;letter-spacing:0.05em;" />
+          <div style="display:flex;gap:8px;align-items:flex-start;margin-top:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span style="font-size:0.75rem;color:var(--white);font-weight:700;line-height:1.5;">Your VIN can be found on the Driver's Lower Windshield, Driver's Door Jamb, or Vehicle Ownership.</span>
+          </div>
+          <div id="vin-char-count" style="font-size:0.72rem;color:var(--muted);margin-top:3px;">0 / 17 characters</div>
+          <div id="vin-error" style="display:none;font-size:0.75rem;color:#f87171;margin-top:3px;"></div>
+          <!-- VIN Confirm -->
+          <label style="display:block;margin-top:12px;font-size:0.8rem;color:var(--muted);font-weight:500;">Confirm VIN <span class="req">*</span></label>
+          <input class="input" type="text" id="vin-confirm" placeholder="Re-enter VIN to confirm — typing only" maxlength="17" oninput="validateVINConfirm()" onpaste="return false;" oncopy="return false;" oncut="return false;" style="text-transform:uppercase;letter-spacing:0.05em;" />
+          <div id="vin-confirm-error" style="display:none;font-size:0.75rem;color:#f87171;margin-top:3px;"></div>
+          <div id="vin-confirm-ok" style="display:none;font-size:0.75rem;color:var(--green);margin-top:3px;">✓ VIN confirmed — both entries match.</div>
+        </div>
+        <div class="field">
+          <label>Kilometers <span class="req">*</span></label>
+          <div class="km-row">
+            <input class="input" type="number" id="km" placeholder="e.g. 72,000" min="0" />
+            <label class="checkbox-label">
+              <input type="checkbox" id="us-vehicle" onchange="toggleUnit()" />
+              US Vehicle (miles)
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tire Type <span class="req">*</span></label>
+          <select class="select" id="tire-type" onchange="updateTireExtra()">
+            <option value="">Select tire type</option>
+            <option>All-Season</option>
+            <option>Winter</option>
+            <option>Summer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tire Condition <span class="req">*</span></label>
+          <select class="select" id="tire-condition">
+            <option value="">Select tire condition</option>
+            <option>New / Like New</option>
+            <option>Good</option>
+            <option>Worn</option>
+            <option>Need Replacing</option>
+          </select>
+        </div>
+        <div class="field col-span-2" id="tire-extra-row" style="display:none;">
+          <label class="check-row">
+            <input type="checkbox" id="extra-tires" />
+            <span id="extra-tires-label">Comes with an additional set of winter rims and tires</span>
+          </label>
+        </div>
+        <div class="field">
+          <label>Number of Keys <span class="req">*</span></label>
+          <select class="select" id="num-keys">
+            <option value="">Select number of keys</option>
+            <option>1</option><option>2</option><option>3+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Windshield Condition <span class="req">*</span></label>
+          <select class="select" id="windshield">
+            <option value="">Select windshield condition</option>
+            <option>Perfect – No chips or cracks</option>
+            <option>Minor chip (repairable)</option>
+            <option>Crack present</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Your Postal Code <span class="req">*</span></label>
+          <input class="input" type="text" id="postal" placeholder="e.g. M5V 3A8" maxlength="7" />
+        </div>
+        <div class="field">
+          <label>Maximum Distance to Dealership <span class="req">*</span></label>
+          <select class="select" id="max-distance" onchange="onDistanceChange()">
+            <option value="">Select maximum distance</option>
+            <option value="150">150 km</option>
+            <option value="200">200 km</option>
+            <option value="250">250 km</option>
+            <option value="300">300 km</option>
+            <option value="400">400 km</option>
+            <option value="500">500 km</option>
+            <option value="provincial">Provincial — All dealers of my chosen brand(s) in my province</option>
+          </select>
+          <div id="provincial-note" style="display:none;margin-top:6px;padding:8px 12px;background:rgba(43,159,217,0.08);border:1px solid rgba(43,159,217,0.25);border-radius:7px;font-size:0.75rem;color:var(--muted);line-height:1.55;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue-light)" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Your listing will be visible to <strong style="color:var(--white);">all franchise dealers of your selected brand(s)</strong> within your province, regardless of distance.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 2: VEHICLE HISTORY ── -->
+    <div class="section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Vehicle History &amp; Condition
+      </div>
+      <div class="grid-1">
+        <div class="field">
+          <label>Accident History</label>
+          <textarea class="textarea" id="accident-history" placeholder="Describe any accidents, or leave blank if none"></textarea>
+        </div>
+        <div class="field">
+          <label>Maintenance History</label>
+          <textarea class="textarea" id="maintenance-history" placeholder="Regular oil changes, recent brake service, etc. Leave blank if unknown"></textarea>
+        </div>
+        <div class="field">
+          <label>Current Damages or Issues</label>
+          <textarea class="textarea" id="damages-issues" placeholder="Minor scratches, dents, mechanical issues, etc. Leave blank if none"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3: OWNERSHIP ── -->
+    <div class="section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Current Ownership Status
+      </div>
+      <div class="field">
+        <label>Do you own, finance, or lease this vehicle? <span class="req">*</span></label>
+        <select class="select" id="ownership" onchange="handleOwnership()">
+          <option value="">Select ownership status</option>
+          <option>Own outright (no payments)</option>
+          <option>Financed (loan with balance owing)</option>
+          <option>Leased</option>
+        </select>
+      </div>
+
+      <!-- Financing fields -->
+      <div id="financing-fields" style="display:none; margin-top:14px">
+        <div class="field">
+          <label>Outstanding Loan Amount <span class="req">*</span></label>
+          <div style="position:relative">
+            <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.9rem">$</span>
+            <input class="input" type="number" id="loan-amount" placeholder="e.g. 12,500" min="0" style="padding-left:26px" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Leasing fields -->
+      <div id="leasing-fields" style="display:none; margin-top:14px">
+        <div class="grid-2">
+          <div class="field">
+            <label>Months Remaining in Lease <span class="req">*</span></label>
+            <select class="select" id="lease-months">
+              <option value="">Select months remaining</option>
+              <option>1–3 months</option>
+              <option>4–6 months</option>
+              <option>7–12 months</option>
+              <option>13–18 months</option>
+              <option>19–24 months</option>
+              <option>25–36 months</option>
+              <option>36+ months</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Buyout Amount <span class="req">*</span></label>
+            <div style="position:relative">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.9rem">$</span>
+              <input class="input" type="number" id="buyout-amount" placeholder="e.g. 18,000" min="0" style="padding-left:26px" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 4: INTENT ── -->
+    <div class="section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        Your Intent
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>What would you like to do? <span class="req">*</span></label>
+        <div class="intent-grid" style="margin-top:8px">
+          <div class="intent-card selected" onclick="selectIntent('sell', this)">
+            <h4>💰 Sell Outright</h4>
+            <p>Receive cash offers from dealers. No trade-in required.</p>
+          </div>
+          <div class="intent-card" onclick="selectIntent('trade', this)">
+            <h4>🔄 Trade-In</h4>
+            <p>Trade your vehicle toward a new car at a franchise dealership.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="field" id="purchase-type-field" style="margin-top:16px; display:none">
+        <label>Purchase Type <span class="req">*</span></label>
+        <select class="select" id="purchase-type">
+          <option value="">Select purchase type</option>
+          <option>Cash Sale</option>
+          <option>Financing</option>
+          <option>Lease</option>
+        </select>
+      </div>
+
+      <!-- Trade-in brand selector -->
+      <div id="trade-brands">
+        <label>Which brands are you interested in trading into? <span class="req">*</span></label>
+        <div class="brand-grid" id="brand-grid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Vehicle type selector -->
+        <div style="margin-top:20px;">
+          <label style="font-size:0.78rem;color:var(--muted);font-weight:500;margin-bottom:10px;display:block;">What type of vehicle are you looking for? <span class="req">*</span></label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;" id="vehicle-type-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 5: PHOTOS ── -->
+    <div class="section-card">
+      <div class="section-title">
+        <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="40" width="44" height="14" rx="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><rect x="20" y="36" width="40" height="8" rx="3" fill="white" stroke="#2B9FD9" stroke-width="1.5"/><rect x="22" y="10" width="36" height="28" rx="5" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><line x1="28" y1="14" x2="28" y2="34" stroke="#2B9FD9" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="52" y1="14" x2="52" y2="34" stroke="#2B9FD9" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="22" y1="22" x2="58" y2="22" stroke="#2B9FD9" stroke-width="0.8"/><rect x="30" y="4" width="20" height="10" rx="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><line x1="35" y1="10" x2="35" y2="14" stroke="#2B9FD9" stroke-width="1.5"/><line x1="45" y1="10" x2="45" y2="14" stroke="#2B9FD9" stroke-width="1.5"/><line x1="24" y1="54" x2="24" y2="58" stroke="#2B9FD9" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="54" x2="56" y2="58" stroke="#2B9FD9" stroke-width="2" stroke-linecap="round"/></svg>
+        Photos, Videos &amp; Documents
+      </div>
+
+      <div class="upload-grid">
+        <div>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-weight:500">Exterior Photos <span class="info-btn" onclick="openPhotoGuide('exterior')">i</span></p>
+          <div class="upload-zone" onclick="triggerUpload('ext-upload')">
+            <input type="file" id="ext-upload" accept="image/*" multiple onchange="handleUpload(this,'ext-count')" />
+            <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 42 Q8 38 12 38 L68 38 Q72 38 72 42 L72 46 Q72 48 70 48 L10 48 Q8 48 8 46 Z" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2" stroke-linejoin="round"/><path d="M18 38 L24 24 Q26 20 30 20 L52 20 Q56 20 58 24 L64 38" fill="none" stroke="#2B9FD9" stroke-width="2" stroke-linejoin="round"/><path d="M26 38 L30 24 L52 24 L56 38" fill="white" stroke="#2B9FD9" stroke-width="1.2" stroke-linejoin="round" opacity="0.8"/><line x1="41" y1="24" x2="41" y2="38" stroke="#2B9FD9" stroke-width="1"/><circle cx="22" cy="48" r="8" fill="white" stroke="#2B9FD9" stroke-width="2.5"/><circle cx="22" cy="48" r="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="22" cy="48" r="1.5" fill="#2B9FD9"/><circle cx="58" cy="48" r="8" fill="white" stroke="#2B9FD9" stroke-width="2.5"/><circle cx="58" cy="48" r="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="58" cy="48" r="1.5" fill="#2B9FD9"/><line x1="30" y1="48" x2="50" y2="48" stroke="#ced5e2" stroke-width="1"/><rect x="8" y="40" width="6" height="4" rx="1" fill="#fbbf24" stroke="#2B9FD9" stroke-width="1"/><line x1="40" y1="38" x2="40" y2="48" stroke="#2B9FD9" stroke-width="1" stroke-dasharray="2 2"/></svg>
+            <h4>Upload Exterior</h4>
+            <p>All 4 sides + front &amp; back</p>
+            <div class="file-count" id="ext-count"></div>
+          </div>
+          <div class="upload-preview-list" id="ext-preview"></div>
+        </div>
+        <div>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-weight:500">Interior Photos <span class="info-btn" onclick="openPhotoGuide('interior')">i</span></p>
+          <div class="upload-zone" onclick="triggerUpload('int-upload')">
+            <input type="file" id="int-upload" accept="image/*" multiple onchange="handleUpload(this,'int-count')" />
+            <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="40" width="44" height="14" rx="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><rect x="20" y="36" width="40" height="8" rx="3" fill="white" stroke="#2B9FD9" stroke-width="1.5"/><rect x="22" y="10" width="36" height="28" rx="5" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><line x1="28" y1="14" x2="28" y2="34" stroke="#2B9FD9" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="52" y1="14" x2="52" y2="34" stroke="#2B9FD9" stroke-width="0.8" stroke-dasharray="2 2"/><line x1="22" y1="22" x2="58" y2="22" stroke="#2B9FD9" stroke-width="0.8"/><rect x="30" y="4" width="20" height="10" rx="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><line x1="35" y1="10" x2="35" y2="14" stroke="#2B9FD9" stroke-width="1.5"/><line x1="45" y1="10" x2="45" y2="14" stroke="#2B9FD9" stroke-width="1.5"/><line x1="24" y1="54" x2="24" y2="58" stroke="#2B9FD9" stroke-width="2" stroke-linecap="round"/><line x1="56" y1="54" x2="56" y2="58" stroke="#2B9FD9" stroke-width="2" stroke-linecap="round"/></svg>
+            <h4>Upload Interior</h4>
+            <p>Dashboard, seats, controls</p>
+            <div class="file-count" id="int-count"></div>
+          </div>
+          <div class="upload-preview-list" id="int-preview"></div>
+        </div>
+        <div>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-weight:500">Damage Photos <span class="info-btn" onclick="openPhotoGuide('damage')">i</span></p>
+          <div class="upload-zone" onclick="triggerUpload('dmg-upload')">
+            <input type="file" id="dmg-upload" accept="image/*" multiple onchange="handleUpload(this,'dmg-count')" />
+            <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 42 Q8 38 12 38 L68 38 Q72 38 72 42 L72 46 Q72 48 70 48 L10 48 Q8 48 8 46 Z" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2" stroke-linejoin="round"/><path d="M18 38 L24 24 Q26 20 30 20 L52 20 Q56 20 58 24 L64 38" fill="none" stroke="#2B9FD9" stroke-width="2" stroke-linejoin="round"/><path d="M26 38 L30 24 L52 24 L56 38" fill="white" stroke="#2B9FD9" stroke-width="1.2" stroke-linejoin="round" opacity="0.8"/><line x1="41" y1="24" x2="41" y2="38" stroke="#2B9FD9" stroke-width="1"/><circle cx="22" cy="48" r="8" fill="white" stroke="#2B9FD9" stroke-width="2.5"/><circle cx="22" cy="48" r="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="22" cy="48" r="1.5" fill="#2B9FD9"/><circle cx="58" cy="48" r="8" fill="white" stroke="#2B9FD9" stroke-width="2.5"/><circle cx="58" cy="48" r="4" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="58" cy="48" r="1.5" fill="#2B9FD9"/><path d="M36 40 Q40 36 44 40" stroke="#e24b4a" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="32" y1="43" x2="42" y2="41" stroke="#e24b4a" stroke-width="1.8" stroke-linecap="round"/><line x1="34" y1="46" x2="46" y2="44" stroke="#e24b4a" stroke-width="1.4" stroke-linecap="round"/><line x1="44" y1="43" x2="50" y2="42" stroke="#e24b4a" stroke-width="1.2" stroke-linecap="round"/><circle cx="40" cy="40" r="3" fill="#fecaca" stroke="#e24b4a" stroke-width="1.2" opacity="0.7"/></svg>
+            <h4>Upload Damage</h4>
+            <p>Scratches, dents, chips</p>
+            <div class="file-count" id="dmg-count"></div>
+          </div>
+          <div class="upload-preview-list" id="dmg-preview"></div>
+        </div>
+        <div>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-weight:500">Other Photos <span class="info-btn" onclick="openPhotoGuide('other')">i</span></p>
+          <div class="upload-zone" onclick="triggerUpload('oth-upload')">
+            <input type="file" id="oth-upload" accept="image/*" multiple onchange="handleUpload(this,'oth-count')" />
+            <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="20" width="44" height="32" rx="5" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><rect x="28" y="14" width="18" height="8" rx="3" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.8"/><circle cx="36" cy="36" r="11" fill="white" stroke="#2B9FD9" stroke-width="2"/><circle cx="36" cy="36" r="7.5" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.2"/><circle cx="36" cy="36" r="4" fill="white" stroke="#2B9FD9" stroke-width="1"/><circle cx="36" cy="36" r="1.5" fill="#2B9FD9"/><rect x="18" y="23" width="6" height="4" rx="1" fill="#fbbf24" stroke="#2B9FD9" stroke-width="1"/><circle cx="56" cy="23" r="3" fill="white" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="58" cy="16" r="8" fill="#2B9FD9"/><line x1="58" y1="12" x2="58" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="54" y1="16" x2="62" y2="16" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <h4>Upload Other</h4>
+            <p>Engine bay, trunk, etc.</p>
+            <div class="file-count" id="oth-count"></div>
+          </div>
+          <div class="upload-preview-list" id="oth-preview"></div>
+        </div>
+
+        <!-- Videos - full width -->
+        <div class="upload-zone-wide">
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-weight:500">Videos <span style="color:var(--navy-border)">(optional)</span></p>
+          <div class="upload-zone" style="padding:18px" onclick="triggerUpload('vid-upload')">
+            <input type="file" id="vid-upload" accept="video/*" multiple onchange="handleUpload(this,'vid-count')" />
+            <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            <h4>Upload Video</h4>
+            <p>Walkaround, startup, etc.</p>
+            <div class="file-count" id="vid-count"></div>
+          </div>
+          <div class="upload-preview-list" id="vid-preview"></div>
+        </div>
+
+        <!-- Documents - full width -->
+        <div class="upload-zone-wide">
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;font-weight:500">Documents <span style="color:var(--navy-border)">(service records, title, etc.)</span></p>
+          <div class="upload-zone" style="padding:18px" onclick="triggerUpload('doc-upload')">
+            <input type="file" id="doc-upload" accept=".pdf,.jpg,.png,.doc,.docx" multiple onchange="handleUpload(this,'doc-count')" />
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <h4>Upload Document</h4>
+            <p>PDF, JPG, PNG accepted</p>
+            <div class="file-count" id="doc-count"></div>
+          </div>
+          <div class="upload-preview-list" id="doc-preview"></div>
+        </div>
+      </div>
+
+      <div class="note-box" style="margin-top:16px">
+        <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="20" width="44" height="32" rx="5" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="2"/><rect x="28" y="14" width="18" height="8" rx="3" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.8"/><circle cx="36" cy="36" r="11" fill="white" stroke="#2B9FD9" stroke-width="2"/><circle cx="36" cy="36" r="7.5" fill="#EBF6FD" stroke="#2B9FD9" stroke-width="1.2"/><circle cx="36" cy="36" r="4" fill="white" stroke="#2B9FD9" stroke-width="1"/><circle cx="36" cy="36" r="1.5" fill="#2B9FD9"/><rect x="18" y="23" width="6" height="4" rx="1" fill="#fbbf24" stroke="#2B9FD9" stroke-width="1"/><circle cx="56" cy="23" r="3" fill="white" stroke="#2B9FD9" stroke-width="1.5"/><circle cx="58" cy="16" r="8" fill="#2B9FD9"/><line x1="58" y1="12" x2="58" y2="20" stroke="white" stroke-width="2.2" stroke-linecap="round"/><line x1="54" y1="16" x2="62" y2="16" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span>Your listing will be visible only to dealerships within your selected travel distance. Maximum 15 photos per category. Photos are automatically removed after 30 days.</span>
+      </div>
+    </div>
+
+  </div><!-- /form-wrap -->
+
+  <!-- DISCLAIMER -->
+  <div style="max-width:760px;margin:0 auto;padding:24px 32px 48px;">
+
+    <!-- Consent checkbox -->
+    <div id="consent-box" style="display:flex;gap:10px;align-items:flex-start;background:rgba(43,159,217,0.05);border:1px solid rgba(43,159,217,0.2);border-radius:10px;padding:14px 16px;margin-bottom:10px;">
+      <input type="checkbox" id="consent-check" style="accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;" />
+      <label for="consent-check" style="font-size:0.76rem;color:#5a647a;line-height:1.6;cursor:pointer;">
+        I consent to DealrTrade providing my name, email address, and phone number to the top three offer dealerships at the close of the offer period, so they may contact me directly regarding my vehicle.
+      </label>
+    </div>
+    <p id="consent-error" style="display:none;font-size:0.75rem;color:var(--red);margin-top:-4px;margin-bottom:10px;padding-left:4px;">⚠ You must provide consent to contact before submitting.</p>
+
+    <div id="disclaimer-box" style="display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,0.03);border:1px solid #ced5e2;border-radius:10px;padding:14px 16px;">
+      <input type="checkbox" id="disclaimer-check" style="accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;" />
+      <label for="disclaimer-check" style="font-size:0.76rem;color:#5a647a;line-height:1.6;cursor:pointer;">
+        All final dealer offers are subject to a cosmetic and mechanical inspection at the dealer's discretion. Final offer may change based on inaccurate or incomplete information provided at the time of submission.
+      </label>
+    </div>
+    <p id="disclaimer-error" style="display:none;font-size:0.75rem;color:var(--red);margin-top:6px;padding-left:4px;">⚠ You must acknowledge the disclaimer before submitting.</p>
+
+    <!-- Terms & Conditions acceptance -->
+    <div id="tos-box" style="display:flex;gap:10px;align-items:flex-start;background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:14px 16px;margin-top:10px;">
+      <input type="checkbox" id="tos-check" style="accent-color:var(--blue);width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;" />
+      <label for="tos-check" style="font-size:0.76rem;color:var(--muted);line-height:1.6;cursor:pointer;">
+        I have read and agree to DealrTrade's
+        <a href="terms.html" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:underline;">Terms &amp; Conditions</a>
+        and
+        <a href="terms.html#s23" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:underline;">Privacy Policy</a>,
+        including the collection and use of my personal information as described therein.
+      </label>
+    </div>
+    <p id="tos-error" style="display:none;font-size:0.75rem;color:var(--red);margin-top:6px;margin-bottom:4px;padding-left:4px;">⚠ You must accept the Terms &amp; Conditions before submitting.</p>
+
+    <div id="submit-error-banner" style="display:none;align-items:center;gap:10px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);border-radius:9px;padding:11px 14px;margin-top:14px;font-size:0.82rem;color:var(--red);">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please fill in all required fields highlighted above, ensure your VIN is 17 characters, and acknowledge the disclaimer before submitting.
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;">
+      <div style="font-size:0.8rem;color:var(--muted);">Listing duration: <span style="color:var(--white);font-weight:600;">5 Business Days</span> · Offers revealed after window closes</div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-ghost" onclick="history.back()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitListing()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Create Listing (5 Business Days)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── MODEL MAP (make → models) ──
+    const MODEL_MAP = {
+      'Acura':['CL','ILX','Integra','Legend','MDX','NSX','RDX','RL','RLX','RSX','TL','TLX','TSX','ZDX','OTHER'],
+      'Alfa Romeo':['147','156','159','164','4C','Brera','Giulia','Giulietta','GTV','MiTo','Spider','Stelvio','Tonale','OTHER'],
+      'Aston Martin':['DB7','DB9','DB11','DB12','DBS','DBX','Rapide','Vantage','Virage','OTHER'],
+      'Audi':['A3','A4','A4 Allroad','A5','A6','A6 Allroad','A7','A8','e-tron','e-tron GT','Q3','Q5','Q5 Sportback','Q7','Q8','Q8 e-tron','R8','RS3','RS4','RS5','RS6','RS7','RS Q3','RS Q8','S3','S4','S5','S6','S7','S8','SQ5','SQ7','SQ8','TT','TTS','OTHER'],
+      'Bentley':['Bentayga','Continental GT','Continental GTC','Flying Spur','Mulsanne','OTHER'],
+      'BMW':['1 Series','2 Series','3 Series','4 Series','5 Series','6 Series','7 Series','8 Series','i3','i4','i5','i7','i8','iX','iX1','iX3','M2','M3','M4','M5','M6','M8','X1','X2','X3','X3 M','X4','X4 M','X5','X5 M','X6','X6 M','X7','XM','Z3','Z4','OTHER'],
+      'Buick':['Cascada','Century','Enclave','Encore','Encore GX','Envision','Envista','LaCrosse','LeSabre','Lucerne','Park Avenue','Rainier','Rendezvous','Terraza','Verano','OTHER'],
+      'Cadillac':['ATS','ATS-V','CT4','CT4-V','CT5','CT5-V','CT6','CTS','CTS-V','DeVille','DTS','Escalade','Escalade ESV','Escalade IQ','Lyriq','Optiq','SRX','STS','XT4','XT5','XT6','XTS','OTHER'],
+      'Chevrolet':['Avalanche','Aveo','Blazer','Blazer EV','Camaro','Captiva','Colorado','Cobalt','Corvette','Cruze','Equinox','Equinox EV','Express','HHR','Impala','Malibu','Montana','Orlando','Silverado 1500','Silverado 2500HD','Silverado 3500HD','Silverado EV','Sonic','Spark','Suburban','Tahoe','Tracker','Trailblazer','Traverse','Trax','Uplander','Volt','OTHER'],
+      'Chrysler':['200','300','300C','Aspen','Concorde','Crossfire','Grand Voyager','Pacifica','Pacifica Hybrid','PT Cruiser','Sebring','Town and Country','Voyager','OTHER'],
+      'Dodge':['Avenger','Caliber','Challenger','Charger','Dakota','Dart','Durango','Grand Caravan','Hornet','Journey','Magnum','Neon','Nitro','Viper','OTHER'],
+      'Ferrari':['296 GTB','296 GTS','360','430','458','488 GTB','488 Pista','488 Spider','575','599','612','812 GTS','812 Superfast','California','California T','F8 Spider','F8 Tributo','GTC4Lusso','LaFerrari','Portofino','Portofino M','Purosangue','Roma','Roma Spider','SF90','OTHER'],
+      'Fiat':['124 Spider','500','500 Abarth','500C','500e','500L','500X','Bravo','Panda','Punto','Tipo','OTHER'],
+      'Ford':['Bronco','Bronco Sport','C-MAX','Contour','Crown Victoria','E-Series','Edge','Escape','Escape Hybrid','Excursion','Expedition','Explorer','Explorer Sport Trac','F-150','F-150 Lightning','F-250 Super Duty','F-350 Super Duty','F-450 Super Duty','Fiesta','Five Hundred','Flex','Focus','Freestar','Freestyle','Fusion','Fusion Energi','Maverick','Mustang','Mustang Mach-E','Ranger','Taurus','Thunderbird','Transit','Transit Connect','OTHER'],
+      'Genesis':['G70','G80','G90','GV60','GV70','GV80','GV90','OTHER'],
+      'GMC':['Acadia','Canyon','Envoy','Envoy XL','Jimmy','Safari','Sierra 1500','Sierra 2500HD','Sierra 3500HD','Sierra EV','Sonoma','Terrain','Yukon','Yukon XL','OTHER'],
+      'Honda':['Accord','Accord Hybrid','Civic','Civic Type R','CR-V','CR-V Hybrid','CR-Z','Crosstour','Element','Fit','HR-V','Insight','Odyssey','Passport','Pilot','Prologue','Ridgeline','S2000','OTHER'],
+      'Hyundai':['Accent','Azera','Elantra','Elantra GT','Elantra N','Entourage','Equus','Genesis Coupe','Ioniq','Ioniq 5','Ioniq 5 N','Ioniq 6','Ioniq 9','Kona','Kona Electric','Kona N','Nexo','Palisade','Santa Cruz','Santa Fe','Santa Fe XL','Sonata','Sonata Hybrid','Tiburon','Tucson','Tucson Hybrid','Tucson PHEV','Venue','Veloster','Veloster N','Veracruz','OTHER'],
+      'Infiniti':['EX35','FX35','FX37','FX50','G25','G35','G37','M35','M45','M56','Q30','Q45','Q50','Q60','Q70','QX30','QX50','QX55','QX56','QX60','QX70','QX80','OTHER'],
+      'Jaguar':['E-Pace','F-Pace','F-Type','I-Pace','S-Type','X-Type','XE','XF','XJ','XJR','XK','XKR','OTHER'],
+      'Jeep':['Cherokee','Commander','Compass','Gladiator','Grand Cherokee','Grand Cherokee 4xe','Grand Cherokee L','Grand Wagoneer','Liberty','Patriot','Renegade','Wagoneer','Wrangler','Wrangler 4xe','Wrangler Unlimited','OTHER'],
+      'Kia':['Amanti','Borrego','Cadenza','Carnival','Cerato','EV6','EV9','Forte','K5','K900','Magentis','Niro','Niro EV','Niro Hybrid','Niro PHEV','Optima','Rondo','Seltos','Sorento','Sorento Hybrid','Soul','Soul EV','Sportage','Sportage Hybrid','Stinger','Telluride','OTHER'],
+      'Lamborghini':['Aventador','Aventador S','Countach','Gallardo','Huracan','Huracan Evo','Huracan Sterrato','Murcielago','Revuelto','Urus','Urus S','OTHER'],
+      'Land Rover':['Defender 90','Defender 110','Defender 130','Discovery','Discovery Sport','Freelander 2','LR2','LR4','Range Rover','Range Rover Evoque','Range Rover Sport','Range Rover Velar','OTHER'],
+      'Lexus':['CT 200h','ES 250','ES 300h','ES 350','GS 300','GS 350','GS 430','GS 460','GX 460','GX 470','GX 550','IS 250','IS 300','IS 350','IS 500','LC 500','LC 500h','LS 400','LS 430','LS 460','LS 500','LS 500h','LX 470','LX 570','LX 600','NX 200t','NX 250','NX 300h','NX 350','NX 350h','NX 450h+','RC 300','RC 350','RC F','RX 300','RX 330','RX 350','RX 350h','RX 350L','RX 400h','RX 450h','RX 450h+','RX 500h','SC 430','TX 350','TX 500h','UX 200','UX 250h','OTHER'],
+      'Lincoln':['Aviator','Aviator Grand Touring','Blackwood','Continental','Corsair','Corsair Grand Touring','LS','Mark LT','MKC','MKS','MKT','MKX','MKZ','MKZ Hybrid','Nautilus','Navigator','Navigator L','Town Car','Zephyr','OTHER'],
+      'Maserati':['Ghibli','GranCabrio','GranTurismo','GranTurismo Folgore','Grecale','Grecale Folgore','Levante','MC20','Quattroporte','OTHER'],
+      'Mazda':['CX-3','CX-30','CX-5','CX-50','CX-60','CX-70','CX-90','Mazda2','Mazda3','Mazda3 Sport','Mazda5','Mazda6','MX-30','MX-5 Miata','MX-5 Miata RF','MPV','Protege','RX-7','RX-8','Tribute','OTHER'],
+      'Mercedes-Benz':['A-Class','AMG GT','AMG GT 4-Door','B-Class','C-Class','CL-Class','CLA','CLK-Class','CLS','E-Class','EQA','EQB','EQC','EQE','EQE SUV','EQS','EQS SUV','G-Class','GLA','GLB','GLC','GLC Coupe','GLE','GLE Coupe','GLS','ML-Class','R-Class','S-Class','SL','SLC','SLK-Class','Sprinter','OTHER'],
+      'MINI':['Clubman','Convertible','Cooper','Cooper S','Cooper SE','Countryman','Countryman SE','Coupe','Hardtop','Paceman','Roadster','OTHER'],
+      'Mitsubishi':['3000GT','Eclipse','Eclipse Cross','Eclipse Cross PHEV','Endeavor','Galant','Lancer','Lancer Evolution','Mirage','Mirage G4','Montero','Montero Sport','Outlander','Outlander PHEV','Outlander Sport','RVR','OTHER'],
+      'Nissan':['350Z','370Z','400Z','Altima','Armada','Frontier','GT-R','Juke','Kicks','Leaf','Leaf Plus','Maxima','Murano','Navara','NV200','Pathfinder','Pathfinder Hybrid','Qashqai','Quest','Rogue','Rogue Sport','Sentra','Titan','Titan XD','Versa','Versa Note','Xterra','OTHER'],
+      'Porsche':['718 Boxster','718 Cayman','911','911 Carrera','911 GT3','911 GT3 RS','911 Targa','911 Turbo','911 Turbo S','944','Boxster','Cayenne','Cayenne Coupe','Cayenne e-Hybrid','Cayman','Macan','Macan Electric','Panamera','Taycan','Taycan Cross Turismo','Taycan Sport Turismo','OTHER'],
+      'RAM':['1500','1500 Classic','2500','3500','4500','5500','ProMaster','ProMaster City','OTHER'],
+      'Rolls-Royce':['Cullinan','Dawn','Ghost','Phantom','Silver Shadow','Silver Spirit','Silver Spur','Spectre','Wraith','OTHER'],
+      'Subaru':['Ascent','BRZ','Crosstrek','Crosstrek Hybrid','Forester','Impreza','Legacy','Outback','Outback Wilderness','Solterra','SVX','Tribeca','WRX','WRX STI','OTHER'],
+      'Tesla':['Cybertruck','Model 3','Model S','Model S Plaid','Model X','Model X Plaid','Model Y','Roadster','OTHER'],
+      'Toyota':['4Runner','86','Avalon','Avalon Hybrid','bZ4X','C-HR','Camry','Camry Hybrid','Celica','Corolla','Corolla Cross','Corolla Cross Hybrid','Corolla Hatchback','Corolla Hybrid','Echo','FJ Cruiser','GR Corolla','GR86','GR Supra','Highlander','Highlander Hybrid','Land Cruiser','Matrix','MR2','Prius','Prius C','Prius PHV','Prius Prime','Prius V','RAV4','RAV4 Hybrid','RAV4 Prime','Sequoia','Sequoia Hybrid','Sienna','Sienna Hybrid','Solara','Supra','Tacoma','Tundra','Tundra Hybrid','Venza','Venza Hybrid','Yaris','Yaris Hatchback','OTHER'],
+      'Volkswagen':['Arteon','Atlas','Atlas Cross Sport','Beetle','CC','Eos','Golf','Golf Alltrack','Golf GTI','Golf R','Golf SportWagen','ID.3','ID.4','ID.6','Jetta','Jetta GLI','Jetta SportWagen','New Beetle','Passat','Polo','Routan','Taos','Tiguan','Touareg','OTHER'],
+      'Volvo':['C30','C40','C40 Recharge','C70','EX30','EX40','EX90','S40','S60','S60 Recharge','S70','S80','S90','S90 Recharge','V40','V50','V60','V60 Cross Country','V60 Recharge','V70','V90','V90 Cross Country','V90 Recharge','XC40','XC40 Recharge','XC60','XC60 Recharge','XC70','XC90','XC90 Recharge','OTHER'],
+    };
+
+    function updateModels() {
+      const make = document.getElementById('make').value;
+      const modelSel = document.getElementById('model');
+      const modelOther = document.getElementById('model-other');
+      modelSel.innerHTML = '<option value="">Select model</option>';
+      modelOther.style.display = 'none';
+      modelOther.value = '';
+      if (make && MODEL_MAP[make]) {
+        MODEL_MAP[make].forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m; opt.textContent = m;
+          modelSel.appendChild(opt);
+        });
+      }
+    }
+
+    function onModelSelect() {
+      const val = document.getElementById('model').value;
+      const other = document.getElementById('model-other');
+      other.style.display = val === 'OTHER' ? 'block' : 'none';
+      if (val !== 'OTHER') other.value = '';
+    }
+
+    // Helper: get real model value for form submission
+    function getModelValue() {
+      const sel = document.getElementById('model').value;
+      if (sel === 'OTHER') return document.getElementById('model-other').value.trim();
+      return sel;
+    }
+
+    // ── Phone modal: show if profile is missing phone number ──
+    function checkPhoneRequired() {
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || 'null');
+      if (!profile || !profile.phone) {
+        document.getElementById('phone-modal').style.display = 'grid';
+      }
+    }
+
+    function submitModalPhone() {
+      const phone = document.getElementById('modal-phone').value.trim();
+      const err = document.getElementById('modal-phone-error');
+      if (!phone) { err.style.display = 'block'; return; }
+      err.style.display = 'none';
+      const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+      localStorage.setItem('customerProfile', JSON.stringify({ ...profile, phone }));
+      document.getElementById('phone-modal').style.display = 'none';
+    }
+
+    checkPhoneRequired();
+
+    // ── Photo guide modal ──
+    const photoGuides = {
+      exterior: {
+        title: 'Exterior Photos',
+        shots: [
+          { label: 'Front', hint: 'Straight on, centred, good lighting' },
+          { label: 'Rear', hint: 'Straight on showing bumper & taillights' },
+          { label: 'Driver side', hint: 'Full side profile from a few steps back' },
+          { label: 'Passenger side', hint: 'Full side profile from a few steps back' },
+          { label: 'Front 3/4 angle', hint: 'Corner shot showing front & driver side' },
+          { label: 'Rear 3/4 angle', hint: 'Corner shot showing rear & passenger side' },
+          { label: 'Wheels & tires', hint: 'At least one close-up showing tread & rims' },
+        ],
+        tip: '<strong>Tip:</strong> Shoot outdoors in daylight, avoid direct sun or harsh shadows. Step back far enough to fit the whole car in frame.'
+      },
+      interior: {
+        title: 'Interior Photos',
+        shots: [
+          { label: 'Dashboard & steering wheel', hint: 'Straight on from the driver seat' },
+          { label: 'Odometer / instrument cluster', hint: 'Show current mileage clearly' },
+          { label: 'Infotainment screen', hint: 'Powered on if possible' },
+          { label: 'Front seats', hint: 'Both seats visible, showing condition' },
+          { label: 'Rear seats', hint: 'Full rear bench or captain chairs' },
+          { label: 'Headliner', hint: 'Any stains or tears visible' },
+        ],
+        tip: '<strong>Tip:</strong> Open the doors wide for better light. Turn on interior lights if shooting at night.'
+      },
+      damage: {
+        title: 'Damage Photos',
+        shots: [
+          { label: 'Each scratch', hint: 'Close-up so depth & length are visible' },
+          { label: 'Each dent', hint: 'Angle the shot to catch the shadow' },
+          { label: 'Paint chips', hint: 'Zoom in to show bare metal if present' },
+          { label: 'Cracked glass', hint: 'Windshield, windows, mirrors' },
+          { label: 'Worn trim or panels', hint: 'Faded, cracked, or missing pieces' },
+        ],
+        tip: '<strong>No visible damage?</strong> Skip this section — you don\'t need to upload anything. Dealers appreciate honesty either way.'
+      },
+      other: {
+        title: 'Other Photos',
+        shots: [
+          { label: 'Engine bay', hint: 'Hood open, full bay visible' },
+          { label: 'Trunk / cargo area', hint: 'Empty and open' },
+          { label: 'Undercarriage (if accessible)', hint: 'Rust or damage underneath' },
+          { label: 'Service stickers', hint: 'Oil change sticker on windshield, etc.' },
+          { label: 'Tow hitch or accessories', hint: 'Any installed extras' },
+        ],
+        tip: '<strong>Tip:</strong> These extras help dealers assess value more accurately and can lead to higher offers.'
+      }
+    };
+
+    function openPhotoGuide(type) {
+      const guide = photoGuides[type];
+      document.getElementById('photo-guide-title').textContent = guide.title;
+      const list = document.getElementById('photo-guide-list');
+      list.innerHTML = guide.shots.map((s, i) => `
+        <div class="photo-guide-item">
+          <div class="photo-guide-num">${i + 1}</div>
+          <div><p>${s.label}</p><span>${s.hint}</span></div>
+        </div>`).join('');
+      document.getElementById('photo-guide-tip').innerHTML = guide.tip;
+      document.getElementById('photo-guide-overlay').classList.add('open');
+    }
+
+    function closePhotoGuide(e) {
+      if (e && document.getElementById('photo-guide-card').contains(e.target)) return;
+      document.getElementById('photo-guide-overlay').classList.remove('open');
+    }
+
+    // ── Ownership conditional fields ──
+    function handleOwnership() {
+      const val = document.getElementById('ownership').value;
+      document.getElementById('financing-fields').style.display = val === 'Financed (loan with balance owing)' ? 'block' : 'none';
+      document.getElementById('leasing-fields').style.display = val === 'Leased' ? 'block' : 'none';
+    }
+
+    
+    const brands = ['Acura','Audi','BMW','Buick','Cadillac','Chevrolet','Chrysler',
+      'Dodge','Ford','Genesis','GMC','Honda','Hyundai','Infiniti','Jaguar','Jeep',
+      'Kia','Land Rover','Lexus','Lincoln','Mazda','Mercedes-Benz','MINI',
+      'Mitsubishi','Nissan','Porsche','RAM','Subaru','Tesla','Toyota','Volkswagen','Volvo'];
+
+    const brandGrid = document.getElementById('brand-grid');
+    brands.forEach(b => {
+      const chip = document.createElement('div');
+      chip.className = 'brand-chip';
+      chip.textContent = b;
+      chip.onclick = () => chip.classList.toggle('selected');
+      brandGrid.appendChild(chip);
+    });
+
+    const vehicleTypes = [
+      'Sedan', 'Coupe', 'Hatchback', 'Convertible', 'Wagon',
+      'Compact SUV', 'Mid-Size SUV', 'Full-Size SUV', 'Luxury SUV',
+      'Pickup Truck', 'HD Pickup Truck', 'Minivan',
+      'Electric Vehicle', 'Hybrid'
+    ];
+
+    const typeGrid = document.getElementById('vehicle-type-grid');
+    vehicleTypes.forEach(t => {
+      const chip = document.createElement('div');
+      chip.className = 'brand-chip';
+      chip.textContent = t;
+      chip.onclick = () => chip.classList.toggle('selected');
+      typeGrid.appendChild(chip);
+    });
+
+    // ── Intent selection ──
+    function selectIntent(type, el) {
+      document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('trade-brands').style.display = type === 'trade' ? 'block' : 'none';
+      const purchaseTypeField = document.getElementById('purchase-type-field');
+      if (type === 'trade') {
+        purchaseTypeField.style.display = 'block';
+      } else {
+        purchaseTypeField.style.display = 'none';
+        document.getElementById('purchase-type').value = '';
+      }
+    }
+
+    // ── KM / Miles toggle ──
+    function toggleUnit() {
+      const isUS = document.getElementById('us-vehicle').checked;
+      const label = document.querySelector('label[for="km"]') || document.querySelector('.field label');
+      document.querySelectorAll('.field label').forEach(l => {
+        if (l.textContent.includes('Kilometer') || l.textContent.includes('Miles')) {
+          l.innerHTML = (isUS ? 'Miles' : 'Kilometers') + ' <span class="req">*</span>';
+        }
+      });
+      document.getElementById('km').placeholder = isUS ? 'e.g. 45000' : 'e.g. 72000';
+    }
+
+    // ── File upload handler ──
+    function triggerUpload(id) { /* click propagates to hidden input */ }
+
+    // In-memory photo store per category
+    const PENDING_PHOTOS = { exterior:[], interior:[], damage:[], other:[] };
+    const UPLOAD_MAP     = { 'ext-upload':'exterior','int-upload':'interior','dmg-upload':'damage','oth-upload':'other' };
+
+    // Per-input file store: inputId → File[]
+    const FILE_STORE = {};
+
+    // Preview container map: inputId → previewContainerId
+    const PREVIEW_MAP = {
+      'ext-upload':'ext-preview','int-upload':'int-preview',
+      'dmg-upload':'dmg-preview','oth-upload':'oth-preview',
+      'vid-upload':'vid-preview','doc-upload':'doc-preview',
+    };
+    const COUNT_MAP = {
+      'ext-upload':'ext-count','int-upload':'int-count',
+      'dmg-upload':'dmg-count','oth-upload':'oth-count',
+      'vid-upload':'vid-count','doc-upload':'doc-count',
+    };
+
+    function handleUpload(input, countId) {
+      const inputId = input.id;
+      const incoming = Array.from(input.files);
+      if (!FILE_STORE[inputId]) FILE_STORE[inputId] = [];
+
+      // Merge new files (avoid exact-name duplicates)
+      incoming.forEach(f => {
+        if (!FILE_STORE[inputId].find(x => x.name === f.name && x.size === f.size))
+          FILE_STORE[inputId].push(f);
+      });
+
+      // Enforce max 15 per category
+      if (FILE_STORE[inputId].length > 15) FILE_STORE[inputId] = FILE_STORE[inputId].slice(0,15);
+
+      renderPreviewList(inputId);
+      updateCountLabel(inputId);
+
+      // Rebuild PENDING_PHOTOS for image categories
+      const category = UPLOAD_MAP[inputId];
+      if (category) {
+        PENDING_PHOTOS[category] = [];
+        FILE_STORE[inputId].forEach((file, i) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            PENDING_PHOTOS[category].push(e.target.result);
+            if (category === 'exterior' && i === 0) {
+              const vin = document.getElementById('vin').value.trim() || 'pendingListing';
+              localStorage.setItem('exteriorThumb_' + vin, e.target.result);
+              localStorage.setItem('exteriorThumb_latest', e.target.result);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    function removeFile(inputId, index) {
+      if (!FILE_STORE[inputId]) return;
+      FILE_STORE[inputId].splice(index, 1);
+      rebuildFileInput(inputId);
+      renderPreviewList(inputId);
+      updateCountLabel(inputId);
+      // Rebuild PENDING_PHOTOS
+      const category = UPLOAD_MAP[inputId];
+      if (category) {
+        PENDING_PHOTOS[category] = [];
+        FILE_STORE[inputId].forEach((file, i) => {
+          const reader = new FileReader();
+          reader.onload = e => {
+            PENDING_PHOTOS[category].push(e.target.result);
+            if (category === 'exterior' && i === 0) {
+              const vin = document.getElementById('vin').value.trim() || 'pendingListing';
+              localStorage.setItem('exteriorThumb_' + vin, e.target.result);
+              localStorage.setItem('exteriorThumb_latest', e.target.result);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    function rebuildFileInput(inputId) {
+      // Use DataTransfer to recreate the FileList from our store
+      try {
+        const dt = new DataTransfer();
+        (FILE_STORE[inputId] || []).forEach(f => dt.items.add(f));
+        const inp = document.getElementById(inputId);
+        if (inp) inp.files = dt.files;
+      } catch(e) { /* DataTransfer not supported in some old browsers */ }
+    }
+
+    function updateCountLabel(inputId) {
+      const countId = COUNT_MAP[inputId];
+      const el = document.getElementById(countId);
+      if (!el) return;
+      const count = (FILE_STORE[inputId] || []).length;
+      if (count > 0) {
+        el.style.display = 'block';
+        el.textContent = `✓ ${count} file${count > 1 ? 's' : ''} selected`;
+      } else {
+        el.style.display = 'none';
+        el.textContent = '';
+      }
+    }
+
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes/1024).toFixed(0) + ' KB';
+      return (bytes/1048576).toFixed(1) + ' MB';
+    }
+
+    function renderPreviewList(inputId) {
+      const containerId = PREVIEW_MAP[inputId];
+      const container   = document.getElementById(containerId);
+      if (!container) return;
+      const files = FILE_STORE[inputId] || [];
+      if (!files.length) { container.innerHTML = ''; return; }
+
+      container.innerHTML = files.map((file, i) => {
+        const isImage = file.type.startsWith('image/');
+        const isVideo = file.type.startsWith('video/');
+        let thumbHtml = '';
+        if (isImage) {
+          // We'll set src after via objectURL
+          thumbHtml = `<img class="upload-preview-thumb" id="prvthumb-${inputId}-${i}" alt="${file.name}"/>`;
+        } else if (isVideo) {
+          thumbHtml = `<span class="upload-preview-thumb doc-icon" style="font-size:1.3rem">🎬</span>`;
+        } else {
+          thumbHtml = `<span class="upload-preview-thumb doc-icon" style="font-size:1.2rem">📄</span>`;
+        }
+        return `<div class="upload-preview-item">
+          ${thumbHtml}
+          <span class="upload-preview-name" title="${file.name}">${file.name}</span>
+          <span class="upload-preview-size">${formatBytes(file.size)}</span>
+          <button class="upload-preview-remove" onclick="removeFile('${inputId}',${i})" title="Remove this file">✕</button>
+        </div>`;
+      }).join('');
+
+      // Set image src via object URLs (avoids base64 in DOM)
+      files.forEach((file, i) => {
+        if (file.type.startsWith('image/')) {
+          const img = document.getElementById('prvthumb-'+inputId+'-'+i);
+          if (img) img.src = URL.createObjectURL(file);
+        }
+      });
+    }
+
+    // ── Submit ──
+    function submitListing() {
+      try {
+        const errors = [];
+
+        // ── Required fields ──
+        const requiredFields = [
+          { id:'year',         label:'Year' },
+          { id:'make',         label:'Make' },
+          { id:'model',        label:'Model' },
+          { id:'trim',         label:'Trim / Version' },
+          { id:'vin',          label:'VIN' },
+          { id:'km',           label:'Mileage (km)' },
+          { id:'tire-type',    label:'Tire Type' },
+          { id:'tire-condition',label:'Tire Condition' },
+          { id:'num-keys',     label:'Number of Keys' },
+          { id:'windshield',   label:'Windshield Condition' },
+          { id:'postal',       label:'Postal Code' },
+          { id:'max-distance', label:'Offer Distance' },
+          { id:'ownership',    label:'Ownership Status' },
+        ];
+
+        requiredFields.forEach(({ id, label }) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const val = el.value ? el.value.trim() : '';
+          if (!val) {
+            el.style.borderColor = '#f87171';
+            errors.push(label);
+          } else {
+            el.style.borderColor = '';
+          }
+        });
+
+        // ── VIN length ──
+        const vinEl = document.getElementById('vin');
+        const vinVal = vinEl ? vinEl.value.trim() : '';
+        const vinErr = document.getElementById('vin-error');
+        if (vinVal.length !== 17) {
+          if (vinEl) vinEl.style.borderColor = '#f87171';
+          if (vinErr) { vinErr.style.display = 'block'; vinErr.textContent = '⚠ VIN must be exactly 17 characters.'; }
+          if (!errors.includes('VIN')) errors.push('VIN (must be 17 characters)');
+        } else {
+          if (vinErr) vinErr.style.display = 'none';
+        }
+
+        // ── VIN confirmation ──
+        const vinConfEl = document.getElementById('vin-confirm');
+        const vinConfErr = document.getElementById('vin-confirm-error');
+        if (vinConfEl) {
+          const vinConf = vinConfEl.value.toUpperCase().trim();
+          if (vinVal.toUpperCase() !== vinConf) {
+            vinConfEl.style.borderColor = '#f87171';
+            if (vinConfErr) { vinConfErr.style.display = 'block'; vinConfErr.textContent = '⚠ VINs do not match — please re-enter.'; }
+            errors.push('VIN Confirmation');
+          } else {
+            vinConfEl.style.borderColor = '';
+            if (vinConfErr) vinConfErr.style.display = 'none';
+          }
+        }
+
+        // ── Auto-fill blank history fields ──
+        [['accident-history','None'],['maintenance-history','Not provided'],['damages-issues','None']].forEach(([id, fallback]) => {
+          const el = document.getElementById(id);
+          if (el && !el.value.trim()) el.value = fallback;
+        });
+
+        // ── Conditional ownership fields ──
+        const ownership = document.getElementById('ownership') ? document.getElementById('ownership').value : '';
+        if (ownership === 'Financed (loan with balance owing)') {
+          const loan = document.getElementById('loan-amount');
+          if (loan && !loan.value) { loan.style.borderColor = '#f87171'; errors.push('Loan Amount'); }
+          else if (loan) loan.style.borderColor = '';
+        }
+        if (ownership === 'Leased') {
+          const months = document.getElementById('lease-months');
+          const buyout = document.getElementById('buyout-amount');
+          if (months && !months.value) { months.style.borderColor = '#f87171'; errors.push('Months Remaining on Lease'); }
+          else if (months) months.style.borderColor = '';
+          if (buyout && !buyout.value) { buyout.style.borderColor = '#f87171'; errors.push('Lease Buyout Amount'); }
+          else if (buyout) buyout.style.borderColor = '';
+        }
+
+        // ── Intent selection ──
+        const selectedIntent = document.querySelector('.intent-card.selected');
+        if (!selectedIntent) {
+          errors.push('Vehicle Intent (Sell or Trade-In)');
+          // Highlight the intent section
+          const intentSection = document.querySelector('.intent-row');
+          if (intentSection) intentSection.style.outline = '2px solid #f87171';
+        } else {
+          const intentSection = document.querySelector('.intent-row');
+          if (intentSection) intentSection.style.outline = '';
+        }
+
+        // ── Purchase type for trade-ins ──
+        if (selectedIntent && selectedIntent.querySelector('h4') && selectedIntent.querySelector('h4').textContent.includes('Trade')) {
+          const pt = document.getElementById('purchase-type');
+          if (pt && !pt.value) { pt.style.borderColor = '#f87171'; errors.push('Current Financing Type'); }
+          else if (pt) pt.style.borderColor = '';
+        }
+
+        // ── Consent ──
+        const consentCheck = document.getElementById('consent-check');
+        const consentError = document.getElementById('consent-error');
+        const consentBox   = document.getElementById('consent-box');
+        if (consentCheck && !consentCheck.checked) {
+          if (consentError) consentError.style.display = 'block';
+          if (consentBox)   consentBox.style.borderColor = '#f87171';
+          errors.push('Listing Consent');
+        } else {
+          if (consentError) consentError.style.display = 'none';
+          if (consentBox)   consentBox.style.borderColor = 'rgba(43,159,217,0.2)';
+        }
+
+        // ── Disclaimer ──
+        const disclaimerCheck = document.getElementById('disclaimer-check');
+        const disclaimerError = document.getElementById('disclaimer-error');
+        const disclaimerBox   = document.getElementById('disclaimer-box');
+        if (disclaimerCheck && !disclaimerCheck.checked) {
+          if (disclaimerError) disclaimerError.style.display = 'block';
+          if (disclaimerBox)   disclaimerBox.style.borderColor = '#f87171';
+          errors.push('Disclaimer Acknowledgement');
+        } else {
+          if (disclaimerError) disclaimerError.style.display = 'none';
+          if (disclaimerBox)   disclaimerBox.style.borderColor = '#ced5e2';
+        }
+
+        // ── Terms & Conditions ──
+        const tosCheck = document.getElementById('tos-check');
+        const tosError = document.getElementById('tos-error');
+        const tosBox   = document.getElementById('tos-box');
+        if (tosCheck && !tosCheck.checked) {
+          if (tosError) tosError.style.display = 'block';
+          if (tosBox)   tosBox.style.borderColor = '#f87171';
+          errors.push('Terms & Conditions Acceptance');
+        } else {
+          if (tosError) tosError.style.display = 'none';
+          if (tosBox)   tosBox.style.borderColor = 'rgba(52,211,153,0.2)';
+        }
+
+        // ── Show errors or proceed ──
+        const errBanner = document.getElementById('submit-error-banner');
+        if (errors.length > 0) {
+          if (errBanner) {
+            errBanner.style.display = 'flex';
+            const msgEl = errBanner.querySelector('span') || errBanner;
+            msgEl.textContent = 'Please complete the following before submitting: ' + errors.join(', ') + '.';
+            errBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            alert('Please complete all required fields before submitting:\n\n' + errors.join('\n'));
+          }
+          return;
+        }
+
+        if (errBanner) errBanner.style.display = 'none';
+
+        // ── Build listing object ──
+        const profile = JSON.parse(localStorage.getItem('customerProfile') || 'null');
+        const vin = vinVal;
+        const intentEl = selectedIntent ? selectedIntent.querySelector('h4') : null;
+        const intent    = intentEl ? intentEl.textContent.trim() : '';
+        const purchaseTypeEl = document.getElementById('purchase-type');
+        const now = new Date();
+        const expires = new Date(now);
+        expires.setDate(expires.getDate() + 5);
+        const fmt = d => d.toISOString();
+
+        const newListing = {
+          id:           vin,
+          vin,
+          title:        document.getElementById('year').value + ' ' + document.getElementById('make').value + ' ' + getModelValue(),
+          trim:         document.getElementById('trim').value,
+          make:         document.getElementById('make').value,
+          model:        getModelValue(),
+          year:         document.getElementById('year').value,
+          mileage:      Number(document.getElementById('km').value).toLocaleString() + ' km',
+          intent,
+          purchaseType: purchaseTypeEl ? purchaseTypeEl.value : '',
+          ownership,
+          tireType:     document.getElementById('tire-type').value,
+          tireCondition:document.getElementById('tire-condition').value,
+          extraTires:   document.getElementById('extra-tires') ? document.getElementById('extra-tires').checked : false,
+          accident:     document.getElementById('accident-history') ? (document.getElementById('accident-history').value || 'None') : 'None',
+          maintenance:  document.getElementById('maintenance-history') ? (document.getElementById('maintenance-history').value || 'Not provided') : 'Not provided',
+          damages:      document.getElementById('damages-issues') ? (document.getElementById('damages-issues').value || 'None') : 'None',
+          postal:       document.getElementById('postal').value,
+          maxDistance:  document.getElementById('max-distance').value,
+          listed:       fmt(now),
+          expires:      fmt(expires),
+          status:       'active',
+          offerCount:   0,
+          highest:      null,
+          offers:       [],
+          customer:     profile ? { id: profile.id, name: profile.name, email: profile.email, phone: profile.phone } : null,
+          photos:       JSON.parse(JSON.stringify(PENDING_PHOTOS)),
+        };
+
+        // ── Save to dt_listings ──
+        const allListings = JSON.parse(localStorage.getItem('dt_listings') || '{}');
+        allListings[vin] = newListing;
+        localStorage.setItem('dt_listings', JSON.stringify(allListings));
+
+        // ── Notify matching dealers by email and in-app ──
+        notifyMatchingDealers(newListing);
+
+        // ── Save thumbnail key for dealer portal ──
+        if (PENDING_PHOTOS.exterior && PENDING_PHOTOS.exterior.length > 0) {
+          localStorage.setItem('exteriorThumb_' + vin, PENDING_PHOTOS.exterior[0]);
+        }
+
+        // ── Clear pending photos ──
+        Object.keys(PENDING_PHOTOS).forEach(k => PENDING_PHOTOS[k] = []);
+
+        // ── Redirect to customer dashboard ──
+        window.location.replace('customer-dashboard.html');
+
+      } catch (err) {
+        console.error('submitListing error:', err);
+        alert('Something went wrong saving your listing. Please check all fields and try again.\n\nError: ' + err.message);
+      }
+    }
+
+    // ── VIN validation ──
+    const VIN_VALID_CHARS = /^[A-HJ-NPR-Z0-9]{17}$/i; // excludes I, O, Q
+    function validateVIN(el) {
+      const val = el.value.toUpperCase().trim();
+      el.value = val; // force uppercase
+      const err = document.getElementById('vin-error');
+      const count = document.getElementById('vin-char-count');
+      count.textContent = val.length + ' / 17 characters';
+      count.style.color = val.length === 17 ? 'var(--green)' : 'var(--muted)';
+      if (val.length === 0) {
+        el.style.borderColor = ''; err.style.display = 'none';
+      } else if (val.length !== 17) {
+        el.style.borderColor = '#f87171'; err.style.display = 'block';
+        err.textContent = '⚠ VIN must be exactly 17 characters (' + val.length + ' entered).';
+      } else if (!VIN_VALID_CHARS.test(val)) {
+        el.style.borderColor = '#f87171'; err.style.display = 'block';
+        err.textContent = '⚠ VIN contains invalid characters. VINs cannot contain I, O, or Q.';
+      } else {
+        el.style.borderColor = 'var(--green)'; err.style.display = 'none';
+      }
+      validateVINConfirm();
+    }
+    function validateVINConfirm() {
+      const vin  = document.getElementById('vin').value.toUpperCase().trim();
+      const conf = document.getElementById('vin-confirm').value.toUpperCase().trim();
+      document.getElementById('vin-confirm').value = conf;
+      const err = document.getElementById('vin-confirm-error');
+      const ok  = document.getElementById('vin-confirm-ok');
+      if (conf.length === 0) { err.style.display='none'; ok.style.display='none'; document.getElementById('vin-confirm').style.borderColor=''; return; }
+      if (vin !== conf) {
+        document.getElementById('vin-confirm').style.borderColor='#f87171';
+        err.style.display='block'; ok.style.display='none';
+        err.textContent = '⚠ VINs do not match — please check and re-enter.';
+      } else if (vin.length === 17 && VIN_VALID_CHARS.test(vin)) {
+        document.getElementById('vin-confirm').style.borderColor='var(--green)';
+        err.style.display='none'; ok.style.display='block';
+      } else {
+        document.getElementById('vin-confirm').style.borderColor='';
+        err.style.display='none'; ok.style.display='none';
+      }
+    }
+    function onDistanceChange() {
+      const val = document.getElementById('max-distance').value;
+      document.getElementById('provincial-note').style.display = val === 'provincial' ? 'block' : 'none';
+    }
+
+    // ── Tire extra set checkbox ──
+    function updateTireExtra() {
+      const type  = document.getElementById('tire-type').value;
+      const row   = document.getElementById('tire-extra-row');
+      const label = document.getElementById('extra-tires-label');
+      const cb    = document.getElementById('extra-tires');
+      if (type === 'All-Season' || type === 'Summer') {
+        label.textContent = 'Comes with an additional set of winter rims and tires';
+        row.style.display = '';
+      } else if (type === 'Winter') {
+        label.textContent = 'Comes with an additional set of all-season or summer tires and rims';
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+        cb.checked = false;
+      }
+    }
+  
+    // ── EmailJS config (shared with admin-dashboard) ──
+    window.EMAILJS_PUBLIC_KEY  = window.EMAILJS_PUBLIC_KEY  || 'YOUR_PUBLIC_KEY';
+    window.EMAILJS_SERVICE_ID  = window.EMAILJS_SERVICE_ID  || 'YOUR_SERVICE_ID';
+    (function(){ if(typeof emailjs!=='undefined'&&window.EMAILJS_PUBLIC_KEY!=='YOUR_PUBLIC_KEY') emailjs.init({publicKey:window.EMAILJS_PUBLIC_KEY}); })();
+
+    // ── Send email via EmailJS (safe no-op if not configured) ──
+    function dtSendEmail(templateId, params) {
+      if(typeof emailjs==='undefined'||window.EMAILJS_PUBLIC_KEY==='YOUR_PUBLIC_KEY') {
+        console.info('[DealrTrade Email]', templateId, params);
+        return;
+      }
+      emailjs.send(window.EMAILJS_SERVICE_ID, templateId, params)
+        .catch(function(e){ console.warn('[DealrTrade Email] failed:', templateId, e); });
+    }
+
+    // ── Notify dealers whose buy criteria matches a new listing ──
+    function notifyMatchingDealers(listing) {
+      var dealerUsers = JSON.parse(localStorage.getItem('dt_dealer_users') || 'null') || [];
+      var dealerProfiles = JSON.parse(localStorage.getItem('dt_dealer_profiles') || '{}');
+      var mgAccess = JSON.parse(localStorage.getItem('dt_market_dealer_access') || '{}');
+      var seen = new Set();
+
+      dealerUsers.forEach(function(u) {
+        if(u.status !== 'active') return;
+        if(seen.has(u.dealerName)) return;
+        seen.add(u.dealerName);
+
+        // Check buys criteria from profile (keyed by dealerId, fallback to dealerName)
+        var profile = dealerProfiles[u.dealerId] || dealerProfiles[u.dealerName] || {};
+        var buys = (profile.buys && profile.buys.length ? profile.buys : (profile.sells || [])).map(function(b){ return b.toLowerCase(); });
+        if(!buys.length) return; // dealer hasn't set buy criteria yet
+        var make = (listing.make || '').toLowerCase();
+        if(!buys.includes(make)) return; // doesn't match
+
+        // Find primary contact (Dealer Principal / Owner or Dealer Admin)
+        var dealerUsers2 = JSON.parse(localStorage.getItem('dt_dealer_users') || 'null') || [];
+        var contact = dealerUsers2.find(function(d){ return d.dealerName === u.dealerName && (d.role === 'Dealer Principal / Owner' || d.role === 'Dealer Admin'); }) || u;
+
+        // Store in-app notification for this dealer
+        var notifKey = 'dt_dealer_notif_' + u.dealerName;
+        var notifs = JSON.parse(localStorage.getItem(notifKey) || '[]');
+        notifs.unshift({
+          type: 'new_listing',
+          vin: listing.vin,
+          title: listing.title,
+          intent: listing.intent,
+          mileage: listing.mileage,
+          expires: listing.expires,
+          ts: Date.now(),
+          read: false,
+        });
+        localStorage.setItem(notifKey, JSON.stringify(notifs));
+
+        // Email notification
+        dtSendEmail('dealer_new_listing', {
+          to_name:    contact.firstName + ' ' + contact.lastName,
+          to_email:   contact.email,
+          dealer_name: u.dealerName,
+          vehicle:    listing.title + (listing.trim ? ' ' + listing.trim : ''),
+          intent:     listing.intent,
+          mileage:    listing.mileage,
+          expires:    listing.expires,
+          portal_url: window.location.origin + '/dealer-portal.html',
+        });
+      });
+    }
+
+  </script>
+
+<!-- SITE FOOTER -->
+<footer style="text-align:center;padding:20px 24px;border-top:1px solid #ced5e2;color:#5a647a;font-size:0.78rem;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 16px;margin-top:auto;">
+  <span>&#169; 2026 DealrTrade</span>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html" target="_blank" style="color:#5a647a;text-decoration:none;">Terms &amp; Conditions</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="terms.html#s23" target="_blank" style="color:#5a647a;text-decoration:none;">Privacy Policy</a>
+  <span style="color:#ced5e2">&#183;</span>
+  <a href="/cdn-cgi/l/email-protection" class="__cf_e
